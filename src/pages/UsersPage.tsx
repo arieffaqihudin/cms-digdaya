@@ -660,6 +660,31 @@ export default function UsersPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Toggle status confirmation */}
+      <AlertDialog open={!!toggleTarget} onOpenChange={(v) => { if (!v) setToggleTarget(null); }}>
+        <AlertDialogContent className="rounded-[12px] border-border">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-[15px]">
+              {toggleTarget?.currentActive ? "Nonaktifkan Pengguna?" : "Aktifkan Pengguna?"}
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-[13px]">
+              {toggleTarget?.currentActive
+                ? "Pengguna tidak akan dapat mengakses sistem. Lanjutkan?"
+                : "Pengguna akan diaktifkan dan sistem akan mengirim email verifikasi ke alamat email pengguna tersebut. Lanjutkan?"}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="h-9 rounded-[10px] text-[13px]">Batal</AlertDialogCancel>
+            <AlertDialogAction
+              className="h-9 rounded-[10px] text-[13px] bg-primary text-primary-foreground hover:bg-primary/90"
+              onClick={confirmToggle}
+            >
+              {toggleTarget?.currentActive ? "Nonaktifkan" : "Aktifkan"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
