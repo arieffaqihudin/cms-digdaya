@@ -378,7 +378,7 @@ export default function UsersPage() {
                       <span className="inline-flex rounded-full bg-primary/[0.07] px-2.5 py-[3px] text-[11px] font-medium text-primary">{u.grupPengguna}</span>
                     </td>
                     <td className="px-4 md:px-5 py-4">
-                      <Switch checked={u.isActive} onCheckedChange={() => toggleStatus(u.id)} />
+                      <Switch checked={u.isActive} onCheckedChange={() => requestToggle(u.id, u.isActive)} />
                     </td>
                     <td className="px-4 md:px-5 py-4">
                       <DropdownMenu>
