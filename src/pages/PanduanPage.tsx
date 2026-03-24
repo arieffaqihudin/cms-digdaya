@@ -3,8 +3,10 @@ import { Link } from "react-router-dom";
 import { Plus, Search, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { useScreenSize } from "@/components/AppLayout";
+import { products } from "@/lib/mock-data";
 
 const mockPanduan = [
   { id: "1", topik: "Cara Membuat Surat Keluar", slug: "cara-membuat-surat-keluar", produk: "Digdaya Persuratan", createdAt: "2025-01-10" },
@@ -16,16 +18,23 @@ const mockPanduan = [
 
 export default function PanduanPage() {
   const [search, setSearch] = useState("");
+  const [filterProduk, setFilterProduk] = useState("all");
   const screen = useScreenSize();
   const isMobile = screen === "mobile";
 
   const filtered = useMemo(
-    () => mockPanduan.filter((p) => p.topik.toLowerCase().includes(search.toLowerCase())),
-    [search]
+    () =>
+      mockPanduan.filter((p) => {
+        const matchSearch = p.topik.toLowerCase().includes(search.toLowerCase());
+        const matchProduk = filterProduk === "all" || p.produk === filterProduk;
+        return matchSearch && matchProduk;
+      }),
+    [search, filterProduk]
   );
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
@@ -43,23 +52,38 @@ export default function PanduanPage() {
         </Link>
       </div>
 
-      <div className="relative max-w-sm">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-        <Input placeholder="Cari topik..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
+      {/* Filters */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="relative w-full sm:max-w-xs">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input placeholder="Cari topik..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
+        </div>
+        <Select value={filterProduk} onValueChange={setFilterProduk}>
+          <SelectTrigger className="w-full sm:w-[220px]">
+            <SelectValue placeholder="Semua Produk" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Semua Produk</SelectItem>
+            {products.map((p) => (
+              <SelectItem key={p} value={p}>{p}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
+      {/* Table / Cards */}
       <div className="rounded-[12px] border bg-card">
         {isMobile ? (
           <div className="divide-y">
             {filtered.map((item) => (
-              <div key={item.id} className="space-y-1 p-4">
+              <div key={item.id} className="space-y-2 p-4">
                 <div className="font-medium text-foreground">{item.topik}</div>
                 <div className="text-xs text-muted-foreground">{item.slug}</div>
-                <div className="flex items-center justify-between pt-1">
+                <div className="flex items-center justify-between">
                   <span className="text-xs text-muted-foreground">{item.produk}</span>
                   <span className="text-xs text-muted-foreground">{item.createdAt}</span>
                 </div>
-                <div className="pt-2">
+                <div className="pt-1">
                   <Link to={`/panduan/${item.id}`} className="text-xs font-medium text-primary hover:underline">Ubah</Link>
                 </div>
               </div>
