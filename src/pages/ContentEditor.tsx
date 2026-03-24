@@ -309,47 +309,48 @@ export default function ContentEditor() {
 
   return (
     <div className="-m-4 md:-m-5 lg:-m-7">
-      {/* ═══ Top Bar ═══ */}
-      <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border/60 bg-surface px-4 md:px-6 py-3">
-        <div className="flex items-center gap-3 md:gap-4 min-w-0">
+      {/* ═══ Editor Page Header ═══ */}
+      <div className="sticky top-0 z-20 border-b border-border/60 bg-card px-4 md:px-6 py-3">
+        {/* Row 1: back + badge + title + actions */}
+        <div className="flex flex-wrap items-center gap-3 md:gap-4">
           <Link
             to={backPath}
             className="flex h-8 w-8 items-center justify-center rounded-[10px] text-muted-foreground hover:bg-accent hover:text-foreground transition-colors shrink-0"
           >
             <ArrowLeft className="h-4 w-4" strokeWidth={1.6} />
           </Link>
-          <div className="flex items-center gap-2 min-w-0">
+          <div className="flex items-center gap-2 min-w-0 flex-1">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/15 bg-primary/[0.06] px-2.5 py-[3px] text-[11px] font-medium text-primary shrink-0">
               <TypeIcon className="h-3 w-3" strokeWidth={1.8} />
               <span className="hidden sm:inline">{typeLabels[contentType]}</span>
             </span>
-            <h2 className="text-[13px] md:text-[14px] font-semibold text-foreground truncate">
+            <h2 className="text-sm md:text-[15px] font-semibold text-foreground truncate">
               {isNew ? `${typeLabels[contentType]} Baru` : `Edit ${typeLabels[contentType]}`}
             </h2>
             {!isNew && <span className="hidden sm:inline"><StatusBadge status={status} /></span>}
           </div>
-        </div>
-        <div className="flex items-center gap-2 shrink-0">
-          <Button variant="ghost" size="sm" className="h-8 rounded-[10px] text-xs text-muted-foreground hover:text-foreground hover:bg-accent gap-1.5 hidden sm:flex">
-            <Eye className="h-3.5 w-3.5" strokeWidth={1.6} /> Preview
-          </Button>
-          <Button variant="outline" size="sm" className="h-8 rounded-[10px] text-xs border-border gap-1.5 hidden md:flex" onClick={handleSave}>
-            <Save className="h-3.5 w-3.5" strokeWidth={1.6} /> Simpan Draft
-          </Button>
-          <Button size="sm" className="h-8 rounded-[10px] text-xs bg-primary text-primary-foreground hover:bg-primary/90 gap-1.5" onClick={handlePublish}>
-            <CheckCircle className="h-3.5 w-3.5" strokeWidth={1.6} /> <span className="hidden sm:inline">Publikasikan</span><span className="sm:hidden">Publish</span>
-          </Button>
+          <div className="flex items-center gap-2 shrink-0 max-sm:w-full max-sm:pt-2 max-sm:border-t max-sm:border-border/40">
+            <Button variant="ghost" size="sm" className="h-8 rounded-[10px] text-xs text-muted-foreground hover:text-foreground hover:bg-accent gap-1.5 hidden sm:flex">
+              <Eye className="h-3.5 w-3.5" strokeWidth={1.6} /> Preview
+            </Button>
+            <Button variant="outline" size="sm" className={cn("h-8 rounded-[10px] text-xs border-border gap-1.5", screenSize === "mobile" ? "flex-1" : "hidden md:flex")} onClick={handleSave}>
+              <Save className="h-3.5 w-3.5" strokeWidth={1.6} /> Simpan Draft
+            </Button>
+            <Button size="sm" className={cn("h-8 rounded-[10px] text-xs bg-primary text-primary-foreground hover:bg-primary/90 gap-1.5", screenSize === "mobile" && "flex-1")} onClick={handlePublish}>
+              <CheckCircle className="h-3.5 w-3.5" strokeWidth={1.6} /> Publikasikan
+            </Button>
+          </div>
         </div>
       </div>
 
       {/* ═══ Two Column Layout ═══ */}
       <div className={cn(
-        "p-4 md:p-5 lg:p-6",
+        "p-4 md:p-6 lg:p-7 pt-6 md:pt-7 lg:pt-8",
         screenSize !== "mobile" ? "flex gap-5 lg:gap-6" : "space-y-5"
       )}>
         {/* ─── LEFT: Content Area ─── */}
         <div className={cn(
-          "min-w-0 space-y-4 md:space-y-5",
+          "min-w-0 space-y-5 md:space-y-6",
           screenSize !== "mobile" && "flex-1"
         )} style={screenSize !== "mobile" ? { maxWidth: "68%" } : undefined}>
           {/* Title Input */}
