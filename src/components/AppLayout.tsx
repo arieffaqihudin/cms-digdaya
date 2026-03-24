@@ -4,6 +4,7 @@ import {
   LayoutDashboard, Video, FileText, HelpCircle, PenSquare,
   FolderTree, Tag, Package, Tv2, Image, FileClock, CheckCircle,
   Archive, Settings, Search, Bell, ChevronLeft, Menu, User, LogOut,
+  CalendarClock,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
@@ -11,23 +12,25 @@ import { Button } from "@/components/ui/button";
 
 const navItems = [
   { label: "Dashboard", icon: LayoutDashboard, path: "/" },
-  { divider: true, section: "Content" },
+  { divider: true, section: "Konten" },
   { label: "Video", icon: Video, path: "/video" },
   { label: "Blog", icon: PenSquare, path: "/blog" },
   { label: "Panduan", icon: FileText, path: "/panduan" },
   { label: "FAQ", icon: HelpCircle, path: "/faq" },
-  { divider: true, section: "Taxonomy" },
-  { label: "Categories", icon: FolderTree, path: "/categories" },
-  { label: "Tags", icon: Tag, path: "/tags" },
-  { label: "Products", icon: Package, path: "/products" },
-  { label: "Channels", icon: Tv2, path: "/channels" },
-  { divider: true, section: "Library" },
+  { divider: true, section: "Taksonomi" },
+  { label: "Kategori", icon: FolderTree, path: "/categories" },
+  { label: "Tag", icon: Tag, path: "/tags" },
+  { label: "Produk", icon: Package, path: "/products" },
+  { label: "Channel", icon: Tv2, path: "/channels" },
+  { divider: true, section: "Media" },
   { label: "Media Library", icon: Image, path: "/media" },
-  { label: "Drafts", icon: FileClock, path: "/drafts" },
-  { label: "Published", icon: CheckCircle, path: "/published" },
-  { label: "Archived", icon: Archive, path: "/archived" },
-  { divider: true, section: "System" },
-  { label: "Settings", icon: Settings, path: "/settings" },
+  { divider: true, section: "Workflow" },
+  { label: "Draft", icon: FileClock, path: "/drafts" },
+  { label: "Terjadwal", icon: CalendarClock, path: "/scheduled" },
+  { label: "Dipublikasikan", icon: CheckCircle, path: "/published" },
+  { label: "Arsip", icon: Archive, path: "/archived" },
+  { divider: true, section: "Pengaturan" },
+  { label: "Pengaturan", icon: Settings, path: "/settings" },
 ] as const;
 
 const pageTitles: Record<string, string> = {
@@ -36,15 +39,16 @@ const pageTitles: Record<string, string> = {
   "/blog": "Blog",
   "/panduan": "Panduan",
   "/faq": "FAQ",
-  "/categories": "Categories",
-  "/tags": "Tags",
-  "/products": "Products",
-  "/channels": "Channels",
+  "/categories": "Kategori",
+  "/tags": "Tag",
+  "/products": "Produk",
+  "/channels": "Channel",
   "/media": "Media Library",
-  "/drafts": "Drafts",
-  "/published": "Published",
-  "/archived": "Archived",
-  "/settings": "Settings",
+  "/drafts": "Draft",
+  "/scheduled": "Terjadwal",
+  "/published": "Dipublikasikan",
+  "/archived": "Arsip",
+  "/settings": "Pengaturan",
 };
 
 export default function AppLayout({ children }: { children: ReactNode }) {

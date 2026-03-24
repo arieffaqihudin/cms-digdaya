@@ -6,6 +6,7 @@ import AppLayout from "@/components/AppLayout";
 import Dashboard from "@/pages/Dashboard";
 import VideoPage from "@/pages/VideoPage";
 import BlogPage from "@/pages/BlogPage";
+import ScheduledPage from "@/pages/ScheduledPage";
 import PanduanPage from "@/pages/PanduanPage";
 import FAQPage from "@/pages/FAQPage";
 import ContentEditor from "@/pages/ContentEditor";
