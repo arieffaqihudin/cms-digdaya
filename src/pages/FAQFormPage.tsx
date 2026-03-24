@@ -97,7 +97,7 @@ export default function FAQFormPage() {
   };
 
   const metadataPanel = (
-    <div className="space-y-5 lg:sticky lg:top-6 self-start">
+    <div className="space-y-5 lg:sticky lg:top-4 self-start">
       {/* Publikasi */}
       <SectionCard title="Publikasi">
         <div className="flex items-center justify-between">
@@ -189,45 +189,48 @@ export default function FAQFormPage() {
   );
 
   return (
-    <div className="space-y-5 md:space-y-6">
-      {/* Top Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <div className="flex items-center gap-3">
+    <div className="-m-4 md:-m-5 lg:-m-7">
+      {/* Editor Page Header */}
+      <div className="sticky top-0 z-20 border-b border-border/60 bg-card px-4 md:px-6 py-3">
+        <div className="flex flex-wrap items-center gap-3 md:gap-4">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => navigate("/faq")}
-            className="rounded-[10px] text-muted-foreground hover:text-foreground h-9 w-9"
+            className="rounded-[10px] text-muted-foreground hover:text-foreground h-8 w-8 shrink-0"
           >
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <div className="flex items-center gap-2">
-            <HelpCircle className="h-4 w-4 text-primary/70" />
-            <h1 className="text-base md:text-lg font-semibold text-foreground/90">FAQ Baru</h1>
+          <div className="flex items-center gap-2 min-w-0 flex-1">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/15 bg-primary/[0.06] px-2.5 py-[3px] text-[11px] font-medium text-primary shrink-0">
+              <HelpCircle className="h-3 w-3" strokeWidth={1.8} />
+              <span className="hidden sm:inline">FAQ</span>
+            </span>
+            <h1 className="text-sm md:text-[15px] font-semibold text-foreground truncate">FAQ Baru</h1>
           </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleSave}
-            className={`rounded-[10px] text-xs gap-1.5 ${screenSize === "mobile" ? "flex-1" : ""}`}
-          >
-            <Save className="h-3.5 w-3.5" />
-            Simpan Draft
-          </Button>
-          <Button
-            size="sm"
-            onClick={handlePublish}
-            className={`rounded-[10px] text-xs gap-1.5 bg-primary hover:bg-primary/90 ${screenSize === "mobile" ? "flex-1" : ""}`}
-          >
-            Publikasikan
-          </Button>
+          <div className="flex items-center gap-2 shrink-0 max-sm:w-full max-sm:pt-2 max-sm:border-t max-sm:border-border/40">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleSave}
+              className={`rounded-[10px] text-xs gap-1.5 h-8 ${screenSize === "mobile" ? "flex-1" : ""}`}
+            >
+              <Save className="h-3.5 w-3.5" />
+              Simpan Draft
+            </Button>
+            <Button
+              size="sm"
+              onClick={handlePublish}
+              className={`rounded-[10px] text-xs gap-1.5 h-8 bg-primary hover:bg-primary/90 ${screenSize === "mobile" ? "flex-1" : ""}`}
+            >
+              Publikasikan
+            </Button>
+          </div>
         </div>
       </div>
 
       {/* Two Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-5 md:gap-6">
+      <div className="p-4 md:p-6 lg:p-7 pt-6 md:pt-7 lg:pt-8 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-5 md:gap-6">
         {/* LEFT — Content */}
         <div className="space-y-5">
           <SectionCard>
