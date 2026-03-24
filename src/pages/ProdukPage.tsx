@@ -131,13 +131,13 @@ export default function ProdukPage() {
                     </span>
                   </td>
                   <td className="px-4 md:px-5 py-4 text-right">
-                    <div className="flex items-center justify-end gap-0.5">
-                      <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground hover:bg-accent">
-                        <Edit className="h-3.5 w-3.5" strokeWidth={1.6} />
-                      </Button>
-                      <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive hover:bg-destructive/10">
-                        <Trash2 className="h-3.5 w-3.5" strokeWidth={1.6} />
-                      </Button>
+                    <div className="flex items-center justify-end gap-2">
+                      <button className="inline-flex items-center gap-1 text-[12px] font-medium text-primary hover:text-primary/80 transition-colors">
+                        <Pencil className="h-3 w-3" strokeWidth={1.6} /> Ubah
+                      </button>
+                      <button className="inline-flex items-center gap-1 text-[12px] font-medium text-muted-foreground hover:text-destructive transition-colors">
+                        <Trash2 className="h-3 w-3" strokeWidth={1.6} /> Hapus
+                      </button>
                     </div>
                   </td>
                 </tr>
