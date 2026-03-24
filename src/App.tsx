@@ -26,6 +26,8 @@ import ProductFormPage from "@/pages/ProductFormPage";
 import FAQFormPage from "@/pages/FAQFormPage";
 import FAQCategoryFormPage from "@/pages/FAQCategoryFormPage";
 import FAQCategoryPage from "@/pages/FAQCategoryPage";
+import DocCategoryPage from "@/pages/DocCategoryPage";
+import DocCategoryFormPage from "@/pages/DocCategoryFormPage";
 import LoginPage from "@/pages/LoginPage";
 import ForgotPasswordPage from "@/pages/ForgotPasswordPage";
 import ResetPasswordPage from "@/pages/ResetPasswordPage";
