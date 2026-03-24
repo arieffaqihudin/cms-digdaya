@@ -18,6 +18,8 @@ import TaxonomyPage from "@/pages/TaxonomyPage";
 import PlaceholderPage from "@/pages/PlaceholderPage";
 import MediaLibrary from "@/pages/MediaLibrary";
 import PanduanFormPage from "@/pages/PanduanFormPage";
+import RepositoryPage from "@/pages/RepositoryPage";
+import RepositoryFormPage from "@/pages/RepositoryFormPage";
 import ProductFormPage from "@/pages/ProductFormPage";
 import FAQFormPage from "@/pages/FAQFormPage";
 import FAQCategoryFormPage from "@/pages/FAQCategoryFormPage";
