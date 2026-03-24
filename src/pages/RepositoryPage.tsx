@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Search, Plus, Pencil, FileText, Filter, FileImage, FileVideo, File, FileSpreadsheet } from "lucide-react";
+import { Search, Plus, Pencil, Eye, FileText, Filter } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -11,78 +11,56 @@ import Pagination from "@/components/Pagination";
 
 interface RepoItem {
   id: string;
-  fileName: string;
-  category: string;
-  product: string;
-  fileType: string;
-  fileSize: string;
-  uploadDate: string;
-  status: "published" | "draft";
+  nama: string;
+  kategori: string;
+  kepengurusan: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
-const productOptions = ["Digdaya Persuratan", "Digdaya Pesantren", "Siskader NU", "Digdaya Kepengurusan"];
-
-const mockItems: RepoItem[] = [
-  { id: "r1", fileName: "Panduan Pengguna v2.1", category: "Panduan", product: "Digdaya Persuratan", fileType: "PDF", fileSize: "2.4 MB", uploadDate: "2025-03-20", status: "published" },
-  { id: "r2", fileName: "Template Surat Resmi", category: "Template", product: "Digdaya Persuratan", fileType: "DOCX", fileSize: "540 KB", uploadDate: "2025-03-18", status: "published" },
-  { id: "r3", fileName: "Video Tutorial Login", category: "Video", product: "Digdaya Persuratan", fileType: "MP4", fileSize: "18.5 MB", uploadDate: "2025-03-15", status: "published" },
-  { id: "r4", fileName: "Laporan Bulanan Maret", category: "Laporan", product: "Digdaya Persuratan", fileType: "XLSX", fileSize: "1.1 MB", uploadDate: "2025-03-12", status: "draft" },
-  { id: "r5", fileName: "Banner Promosi Ramadhan", category: "Media", product: "Digdaya Persuratan", fileType: "PNG", fileSize: "3.2 MB", uploadDate: "2025-03-10", status: "published" },
-  { id: "r6", fileName: "Panduan Admin Pesantren", category: "Panduan", product: "Digdaya Pesantren", fileType: "PDF", fileSize: "4.8 MB", uploadDate: "2025-03-19", status: "published" },
-  { id: "r7", fileName: "Data Santri Template", category: "Template", product: "Digdaya Pesantren", fileType: "XLSX", fileSize: "280 KB", uploadDate: "2025-03-17", status: "published" },
-  { id: "r8", fileName: "Brosur Digital Pesantren", category: "Media", product: "Digdaya Pesantren", fileType: "PDF", fileSize: "6.1 MB", uploadDate: "2025-03-14", status: "draft" },
-  { id: "r9", fileName: "Panduan Input Kader", category: "Panduan", product: "Siskader NU", fileType: "PDF", fileSize: "1.9 MB", uploadDate: "2025-03-16", status: "published" },
-  { id: "r10", fileName: "Template Laporan Kader", category: "Template", product: "Siskader NU", fileType: "DOCX", fileSize: "320 KB", uploadDate: "2025-03-11", status: "published" },
-  { id: "r11", fileName: "Panduan Kepengurusan", category: "Panduan", product: "Digdaya Kepengurusan", fileType: "PDF", fileSize: "3.5 MB", uploadDate: "2025-03-13", status: "published" },
-  { id: "r12", fileName: "Infografis Struktur Organisasi", category: "Media", product: "Digdaya Kepengurusan", fileType: "PNG", fileSize: "2.8 MB", uploadDate: "2025-03-09", status: "published" },
+const kategoriOptions = [
+  "Peraturan Perkumpulan",
+  "Konbes NU",
+  "Rencana Strategis",
+  "Digitalisasi",
+  "Lain-lain",
+  "Harlah NU",
 ];
 
-const statusMap: Record<string, { label: string; className: string; dot: string }> = {
-  published: { label: "Dipublikasikan", className: "bg-[hsl(var(--status-success-bg))] text-[hsl(var(--status-success-fg))]", dot: "bg-[hsl(var(--status-success-fg))]" },
-  draft: { label: "Draft", className: "bg-muted text-muted-foreground", dot: "bg-muted-foreground/50" },
-};
-
-const fileTypeIcons: Record<string, typeof FileText> = {
-  PDF: FileText,
-  DOCX: File,
-  XLSX: FileSpreadsheet,
-  MP4: FileVideo,
-  PNG: FileImage,
-  JPG: FileImage,
-};
+const mockItems: RepoItem[] = [
+  { id: "r1", nama: "AD/ART NU 2022", kategori: "Peraturan Perkumpulan", kepengurusan: "PBNU", createdAt: "2025-03-20", updatedAt: "2025-03-22" },
+  { id: "r2", nama: "Hasil Konbes NU 2024", kategori: "Konbes NU", kepengurusan: "PBNU", createdAt: "2025-03-18", updatedAt: "2025-03-18" },
+  { id: "r3", nama: "Renstra NU 2025-2030", kategori: "Rencana Strategis", kepengurusan: "PBNU", createdAt: "2025-03-15", updatedAt: "2025-03-20" },
+  { id: "r4", nama: "Blueprint Digitalisasi NU", kategori: "Digitalisasi", kepengurusan: "Lembaga Pendidikan NU", createdAt: "2025-03-12", updatedAt: "2025-03-15" },
+  { id: "r5", nama: "Panduan Harlah NU ke-103", kategori: "Harlah NU", kepengurusan: "PWNU Jawa Timur", createdAt: "2025-03-10", updatedAt: "2025-03-14" },
+  { id: "r6", nama: "PO/PD NU 2023", kategori: "Peraturan Perkumpulan", kepengurusan: "PBNU", createdAt: "2025-03-09", updatedAt: "2025-03-09" },
+  { id: "r7", nama: "Rekomendasi Konbes Alim Ulama", kategori: "Konbes NU", kepengurusan: "PBNU", createdAt: "2025-03-08", updatedAt: "2025-03-10" },
+  { id: "r8", nama: "Laporan Digitalisasi Pesantren", kategori: "Digitalisasi", kepengurusan: "PWNU Jawa Tengah", createdAt: "2025-03-05", updatedAt: "2025-03-07" },
+  { id: "r9", nama: "Dokumen Pendukung Lainnya", kategori: "Lain-lain", kepengurusan: "PCNU Surabaya", createdAt: "2025-03-03", updatedAt: "2025-03-03" },
+  { id: "r10", nama: "Susunan Acara Harlah NU 2025", kategori: "Harlah NU", kepengurusan: "PWNU Jawa Barat", createdAt: "2025-03-01", updatedAt: "2025-03-02" },
+];
 
 const ITEMS_PER_PAGE = 10;
 
 export default function RepositoryPage() {
   const [search, setSearch] = useState("");
-  const [productFilter, setProductFilter] = useState("all");
-  const [categoryFilter, setCategoryFilter] = useState("all");
-  const [statusFilter, setStatusFilter] = useState("all");
+  const [kategoriFilter, setKategoriFilter] = useState("all");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [page, setPage] = useState(1);
   const [showFilters, setShowFilters] = useState(false);
   const screenSize = useScreenSize();
 
-  const categoriesForProduct = useMemo(() => {
-    const items = productFilter === "all" ? mockItems : mockItems.filter((f) => f.product === productFilter);
-    const cats = new Set(items.map((f) => f.category));
-    return Array.from(cats);
-  }, [productFilter]);
-
   const filtered = useMemo(() => {
     return mockItems.filter((f) => {
-      if (productFilter !== "all" && f.product !== productFilter) return false;
-      if (search && !f.fileName.toLowerCase().includes(search.toLowerCase())) return false;
-      if (categoryFilter !== "all" && f.category !== categoryFilter) return false;
-      if (statusFilter !== "all" && f.status !== statusFilter) return false;
+      if (kategoriFilter !== "all" && f.kategori !== kategoriFilter) return false;
+      if (search && !f.nama.toLowerCase().includes(search.toLowerCase())) return false;
       return true;
     });
-  }, [search, productFilter, categoryFilter, statusFilter]);
+  }, [search, kategoriFilter]);
 
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
   const paged = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
   const allSelected = paged.length > 0 && paged.every((f) => selectedIds.has(f.id));
-  const hasActiveFilters = productFilter !== "all" || categoryFilter !== "all" || statusFilter !== "all";
 
   const toggleAll = () => {
     if (allSelected) setSelectedIds(new Set());
@@ -94,52 +72,16 @@ export default function RepositoryPage() {
     setSelectedIds(next);
   };
 
-  const StatusBadge = ({ status }: { status: string }) => {
-    const s = statusMap[status] || statusMap.draft;
-    return (
-      <span className={cn("inline-flex items-center gap-1.5 rounded-full px-2.5 py-[3px] text-[11px] font-medium", s.className)}>
-        <span className={cn("h-1.5 w-1.5 rounded-full", s.dot)} />
-        {s.label}
-      </span>
-    );
-  };
-
-  const FileTypeIcon = ({ type }: { type: string }) => {
-    const Icon = fileTypeIcons[type] || File;
-    return <Icon className="h-4 w-4 text-muted-foreground" strokeWidth={1.6} />;
-  };
-
-  const filterSelects = (
-    <>
-      <Select value={productFilter} onValueChange={(v) => { setProductFilter(v); setCategoryFilter("all"); setPage(1); }}>
-        <SelectTrigger className="w-full sm:w-[180px] h-9 rounded-[10px] text-[13px] border-border bg-background">
-          <SelectValue placeholder="Semua Produk" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">Semua Produk</SelectItem>
-          {productOptions.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}
-        </SelectContent>
-      </Select>
-      <Select value={categoryFilter} onValueChange={(v) => { setCategoryFilter(v); setPage(1); }}>
-        <SelectTrigger className="w-full sm:w-[170px] h-9 rounded-[10px] text-[13px] border-border bg-background">
-          <SelectValue placeholder="Semua Kategori" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">Semua Kategori</SelectItem>
-          {categoriesForProduct.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
-        </SelectContent>
-      </Select>
-      <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setPage(1); }}>
-        <SelectTrigger className="w-full sm:w-[150px] h-9 rounded-[10px] text-[13px] border-border bg-background">
-          <SelectValue placeholder="Semua Status" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">Semua Status</SelectItem>
-          <SelectItem value="published">Dipublikasikan</SelectItem>
-          <SelectItem value="draft">Draft</SelectItem>
-        </SelectContent>
-      </Select>
-    </>
+  const filterSelect = (
+    <Select value={kategoriFilter} onValueChange={(v) => { setKategoriFilter(v); setPage(1); }}>
+      <SelectTrigger className="w-full sm:w-[200px] h-9 rounded-[10px] text-[13px] border-border bg-background">
+        <SelectValue placeholder="Semua Kategori" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="all">Semua Kategori</SelectItem>
+        {kategoriOptions.map((k) => <SelectItem key={k} value={k}>{k}</SelectItem>)}
+      </SelectContent>
+    </Select>
   );
 
   return (
@@ -148,22 +90,22 @@ export default function RepositoryPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <h1 className="text-base md:text-lg font-semibold text-foreground">Repository</h1>
-          <p className="text-[12px] md:text-[13px] text-muted-foreground mt-0.5">Kelola dokumen dan file Digdaya</p>
+          <p className="text-[12px] md:text-[13px] text-muted-foreground mt-0.5">Kelola dokumen dan file organisasi</p>
         </div>
         <div className="flex items-center gap-1.5 rounded-[10px] bg-accent/60 px-2.5 md:px-3 py-1.5 text-[12px] text-muted-foreground self-start sm:self-auto">
           <FileText className="h-3.5 w-3.5" strokeWidth={1.6} />
           <span className="tabular-nums font-medium">{filtered.length}</span>
-          <span className="hidden sm:inline">file</span>
+          <span className="hidden sm:inline">dokumen</span>
         </div>
       </div>
 
-      {/* Search + Filters + Upload */}
+      {/* Search + Filter + Upload */}
       <div className="rounded-[12px] border border-border bg-surface p-3 md:p-4 shadow-card">
         <div className="flex flex-wrap items-center gap-2 md:gap-3">
           <div className="relative flex-1 min-w-[160px]">
             <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" strokeWidth={1.6} />
             <Input
-              placeholder="Cari file..."
+              placeholder="Cari dokumen..."
               value={search}
               onChange={(e) => { setSearch(e.target.value); setPage(1); }}
               className="pl-9 h-9 rounded-[10px] text-[13px] border-border bg-background focus-visible:ring-1 focus-visible:ring-ring"
@@ -174,12 +116,12 @@ export default function RepositoryPage() {
               <Button
                 variant="outline"
                 size="sm"
-                className={cn("h-9 rounded-[10px] text-[13px] border-border gap-1.5", hasActiveFilters && "border-primary/40 text-primary")}
+                className={cn("h-9 rounded-[10px] text-[13px] border-border gap-1.5", kategoriFilter !== "all" && "border-primary/40 text-primary")}
                 onClick={() => setShowFilters(!showFilters)}
               >
                 <Filter className="h-3.5 w-3.5" strokeWidth={1.6} /> Filter
               </Button>
-              <Link to="/repository/new" className="w-full sm:w-auto">
+              <Link to="/repository/new" className="w-full">
                 <Button size="sm" className="h-9 w-full rounded-[10px] text-[13px] bg-primary text-primary-foreground hover:bg-primary/90 gap-1.5">
                   <Plus className="h-4 w-4" strokeWidth={1.6} /> Upload
                 </Button>
@@ -187,7 +129,7 @@ export default function RepositoryPage() {
             </>
           ) : (
             <>
-              {filterSelects}
+              {filterSelect}
               <Link to="/repository/new">
                 <Button size="sm" className="h-9 rounded-[10px] text-[13px] bg-primary text-primary-foreground hover:bg-primary/90 gap-1.5">
                   <Plus className="h-4 w-4" strokeWidth={1.6} /> Upload
@@ -197,7 +139,7 @@ export default function RepositoryPage() {
           )}
         </div>
         {screenSize === "mobile" && showFilters && (
-          <div className="mt-3 pt-3 border-t border-border/60 space-y-2 animate-fade-in">{filterSelects}</div>
+          <div className="mt-3 pt-3 border-t border-border/60 space-y-2 animate-fade-in">{filterSelect}</div>
         )}
       </div>
 
@@ -209,27 +151,18 @@ export default function RepositoryPage() {
               <div key={item.id} className="p-4 hover:bg-accent/30 transition-colors">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <FileTypeIcon type={item.fileType} />
-                      <p className="text-[13px] font-medium text-foreground leading-[1.4] truncate">{item.fileName}</p>
-                    </div>
+                    <p className="text-[13px] font-medium text-foreground leading-[1.4]">{item.nama}</p>
                     <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-                      <span className="text-[11px] text-muted-foreground">{item.category}</span>
-                      <span className="text-[11px] text-muted-foreground/50">·</span>
-                      <span className="text-[11px] text-muted-foreground">{item.fileType} · {item.fileSize}</span>
+                      <span className="inline-flex items-center rounded-full bg-primary/[0.07] px-2 py-[2px] text-[10px] font-medium text-primary">{item.kategori}</span>
+                      <span className="text-[11px] text-muted-foreground">{item.kepengurusan}</span>
                     </div>
-                    <div className="flex items-center gap-2 mt-1.5">
-                      <span className="inline-flex items-center rounded-full bg-primary/[0.07] px-2 py-[2px] text-[10px] font-medium text-primary">{item.product}</span>
-                      <StatusBadge status={item.status} />
-                    </div>
+                    <p className="text-[11px] text-muted-foreground mt-1">Dibuat: {item.createdAt}</p>
                   </div>
-                  <Link
-                    to={`/repository/${item.id}`}
-                    className="flex items-center gap-1 text-[12px] font-medium text-primary hover:text-primary/80 transition-colors shrink-0 mt-0.5"
-                  >
-                    <Pencil className="h-3 w-3" strokeWidth={1.6} />
-                    Ubah
-                  </Link>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <Link to={`/repository/${item.id}`} className="text-[12px] font-medium text-primary hover:text-primary/80 transition-colors">
+                      Ubah
+                    </Link>
+                  </div>
                 </div>
               </div>
             ))}
@@ -242,13 +175,11 @@ export default function RepositoryPage() {
                   <th className="px-4 py-3.5 w-10">
                     <Checkbox checked={allSelected} onCheckedChange={toggleAll} className="h-4 w-4" />
                   </th>
-                  <th className="px-4 md:px-5 py-3.5 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground">File Name</th>
-                  <th className="px-4 md:px-5 py-3.5 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground hidden lg:table-cell">Kategori</th>
-                  <th className="px-4 md:px-5 py-3.5 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground hidden lg:table-cell">Produk</th>
-                  <th className="px-4 md:px-5 py-3.5 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground hidden xl:table-cell">Tipe</th>
-                  <th className="px-4 md:px-5 py-3.5 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground hidden xl:table-cell">Ukuran</th>
-                  <th className="px-4 md:px-5 py-3.5 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground hidden md:table-cell">Tanggal Upload</th>
-                  <th className="px-4 md:px-5 py-3.5 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground">Status</th>
+                  <th className="px-4 md:px-5 py-3.5 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground">Nama Dokumen</th>
+                  <th className="px-4 md:px-5 py-3.5 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground">Kategori Dokumen</th>
+                  <th className="px-4 md:px-5 py-3.5 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground hidden lg:table-cell">Kepengurusan</th>
+                  <th className="px-4 md:px-5 py-3.5 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground hidden md:table-cell">Ditambahkan pada</th>
+                  <th className="px-4 md:px-5 py-3.5 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground hidden xl:table-cell">Diperbarui pada</th>
                   <th className="px-4 md:px-5 py-3.5 text-right text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground">Aksi</th>
                 </tr>
               </thead>
@@ -259,29 +190,23 @@ export default function RepositoryPage() {
                       <Checkbox checked={selectedIds.has(item.id)} onCheckedChange={() => toggleOne(item.id)} className="h-4 w-4" />
                     </td>
                     <td className="px-4 md:px-5 py-4">
-                      <div className="flex items-center gap-2.5">
-                        <FileTypeIcon type={item.fileType} />
-                        <div>
-                          <span className="font-medium text-foreground leading-[1.4]">{item.fileName}</span>
-                          <p className="text-[11px] text-muted-foreground mt-0.5 lg:hidden">{item.category} · {item.fileType} · {item.fileSize}</p>
-                        </div>
-                      </div>
+                      <span className="font-medium text-foreground">{item.nama}</span>
                     </td>
-                    <td className="px-4 md:px-5 py-4 text-muted-foreground hidden lg:table-cell">{item.category}</td>
-                    <td className="px-4 md:px-5 py-4 hidden lg:table-cell">
-                      <span className="inline-flex items-center rounded-full bg-primary/[0.07] px-2.5 py-[3px] text-[11px] font-medium text-primary">{item.product}</span>
+                    <td className="px-4 md:px-5 py-4">
+                      <span className="inline-flex items-center rounded-full bg-primary/[0.07] px-2.5 py-[3px] text-[11px] font-medium text-primary">{item.kategori}</span>
                     </td>
-                    <td className="px-4 md:px-5 py-4 text-muted-foreground hidden xl:table-cell">
-                      <span className="inline-flex items-center gap-1.5 rounded-md bg-accent/80 px-2 py-[3px] text-[11px] font-mono">{item.fileType}</span>
-                    </td>
-                    <td className="px-4 md:px-5 py-4 text-muted-foreground tabular-nums hidden xl:table-cell">{item.fileSize}</td>
-                    <td className="px-4 md:px-5 py-4 text-muted-foreground tabular-nums hidden md:table-cell">{item.uploadDate}</td>
-                    <td className="px-4 md:px-5 py-4"><StatusBadge status={item.status} /></td>
+                    <td className="px-4 md:px-5 py-4 text-muted-foreground hidden lg:table-cell">{item.kepengurusan}</td>
+                    <td className="px-4 md:px-5 py-4 text-muted-foreground tabular-nums hidden md:table-cell">{item.createdAt}</td>
+                    <td className="px-4 md:px-5 py-4 text-muted-foreground tabular-nums hidden xl:table-cell">{item.updatedAt}</td>
                     <td className="px-4 md:px-5 py-4 text-right">
-                      <Link to={`/repository/${item.id}`} className="inline-flex items-center gap-1 text-[12px] font-medium text-primary hover:text-primary/80 transition-colors">
-                        <Pencil className="h-3 w-3" strokeWidth={1.6} />
-                        Ubah
-                      </Link>
+                      <div className="flex items-center justify-end gap-3">
+                        <Link to={`/repository/${item.id}`} className="inline-flex items-center gap-1 text-[12px] font-medium text-primary hover:text-primary/80 transition-colors">
+                          <Pencil className="h-3 w-3" strokeWidth={1.6} /> Edit
+                        </Link>
+                        <button className="inline-flex items-center gap-1 text-[12px] font-medium text-muted-foreground hover:text-foreground transition-colors">
+                          <Eye className="h-3 w-3" strokeWidth={1.6} /> View
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -291,7 +216,7 @@ export default function RepositoryPage() {
         )}
 
         {filtered.length === 0 && (
-          <div className="p-12 md:p-16 text-center text-[13px] text-muted-foreground">Tidak ada file ditemukan.</div>
+          <div className="p-12 md:p-16 text-center text-[13px] text-muted-foreground">Tidak ada dokumen ditemukan.</div>
         )}
 
         {totalPages > 0 && (

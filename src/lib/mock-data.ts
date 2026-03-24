@@ -70,7 +70,14 @@ export const tags = [
 ];
 
 export const products = [
-  "Digdaya App", "NU Online Web", "Lazisnu Platform", "TVNU Streaming", "NU Care"
+  "Digdaya Persuratan",
+  "Digdaya Kepengurusan",
+  "Digdaya Pesantren",
+  "Portal Pesantren NU",
+  "Digdaya Kader",
+  "Digdaya Health",
+  "Digdaya Masjid",
+  "Digdaya Dakwah",
 ];
 
 export const mockVideos: Video[] = [
