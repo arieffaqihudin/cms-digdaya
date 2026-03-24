@@ -41,6 +41,7 @@ const App = () => (
                   <Route path="/panduan" element={<PanduanPage />} />
                   <Route path="/panduan/new" element={<PanduanFormPage />} />
                   <Route path="/faq" element={<FAQPage />} />
+                  <Route path="/faq/new" element={<FAQFormPage />} />
                   <Route path="/content/:id" element={<ContentEditor />} />
                   <Route path="/published" element={<PublishedContent />} />
                   <Route path="/archived" element={<ArchivedContent />} />
