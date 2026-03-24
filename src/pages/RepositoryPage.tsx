@@ -20,7 +20,7 @@ interface RepoItem {
   status: "published" | "draft";
 }
 
-const productTabs = ["Digdaya Persuratan", "Digdaya Pesantren", "Siskader NU", "Digdaya Kepengurusan"];
+const productOptions = ["Digdaya Persuratan", "Digdaya Pesantren", "Siskader NU", "Digdaya Kepengurusan"];
 
 const mockItems: RepoItem[] = [
   { id: "r1", fileName: "Panduan Pengguna v2.1", category: "Panduan", product: "Digdaya Persuratan", fileType: "PDF", fileSize: "2.4 MB", uploadDate: "2025-03-20", status: "published" },
@@ -55,7 +55,7 @@ const ITEMS_PER_PAGE = 10;
 
 export default function RepositoryPage() {
   const [search, setSearch] = useState("");
-  const [activeTab, setActiveTab] = useState(productTabs[0]);
+  const [productFilter, setProductFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -63,25 +63,26 @@ export default function RepositoryPage() {
   const [showFilters, setShowFilters] = useState(false);
   const screenSize = useScreenSize();
 
-  const categoriesForTab = useMemo(() => {
-    const cats = new Set(mockItems.filter((f) => f.product === activeTab).map((f) => f.category));
+  const categoriesForProduct = useMemo(() => {
+    const items = productFilter === "all" ? mockItems : mockItems.filter((f) => f.product === productFilter);
+    const cats = new Set(items.map((f) => f.category));
     return Array.from(cats);
-  }, [activeTab]);
+  }, [productFilter]);
 
   const filtered = useMemo(() => {
     return mockItems.filter((f) => {
-      if (f.product !== activeTab) return false;
+      if (productFilter !== "all" && f.product !== productFilter) return false;
       if (search && !f.fileName.toLowerCase().includes(search.toLowerCase())) return false;
       if (categoryFilter !== "all" && f.category !== categoryFilter) return false;
       if (statusFilter !== "all" && f.status !== statusFilter) return false;
       return true;
     });
-  }, [search, activeTab, categoryFilter, statusFilter]);
+  }, [search, productFilter, categoryFilter, statusFilter]);
 
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
   const paged = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
   const allSelected = paged.length > 0 && paged.every((f) => selectedIds.has(f.id));
-  const hasActiveFilters = categoryFilter !== "all" || statusFilter !== "all";
+  const hasActiveFilters = productFilter !== "all" || categoryFilter !== "all" || statusFilter !== "all";
 
   const toggleAll = () => {
     if (allSelected) setSelectedIds(new Set());
@@ -91,13 +92,6 @@ export default function RepositoryPage() {
     const next = new Set(selectedIds);
     if (next.has(id)) next.delete(id); else next.add(id);
     setSelectedIds(next);
-  };
-  const handleTabChange = (tab: string) => {
-    setActiveTab(tab);
-    setPage(1);
-    setCategoryFilter("all");
-    setStatusFilter("all");
-    setSelectedIds(new Set());
   };
 
   const StatusBadge = ({ status }: { status: string }) => {
@@ -117,18 +111,27 @@ export default function RepositoryPage() {
 
   const filterSelects = (
     <>
+      <Select value={productFilter} onValueChange={(v) => { setProductFilter(v); setCategoryFilter("all"); setPage(1); }}>
+        <SelectTrigger className="w-full sm:w-[180px] h-9 rounded-[10px] text-[13px] border-border bg-background">
+          <SelectValue placeholder="Semua Produk" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">Semua Produk</SelectItem>
+          {productOptions.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}
+        </SelectContent>
+      </Select>
       <Select value={categoryFilter} onValueChange={(v) => { setCategoryFilter(v); setPage(1); }}>
         <SelectTrigger className="w-full sm:w-[170px] h-9 rounded-[10px] text-[13px] border-border bg-background">
-          <SelectValue placeholder="Kategori" />
+          <SelectValue placeholder="Semua Kategori" />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">Semua Kategori</SelectItem>
-          {categoriesForTab.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+          {categoriesForProduct.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
         </SelectContent>
       </Select>
       <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setPage(1); }}>
         <SelectTrigger className="w-full sm:w-[150px] h-9 rounded-[10px] text-[13px] border-border bg-background">
-          <SelectValue placeholder="Status" />
+          <SelectValue placeholder="Semua Status" />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">Semua Status</SelectItem>
@@ -151,26 +154,6 @@ export default function RepositoryPage() {
           <FileText className="h-3.5 w-3.5" strokeWidth={1.6} />
           <span className="tabular-nums font-medium">{filtered.length}</span>
           <span className="hidden sm:inline">file</span>
-        </div>
-      </div>
-
-      {/* Product tabs */}
-      <div className="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
-        <div className="flex gap-1 min-w-max">
-          {productTabs.map((tab) => (
-            <button
-              key={tab}
-              onClick={() => handleTabChange(tab)}
-              className={cn(
-                "px-3.5 py-2 rounded-[10px] text-[13px] font-medium transition-colors whitespace-nowrap",
-                activeTab === tab
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-              )}
-            >
-              {tab}
-            </button>
-          ))}
         </div>
       </div>
 
@@ -260,11 +243,11 @@ export default function RepositoryPage() {
                     <Checkbox checked={allSelected} onCheckedChange={toggleAll} className="h-4 w-4" />
                   </th>
                   <th className="px-4 md:px-5 py-3.5 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground">File Name</th>
-                  <th className="px-4 md:px-5 py-3.5 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground hidden lg:table-cell">Category</th>
+                  <th className="px-4 md:px-5 py-3.5 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground hidden lg:table-cell">Kategori</th>
                   <th className="px-4 md:px-5 py-3.5 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground hidden lg:table-cell">Produk</th>
-                  <th className="px-4 md:px-5 py-3.5 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground hidden xl:table-cell">File Type</th>
-                  <th className="px-4 md:px-5 py-3.5 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground hidden xl:table-cell">File Size</th>
-                  <th className="px-4 md:px-5 py-3.5 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground hidden md:table-cell">Upload Date</th>
+                  <th className="px-4 md:px-5 py-3.5 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground hidden xl:table-cell">Tipe</th>
+                  <th className="px-4 md:px-5 py-3.5 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground hidden xl:table-cell">Ukuran</th>
+                  <th className="px-4 md:px-5 py-3.5 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground hidden md:table-cell">Tanggal Upload</th>
                   <th className="px-4 md:px-5 py-3.5 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground">Status</th>
                   <th className="px-4 md:px-5 py-3.5 text-right text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground">Aksi</th>
                 </tr>
