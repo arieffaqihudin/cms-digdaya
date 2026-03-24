@@ -314,7 +314,7 @@ export default function UsersPage() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="rounded-[10px]">
                       <DropdownMenuItem onClick={() => openEdit(u)} className="gap-2 text-[13px]">
-                        <Pencil className="h-3.5 w-3.5" /> Edit
+                        <Pencil className="h-3.5 w-3.5" /> Ubah
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => setDeleteId(u.id)} className="gap-2 text-[13px] text-destructive focus:text-destructive">
                         <Trash2 className="h-3.5 w-3.5" /> Hapus
