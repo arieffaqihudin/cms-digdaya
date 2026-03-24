@@ -3,7 +3,7 @@ import {
   ArrowLeft, Save, CheckCircle, XCircle, ExternalLink, Plus, Trash2,
   Image, Video, FileText, Eye, Calendar, Clock, ThumbsUp, ThumbsDown,
   Pin, BookOpen, Hash, Users, Building2, Link2, Star, Sparkles,
-  ChevronDown,
+  ChevronDown, Bold, Italic, Underline, Heading1, Heading2, List, Code, LinkIcon,
 } from "lucide-react";
 import { mockVideos, mockGuides, mockFAQs, mockBlogs, categories, tags as allTags, products } from "@/lib/mock-data";
 import type { ContentType } from "@/lib/mock-data";
@@ -45,8 +45,8 @@ function getBackPath(type: ContentType) {
 const typeLabels: Record<ContentType, string> = { video: "Video", guide: "Panduan", faq: "FAQ", blog: "Blog" };
 const typeIcons: Record<ContentType, typeof Video> = { video: Video, guide: BookOpen, faq: FileText, blog: FileText };
 
-/* ─── Collapsible Sidebar Card ─── */
-function SidebarCard({ title, icon: Icon, children, defaultOpen = true }: { title: string; icon?: typeof Star; children: React.ReactNode; defaultOpen?: boolean }) {
+/* ─── Section Card ─── */
+function SectionCard({ title, icon: Icon, children, defaultOpen = true }: { title: string; icon?: typeof Star; children: React.ReactNode; defaultOpen?: boolean }) {
   const [open, setOpen] = useState(defaultOpen);
   const screenSize = useScreenSize();
   const collapsible = screenSize === "mobile";
@@ -127,6 +127,7 @@ export default function ContentEditor() {
   const [selectedTags, setSelectedTags] = useState<string[]>(video?.tags || blog?.tags || []);
   const [pinned, setPinned] = useState(false);
   const [difficulty, setDifficulty] = useState("Pemula");
+  const [activeLang, setActiveLang] = useState<"id" | "en">("id");
   const [steps, setSteps] = useState([
     { title: "Langkah 1", content: "" },
     { title: "Langkah 2", content: "" },
@@ -147,7 +148,7 @@ export default function ContentEditor() {
   const sidebarPanels = (
     <>
       {/* Publishing */}
-      <SidebarCard title="Status & Publikasi" icon={CheckCircle}>
+      <SectionCard title="Status & Publikasi" icon={CheckCircle}>
         <Field label="Status">
           <Select value={status} onValueChange={setStatus}>
             <SelectTrigger className="rounded-[10px] h-9 text-[13px] border-border bg-background"><SelectValue /></SelectTrigger>
@@ -172,29 +173,67 @@ export default function ContentEditor() {
             <Input type="date" className="pl-9 rounded-[10px] h-9 text-[13px] border-border bg-background" />
           </div>
         </Field>
-      </SidebarCard>
+      </SectionCard>
+
+      {/* Kategorisasi */}
+      <SectionCard title="Kategorisasi" icon={Hash} defaultOpen={screenSize !== "mobile"}>
+        <Field label="Kategori">
+          <Select value={category} onValueChange={setCategory}>
+            <SelectTrigger className="rounded-[10px] h-9 text-[13px] border-border bg-background"><SelectValue placeholder="Pilih kategori" /></SelectTrigger>
+            <SelectContent>{categories.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
+          </Select>
+        </Field>
+        {contentType === "blog" && (
+          <Field label="Penerbit">
+            <Input value={author} onChange={(e) => setAuthor(e.target.value)} className="rounded-[10px] h-9 text-[13px] border-border bg-background" placeholder="Nama penerbit..." />
+          </Field>
+        )}
+        <Field label="Slug">
+          <div className="flex items-center gap-2 rounded-[10px] border border-border bg-muted/30 px-3 py-2 text-[12px] text-muted-foreground font-mono">
+            <Link2 className="h-3.5 w-3.5 shrink-0" strokeWidth={1.6} />
+            <span className="truncate">{title ? title.toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-") : "slug-otomatis"}</span>
+          </div>
+        </Field>
+      </SectionCard>
+
+      {/* Media / Cover */}
+      <SectionCard title="Gambar Sampul" icon={Image} defaultOpen={screenSize !== "mobile"}>
+        <div className="border border-dashed border-border/60 rounded-[10px] p-6 text-center hover:border-primary/25 transition-colors cursor-pointer group">
+          <Image className="h-5 w-5 mx-auto text-muted-foreground/40 mb-1.5 group-hover:text-primary/50 transition-colors" strokeWidth={1.6} />
+          <p className="text-[11px] text-muted-foreground">Upload gambar sampul</p>
+          <p className="text-[10px] text-muted-foreground/60 mt-0.5">PNG, JPG · 1200×630</p>
+        </div>
+      </SectionCard>
+
+      {/* Opsi Penerbitan */}
+      <SectionCard title="Opsi Penerbitan" icon={Calendar} defaultOpen={screenSize !== "mobile"}>
+        <Field label="Tanggal Terbit">
+          <div className="relative">
+            <Calendar className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" strokeWidth={1.6} />
+            <Input type="date" className="pl-9 rounded-[10px] h-9 text-[13px] border-border bg-background" />
+          </div>
+        </Field>
+        <ToggleRow label="Postingan Unggulan" checked={featured} onChange={setFeatured} hint="Ditampilkan di bagian utama" />
+      </SectionCard>
 
       {contentType === "blog" && (
-        <SidebarCard title="Penulis" icon={Users}>
-          <Field label="Nama Penulis">
-            <Input value={author} onChange={(e) => setAuthor(e.target.value)} className="rounded-[10px] h-9 text-[13px] border-border bg-background" placeholder="Nama penulis..." />
-          </Field>
+        <SectionCard title="Penulis" icon={Users}>
           <Field label="Kutipan" hint="Ringkasan singkat untuk halaman listing">
             <Textarea value={summary} onChange={(e) => setSummary(e.target.value)} rows={2} className="rounded-[10px] resize-none text-[13px] border-border bg-background leading-relaxed" placeholder="Ringkasan singkat..." />
           </Field>
-        </SidebarCard>
+        </SectionCard>
       )}
 
       {contentType === "faq" && (
-        <SidebarCard title="Pengaturan FAQ" icon={Hash}>
+        <SectionCard title="Pengaturan FAQ" icon={Hash}>
           <Field label="Urutan Tampil">
             <Input type="number" defaultValue={faq?.order || 1} className="rounded-[10px] h-9 text-[13px] border-border bg-background tabular-nums" />
           </Field>
-        </SidebarCard>
+        </SectionCard>
       )}
 
       {contentType === "guide" && (
-        <SidebarCard title="Pengaturan Panduan" icon={Clock}>
+        <SectionCard title="Pengaturan Panduan" icon={Clock}>
           <Field label="Estimasi Waktu Baca">
             <Input placeholder="misal: 5 menit" className="rounded-[10px] h-9 text-[13px] border-border bg-background" />
           </Field>
@@ -204,45 +243,10 @@ export default function ContentEditor() {
               <SelectContent>{difficulties.map(d => <SelectItem key={d} value={d}>{d}</SelectItem>)}</SelectContent>
             </Select>
           </Field>
-          <div className="flex items-center gap-3 pt-1">
-            <span className="text-[11px] text-muted-foreground">Apakah membantu?</span>
-            <button className="flex items-center gap-1 text-[11px] text-muted-foreground hover:text-primary transition-colors">
-              <ThumbsUp className="h-3.5 w-3.5" strokeWidth={1.6} /> Ya
-            </button>
-            <button className="flex items-center gap-1 text-[11px] text-muted-foreground hover:text-destructive transition-colors">
-              <ThumbsDown className="h-3.5 w-3.5" strokeWidth={1.6} /> Tidak
-            </button>
-          </div>
-        </SidebarCard>
+        </SectionCard>
       )}
 
-      <SidebarCard title="Kategorisasi" icon={Hash} defaultOpen={screenSize !== "mobile"}>
-        <Field label="Kategori">
-          <Select value={category} onValueChange={setCategory}>
-            <SelectTrigger className="rounded-[10px] h-9 text-[13px] border-border bg-background"><SelectValue placeholder="Pilih kategori" /></SelectTrigger>
-            <SelectContent>{categories.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
-          </Select>
-        </Field>
-        <Field label="Tag">
-          <div className="flex flex-wrap gap-1.5">
-            {allTags.map((t) => (
-              <button
-                key={t}
-                onClick={() => toggleTag(t)}
-                className={`rounded-full border px-2.5 py-[3px] text-[11px] font-medium transition-all duration-150 ${
-                  selectedTags.includes(t)
-                    ? "border-primary/30 bg-primary/[0.08] text-primary"
-                    : "border-border text-muted-foreground hover:border-primary/20 hover:text-primary hover:bg-primary/[0.04]"
-                }`}
-              >
-                {t}
-              </button>
-            ))}
-          </div>
-        </Field>
-      </SidebarCard>
-
-      <SidebarCard title="Relasi" icon={Link2} defaultOpen={screenSize !== "mobile"}>
+      <SectionCard title="Relasi" icon={Link2} defaultOpen={screenSize !== "mobile"}>
         <Field label="Produk Terkait">
           <Select value={product} onValueChange={setProduct}>
             <SelectTrigger className="rounded-[10px] h-9 text-[13px] border-border bg-background"><SelectValue placeholder="Pilih produk" /></SelectTrigger>
@@ -255,63 +259,20 @@ export default function ContentEditor() {
             <SelectContent>{audiences.map((a) => <SelectItem key={a} value={a}>{a}</SelectItem>)}</SelectContent>
           </Select>
         </Field>
-        <Field label="Level Organisasi">
-          <Select value={orgLevel} onValueChange={setOrgLevel}>
-            <SelectTrigger className="rounded-[10px] h-9 text-[13px] border-border bg-background"><SelectValue placeholder="Pilih level" /></SelectTrigger>
-            <SelectContent>{orgLevels.map((l) => <SelectItem key={l} value={l}>{l}</SelectItem>)}</SelectContent>
-          </Select>
-        </Field>
-        <Field label="Konten Terkait">
-          <Input placeholder="Cari konten terkait..." className="rounded-[10px] h-9 text-[13px] border-border bg-background" />
-        </Field>
-      </SidebarCard>
+      </SectionCard>
 
-      <SidebarCard title="Media" icon={Image} defaultOpen={screenSize !== "mobile"}>
-        <Field label="Thumbnail">
-          <div className="border border-dashed border-border/60 rounded-[10px] p-6 text-center hover:border-primary/25 transition-colors cursor-pointer group">
-            <Image className="h-5 w-5 mx-auto text-muted-foreground/40 mb-1.5 group-hover:text-primary/50 transition-colors" strokeWidth={1.6} />
-            <p className="text-[11px] text-muted-foreground">Upload thumbnail</p>
-          </div>
-        </Field>
-      </SidebarCard>
-
-      <SidebarCard title="Catatan" icon={FileText} defaultOpen={screenSize !== "mobile"}>
+      <SectionCard title="Catatan" icon={FileText} defaultOpen={screenSize !== "mobile"}>
         <Field label="Catatan Editor" hint="Internal — tidak terlihat oleh pengguna">
           <Textarea value={editorNotes} onChange={(e) => setEditorNotes(e.target.value)} rows={2} className="rounded-[10px] resize-none text-[13px] border-border bg-background leading-relaxed" placeholder="Catatan internal..." />
         </Field>
-        {contentType === "video" && (
-          <Field label="Alasan Penolakan">
-            <Input value={rejectReason} onChange={(e) => setRejectReason(e.target.value)} placeholder="Alasan jika ditolak..." className="rounded-[10px] h-9 text-[13px] border-border bg-background" />
-          </Field>
-        )}
-      </SidebarCard>
-
-      {/* Action Buttons */}
-      <div className="rounded-[12px] border border-border bg-surface shadow-card p-4 space-y-2.5">
-        <div className="flex gap-2">
-          <Button variant="outline" className="flex-1 h-9 rounded-[10px] text-xs border-border gap-1.5" onClick={handleSave}>
-            <Save className="h-3.5 w-3.5" strokeWidth={1.6} /> Simpan Draft
-          </Button>
-          <Button className="flex-1 h-9 rounded-[10px] text-xs bg-primary text-primary-foreground hover:bg-primary/90 gap-1.5" onClick={handlePublish}>
-            <CheckCircle className="h-3.5 w-3.5" strokeWidth={1.6} /> Publikasikan
-          </Button>
-        </div>
-        <Button
-          variant="ghost"
-          className="w-full h-9 rounded-[10px] text-xs text-destructive hover:bg-status-danger-bg hover:text-status-danger-fg gap-1.5"
-          onClick={handleReject}
-        >
-          <XCircle className="h-3.5 w-3.5" strokeWidth={1.6} /> Tolak
-        </Button>
-      </div>
+      </SectionCard>
     </>
   );
 
   return (
-    <div className="-m-4 md:-m-5 lg:-m-7">
-      {/* ═══ Editor Page Header ═══ */}
-      <div className="sticky top-0 z-20 border-b border-border/60 bg-card px-4 md:px-6 py-3">
-        {/* Row 1: back + badge + title + actions */}
+    <div className="space-y-6">
+      {/* ═══ Editor Page Header — normal flow, NOT floating ═══ */}
+      <div className="rounded-[12px] border border-border bg-card p-4 md:px-6 md:py-4 shadow-card">
         <div className="flex flex-wrap items-center gap-3 md:gap-4">
           <Link
             to={backPath}
@@ -333,7 +294,7 @@ export default function ContentEditor() {
             <Button variant="ghost" size="sm" className="h-8 rounded-[10px] text-xs text-muted-foreground hover:text-foreground hover:bg-accent gap-1.5 hidden sm:flex">
               <Eye className="h-3.5 w-3.5" strokeWidth={1.6} /> Preview
             </Button>
-            <Button variant="outline" size="sm" className={cn("h-8 rounded-[10px] text-xs border-border gap-1.5", screenSize === "mobile" ? "flex-1" : "hidden md:flex")} onClick={handleSave}>
+            <Button variant="outline" size="sm" className={cn("h-8 rounded-[10px] text-xs border-border gap-1.5", screenSize === "mobile" ? "flex-1" : "")} onClick={handleSave}>
               <Save className="h-3.5 w-3.5" strokeWidth={1.6} /> Simpan Draft
             </Button>
             <Button size="sm" className={cn("h-8 rounded-[10px] text-xs bg-primary text-primary-foreground hover:bg-primary/90 gap-1.5", screenSize === "mobile" && "flex-1")} onClick={handlePublish}>
@@ -344,17 +305,32 @@ export default function ContentEditor() {
       </div>
 
       {/* ═══ Two Column Layout ═══ */}
-      <div className={cn(
-        "p-4 md:p-6 lg:p-7 pt-6 md:pt-7 lg:pt-8",
-        screenSize !== "mobile" ? "flex gap-5 lg:gap-6" : "space-y-5"
-      )}>
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-5 lg:gap-6">
         {/* ─── LEFT: Content Area ─── */}
-        <div className={cn(
-          "min-w-0 space-y-5 md:space-y-6",
-          screenSize !== "mobile" && "flex-1"
-        )} style={screenSize !== "mobile" ? { maxWidth: "68%" } : undefined}>
+        <div className="min-w-0 space-y-5">
+          {/* Language Switch (Blog) */}
+          {contentType === "blog" && (
+            <div className="flex gap-1 rounded-[10px] bg-accent/60 p-1 w-fit">
+              {(["id", "en"] as const).map((lang) => (
+                <button
+                  key={lang}
+                  onClick={() => setActiveLang(lang)}
+                  className={cn(
+                    "px-3 py-1.5 rounded-[8px] text-[12px] font-medium transition-colors",
+                    activeLang === lang
+                      ? "bg-card text-foreground shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  {lang === "id" ? "ID" : "EN"}
+                </button>
+              ))}
+            </div>
+          )}
+
           {/* Title Input */}
-          <div className="rounded-[12px] border border-border bg-surface p-4 md:p-6 shadow-card">
+          <div className="rounded-[12px] border border-border bg-surface p-4 md:p-6 shadow-card space-y-3">
+            <Label className="text-[11px] font-medium text-muted-foreground">Judul Artikel</Label>
             <input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -362,12 +338,36 @@ export default function ContentEditor() {
               placeholder={contentType === "faq" ? "Masukkan pertanyaan..." : "Masukkan judul konten..."}
             />
             {(contentType === "blog" || contentType === "guide") && (
-              <input
-                value={summary}
-                onChange={(e) => setSummary(e.target.value)}
-                className="w-full bg-transparent text-[13px] md:text-[14px] text-muted-foreground placeholder:text-muted-foreground/30 outline-none mt-3 leading-relaxed"
-                placeholder="Tulis ringkasan singkat..."
-              />
+              <>
+                <Label className="text-[11px] font-medium text-muted-foreground">Kutipan</Label>
+                <input
+                  value={summary}
+                  onChange={(e) => setSummary(e.target.value)}
+                  className="w-full bg-transparent text-[13px] md:text-[14px] text-muted-foreground placeholder:text-muted-foreground/30 outline-none leading-relaxed"
+                  placeholder="Tulis ringkasan singkat..."
+                />
+              </>
+            )}
+            {contentType === "blog" && (
+              <>
+                <Label className="text-[11px] font-medium text-muted-foreground">Tag</Label>
+                <div className="flex flex-wrap gap-1.5">
+                  {allTags.map((t) => (
+                    <button
+                      key={t}
+                      onClick={() => toggleTag(t)}
+                      className={cn(
+                        "rounded-full border px-2.5 py-[3px] text-[11px] font-medium transition-all duration-150",
+                        selectedTags.includes(t)
+                          ? "border-primary/30 bg-primary/[0.08] text-primary"
+                          : "border-border text-muted-foreground hover:border-primary/20 hover:text-primary hover:bg-primary/[0.04]"
+                      )}
+                    >
+                      {t}
+                    </button>
+                  ))}
+                </div>
+              </>
             )}
           </div>
 
@@ -404,12 +404,6 @@ export default function ContentEditor() {
                       </span>
                     </div>
                   </div>
-                  {video.description && (
-                    <div className="mt-4 pt-4 border-t border-border/40">
-                      <p className="text-[11px] text-muted-foreground mb-1">Deskripsi</p>
-                      <p className="text-[13px] text-muted-foreground leading-relaxed">{video.description}</p>
-                    </div>
-                  )}
                   {video.youtubeUrl && (
                     <a href={video.youtubeUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 mt-4 text-[12px] text-primary hover:underline">
                       <ExternalLink className="h-3 w-3" strokeWidth={1.6} /> Lihat di YouTube
@@ -420,24 +414,10 @@ export default function ContentEditor() {
             </>
           )}
 
-          {/* Blog: Cover Image */}
-          {contentType === "blog" && (
-            <div className="rounded-[12px] border border-border bg-surface p-4 md:p-6 shadow-card space-y-3">
-              <p className="text-[11px] font-medium text-muted-foreground">Cover Image</p>
-              <div className="border border-dashed border-border/70 rounded-[12px] p-8 md:p-12 text-center hover:border-primary/30 transition-colors cursor-pointer group">
-                <div className="flex h-10 w-10 items-center justify-center rounded-[10px] bg-accent mx-auto mb-3 group-hover:bg-primary/10 transition-colors">
-                  <Image className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" strokeWidth={1.6} />
-                </div>
-                <p className="text-[13px] text-foreground font-medium">Klik untuk upload atau drag & drop</p>
-                <p className="text-[11px] text-muted-foreground mt-1">PNG, JPG maks 5MB · Rekomendasi 1200×630</p>
-              </div>
-            </div>
-          )}
-
           {/* FAQ: Answer */}
           {contentType === "faq" && (
             <div className="rounded-[12px] border border-border bg-surface p-4 md:p-6 shadow-card space-y-3">
-              <p className="text-[11px] font-medium text-muted-foreground">Jawaban</p>
+              <Label className="text-[11px] font-medium text-muted-foreground">Jawaban</Label>
               <Textarea
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
@@ -514,12 +494,24 @@ export default function ContentEditor() {
           {(contentType === "blog" || contentType === "video") && (
             <div className="rounded-[12px] border border-border bg-surface shadow-card">
               <div className="flex items-center gap-1 md:gap-1.5 px-4 md:px-5 py-2.5 border-b border-border/50 overflow-x-auto">
-                {["B", "I", "U", "H1", "H2", "—", "Link", "List", "Image", "Code"].map((btn, i) =>
-                  btn === "—" ? (
-                    <div key={i} className="w-px h-5 bg-border/50 mx-1 shrink-0" />
+                {[
+                  { icon: Bold, label: "Bold" },
+                  { icon: Italic, label: "Italic" },
+                  { icon: Underline, label: "Underline" },
+                  null,
+                  { icon: Heading1, label: "H1" },
+                  { icon: Heading2, label: "H2" },
+                  null,
+                  { icon: List, label: "List" },
+                  { icon: LinkIcon, label: "Link" },
+                  { icon: Image, label: "Image" },
+                  { icon: Code, label: "Code" },
+                ].map((item, i) =>
+                  item === null ? (
+                    <div key={`sep-${i}`} className="w-px h-5 bg-border/50 mx-1 shrink-0" />
                   ) : (
-                    <button key={btn} className="px-2 md:px-2.5 py-1.5 text-[11px] font-medium text-muted-foreground hover:bg-accent hover:text-foreground rounded-[6px] transition-colors shrink-0">
-                      {btn}
+                    <button key={item.label} className="p-2 text-muted-foreground hover:bg-accent hover:text-foreground rounded-[6px] transition-colors shrink-0" title={item.label}>
+                      <item.icon className="h-4 w-4" strokeWidth={1.6} />
                     </button>
                   )
                 )}
@@ -535,40 +527,10 @@ export default function ContentEditor() {
               </div>
             </div>
           )}
-
-          {/* Media Embed */}
-          {(contentType === "blog" || contentType === "guide") && (
-            <div className="rounded-[12px] border border-dashed border-border/60 bg-surface/50 p-6 md:p-8 text-center hover:border-primary/25 transition-colors cursor-pointer group">
-              <Video className="h-5 w-5 mx-auto text-muted-foreground/30 mb-2 group-hover:text-primary/40 transition-colors" strokeWidth={1.6} />
-              <p className="text-[12px] text-muted-foreground">Embed gambar, video, atau media lainnya</p>
-            </div>
-          )}
-
-          {/* Preview */}
-          <div className="rounded-[12px] border border-border bg-surface shadow-card">
-            <div className="flex items-center gap-2 px-4 md:px-5 py-3 md:py-3.5 border-b border-border/50">
-              <Eye className="h-3.5 w-3.5 text-muted-foreground" strokeWidth={1.6} />
-              <h3 className="text-[12px] font-semibold text-foreground uppercase tracking-[0.06em]">Preview</h3>
-            </div>
-            <div className="p-4 md:p-6 min-h-[80px]">
-              {title ? (
-                <>
-                  <h4 className="text-[15px] md:text-[16px] font-semibold text-foreground mb-2 leading-snug">{title}</h4>
-                  {summary && <p className="text-[13px] text-muted-foreground mb-3">{summary}</p>}
-                  <p className="text-[13px] md:text-[14px] text-foreground/80 leading-relaxed whitespace-pre-wrap">{content || ""}</p>
-                </>
-              ) : (
-                <p className="text-[13px] text-muted-foreground/50 italic">Preview akan muncul saat Anda menulis...</p>
-              )}
-            </div>
-          </div>
         </div>
 
         {/* ─── RIGHT: Metadata Sidebar ─── */}
-        <div className={cn(
-          "space-y-5",
-          screenSize !== "mobile" ? "w-[300px] lg:w-[320px] shrink-0 sticky top-4 self-start" : ""
-        )}>
+        <div className="space-y-5 lg:sticky lg:top-4 self-start">
           {sidebarPanels}
         </div>
       </div>
