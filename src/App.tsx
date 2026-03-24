@@ -18,8 +18,6 @@ import ProdukPage from "@/pages/ProdukPage";
 import TagPage from "@/pages/TagPage";
 import ChannelPage from "@/pages/ChannelPage";
 import AccessPage from "@/pages/AccessPage";
-import TagPage from "@/pages/TagPage";
-import ChannelPage from "@/pages/ChannelPage";
 import MediaLibrary from "@/pages/MediaLibrary";
 import PanduanFormPage from "@/pages/PanduanFormPage";
 import RepositoryPage from "@/pages/RepositoryPage";
