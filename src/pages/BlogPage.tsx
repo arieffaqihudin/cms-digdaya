@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Search, Eye, Plus, PenSquare, Filter } from "lucide-react";
+import { Search, Pencil, Plus, PenSquare, Filter } from "lucide-react";
 import { mockBlogs, categories } from "@/lib/mock-data";
 import StatusBadge from "@/components/StatusBadge";
 import Pagination from "@/components/Pagination";
