@@ -6,6 +6,7 @@ import AppLayout from "@/components/AppLayout";
 import Dashboard from "@/pages/Dashboard";
 import VideoPage from "@/pages/VideoPage";
 import BlogPage from "@/pages/BlogPage";
+import ScheduledPage from "@/pages/ScheduledPage";
 import PanduanPage from "@/pages/PanduanPage";
 import FAQPage from "@/pages/FAQPage";
 import ContentEditor from "@/pages/ContentEditor";
@@ -39,12 +40,13 @@ const App = () => (
                   <Route path="/published" element={<PublishedContent />} />
                   <Route path="/archived" element={<ArchivedContent />} />
                   <Route path="/drafts" element={<DraftsPage />} />
+                  <Route path="/scheduled" element={<ScheduledPage />} />
                   <Route path="/categories" element={<TaxonomyPage defaultTab="categories" />} />
                   <Route path="/tags" element={<TaxonomyPage defaultTab="tags" />} />
                   <Route path="/products" element={<TaxonomyPage defaultTab="products" />} />
                   <Route path="/channels" element={<TaxonomyPage defaultTab="channels" />} />
                   <Route path="/media" element={<PlaceholderPage title="Media Library" />} />
-                  <Route path="/settings" element={<PlaceholderPage title="Settings" />} />
+                  <Route path="/settings" element={<PlaceholderPage title="Pengaturan" />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </AppLayout>
