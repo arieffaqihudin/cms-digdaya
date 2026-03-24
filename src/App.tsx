@@ -85,7 +85,9 @@ const AppRoutes = () => {
                 <Route path="/drafts" element={<DraftsPage />} />
                 <Route path="/scheduled" element={<ScheduledPage />} />
                 <Route path="/categories" element={<TaxonomyPage defaultTab="categories" />} />
+                <Route path="/categories/faq" element={<FAQCategoryPage />} />
                 <Route path="/categories/faq/new" element={<FAQCategoryFormPage />} />
+                <Route path="/categories/faq/:id" element={<FAQCategoryFormPage />} />
                 <Route path="/tags" element={<TaxonomyPage defaultTab="tags" />} />
                 <Route path="/products" element={<TaxonomyPage defaultTab="products" />} />
                 <Route path="/products/new" element={<ProductFormPage />} />
