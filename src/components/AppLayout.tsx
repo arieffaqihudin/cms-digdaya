@@ -24,6 +24,7 @@ const navItems = [
   { divider: true, section: "Master" },
   { label: "Kategori FAQ", icon: FolderTree, path: "/categories/faq" },
   { label: "Kategori Dokumen", icon: FolderTree, path: "/categories/dokumen" },
+  { label: "Kategori Video", icon: FolderTree, path: "/categories/video" },
   { label: "Produk", icon: Package, path: "/products" },
   { label: "Tag", icon: Tag, path: "/tags" },
   { label: "Channel", icon: Tv2, path: "/channels" },
