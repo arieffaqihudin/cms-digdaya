@@ -2,7 +2,7 @@ import { useParams, useSearchParams, Link, useNavigate } from "react-router-dom"
 import {
   ArrowLeft, Save, CheckCircle, XCircle, ExternalLink, Plus, Trash2,
   Image, Video, FileText, Eye, Calendar, Clock, ThumbsUp, ThumbsDown,
-  Pin, BookOpen, Hash, Users, Building2, Link2, Star,
+  Pin, BookOpen, Hash, Users, Building2, Link2, Star, Sparkles,
 } from "lucide-react";
 import { mockVideos, mockGuides, mockFAQs, mockBlogs, categories, tags as allTags, products } from "@/lib/mock-data";
 import type { ContentType } from "@/lib/mock-data";
@@ -42,11 +42,11 @@ function getBackPath(type: ContentType) {
 const typeLabels: Record<ContentType, string> = { video: "Video", guide: "Panduan", faq: "FAQ", blog: "Blog" };
 const typeIcons: Record<ContentType, typeof Video> = { video: Video, guide: BookOpen, faq: FileText, blog: FileText };
 
-/* ─── Sidebar Section Card ─── */
+/* ─── Sidebar Card ─── */
 function SidebarCard({ title, icon: Icon, children }: { title: string; icon?: typeof Star; children: React.ReactNode }) {
   return (
-    <div className="rounded-xl border border-border bg-surface shadow-soft">
-      <div className="flex items-center gap-2 px-5 py-3.5 border-b border-border/60">
+    <div className="rounded-[12px] border border-border bg-surface shadow-card">
+      <div className="flex items-center gap-2 px-5 py-3.5 border-b border-border/50">
         {Icon && <Icon className="h-3.5 w-3.5 text-muted-foreground" strokeWidth={1.6} />}
         <h3 className="text-[12px] font-semibold text-foreground uppercase tracking-[0.06em]">{title}</h3>
       </div>
@@ -55,7 +55,7 @@ function SidebarCard({ title, icon: Icon, children }: { title: string; icon?: ty
   );
 }
 
-/* ─── Field Wrapper ─── */
+/* ─── Field ─── */
 function Field({ label, children, hint }: { label: string; children: React.ReactNode; hint?: string }) {
   return (
     <div className="space-y-1.5">
@@ -109,8 +109,8 @@ export default function ContentEditor() {
   const [pinned, setPinned] = useState(false);
   const [difficulty, setDifficulty] = useState("Pemula");
   const [steps, setSteps] = useState([
-    { title: "Step 1", content: "" },
-    { title: "Step 2", content: "" },
+    { title: "Langkah 1", content: "" },
+    { title: "Langkah 2", content: "" },
   ]);
 
   const toggleTag = (tag: string) => {
@@ -120,14 +120,14 @@ export default function ContentEditor() {
   const backPath = getBackPath(contentType);
   const TypeIcon = typeIcons[contentType];
 
-  const handleSave = () => toast.success("Draft saved successfully.");
-  const handlePublish = () => { toast.success(`${typeLabels[contentType]} published!`); navigate(backPath); };
-  const handleReject = () => { toast.success(`${typeLabels[contentType]} rejected.`); navigate(backPath); };
+  const handleSave = () => toast.success("Draft berhasil disimpan.");
+  const handlePublish = () => { toast.success(`${typeLabels[contentType]} berhasil dipublikasikan!`); navigate(backPath); };
+  const handleReject = () => { toast.success(`${typeLabels[contentType]} ditolak.`); navigate(backPath); };
 
   return (
     <div className="-m-7">
       {/* ═══ Top Bar ═══ */}
-      <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-surface px-6 py-3">
+      <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border/60 bg-surface px-6 py-3">
         <div className="flex items-center gap-4">
           <Link
             to={backPath}
@@ -141,35 +141,35 @@ export default function ContentEditor() {
               {typeLabels[contentType]}
             </span>
             <h2 className="text-[14px] font-semibold text-foreground">
-              {isNew ? `New ${typeLabels[contentType]}` : `Edit ${typeLabels[contentType]}`}
+              {isNew ? `${typeLabels[contentType]} Baru` : `Edit ${typeLabels[contentType]}`}
             </h2>
             {!isNew && <StatusBadge status={status} />}
           </div>
         </div>
         <div className="flex items-center gap-2.5">
-          <Button variant="ghost" size="sm" className="h-8 rounded-[10px] text-xs text-muted-foreground hover:text-foreground hover:bg-accent">
-            <Eye className="h-3.5 w-3.5 mr-1.5" strokeWidth={1.6} /> Preview
+          <Button variant="ghost" size="sm" className="h-8 rounded-[10px] text-xs text-muted-foreground hover:text-foreground hover:bg-accent gap-1.5">
+            <Eye className="h-3.5 w-3.5" strokeWidth={1.6} /> Preview
           </Button>
-          <Button variant="outline" size="sm" className="h-8 rounded-[10px] text-xs border-border" onClick={handleSave}>
-            <Save className="h-3.5 w-3.5 mr-1.5" strokeWidth={1.6} /> Save Draft
+          <Button variant="outline" size="sm" className="h-8 rounded-[10px] text-xs border-border gap-1.5" onClick={handleSave}>
+            <Save className="h-3.5 w-3.5" strokeWidth={1.6} /> Simpan Draft
           </Button>
-          <Button size="sm" className="h-8 rounded-[10px] text-xs bg-primary text-primary-foreground hover:bg-primary/90" onClick={handlePublish}>
-            <CheckCircle className="h-3.5 w-3.5 mr-1.5" strokeWidth={1.6} /> Publish
+          <Button size="sm" className="h-8 rounded-[10px] text-xs bg-primary text-primary-foreground hover:bg-primary/90 gap-1.5" onClick={handlePublish}>
+            <CheckCircle className="h-3.5 w-3.5" strokeWidth={1.6} /> Publikasikan
           </Button>
         </div>
       </div>
 
       {/* ═══ Two Column Layout ═══ */}
       <div className="flex gap-6 p-6">
-        {/* ─── LEFT: Content Area (65–70%) ─── */}
+        {/* ─── LEFT: Content Area ─── */}
         <div className="flex-1 min-w-0 space-y-5" style={{ maxWidth: "68%" }}>
-          {/* Title */}
-          <div className="rounded-xl border border-border bg-surface p-6 shadow-soft">
+          {/* Title Input */}
+          <div className="rounded-[12px] border border-border bg-surface p-6 shadow-card">
             <input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full bg-transparent text-xl font-semibold text-foreground placeholder:text-muted-foreground/40 placeholder:font-normal outline-none leading-relaxed"
-              placeholder={contentType === "faq" ? "Masukkan pertanyaan..." : "Masukkan judul..."}
+              className="w-full bg-transparent text-[22px] font-semibold text-foreground placeholder:text-muted-foreground/35 placeholder:font-normal outline-none leading-relaxed"
+              placeholder={contentType === "faq" ? "Masukkan pertanyaan..." : "Masukkan judul konten..."}
             />
             {(contentType === "blog" || contentType === "guide") && (
               <input
@@ -184,42 +184,45 @@ export default function ContentEditor() {
           {/* Video: YouTube Preview */}
           {contentType === "video" && video && (
             <>
-              <div className="rounded-xl overflow-hidden bg-foreground/5 aspect-video flex items-center justify-center border border-border">
+              <div className="rounded-[12px] overflow-hidden bg-muted aspect-video flex items-center justify-center border border-border">
                 <img src={video.thumbnail} alt="" className="w-full h-full object-cover" />
               </div>
-              <div className="rounded-xl border border-border bg-surface shadow-soft">
-                <div className="flex items-center gap-2 px-5 py-3.5 border-b border-border/60">
+              <div className="rounded-[12px] border border-border bg-surface shadow-card">
+                <div className="flex items-center gap-2 px-5 py-3.5 border-b border-border/50">
                   <Video className="h-3.5 w-3.5 text-muted-foreground" strokeWidth={1.6} />
-                  <h3 className="text-[12px] font-semibold text-foreground uppercase tracking-[0.06em]">YouTube Source</h3>
+                  <h3 className="text-[12px] font-semibold text-foreground uppercase tracking-[0.06em]">Sumber YouTube</h3>
                 </div>
                 <div className="p-5">
                   <div className="grid grid-cols-2 gap-x-6 gap-y-4">
                     <div>
-                      <p className="text-[11px] text-muted-foreground mb-1">Original Title</p>
+                      <p className="text-[11px] text-muted-foreground mb-1">Judul Asli</p>
                       <p className="text-[13px] text-foreground leading-snug">{video.title}</p>
                     </div>
                     <div>
-                      <p className="text-[11px] text-muted-foreground mb-1">Source Channel</p>
+                      <p className="text-[11px] text-muted-foreground mb-1">Channel Sumber</p>
                       <p className="text-[13px] text-foreground">{video.channel}</p>
                     </div>
                     <div>
-                      <p className="text-[11px] text-muted-foreground mb-1">Publish Date</p>
+                      <p className="text-[11px] text-muted-foreground mb-1">Tanggal Publish</p>
                       <p className="text-[13px] text-foreground tabular-nums">{video.publishDate}</p>
                     </div>
                     <div>
                       <p className="text-[11px] text-muted-foreground mb-1">AI Suggestion</p>
-                      <span className="inline-flex items-center rounded-full bg-primary/[0.07] px-2.5 py-[3px] text-[11px] font-medium text-primary">{video.aiSuggestion}</span>
+                      <span className="inline-flex items-center gap-1 rounded-full bg-primary/[0.07] px-2.5 py-[3px] text-[11px] font-medium text-primary">
+                        <Sparkles className="h-3 w-3" strokeWidth={1.8} />
+                        {video.aiSuggestion}
+                      </span>
                     </div>
                   </div>
                   {video.description && (
-                    <div className="mt-4 pt-4 border-t border-border/50">
-                      <p className="text-[11px] text-muted-foreground mb-1">Description</p>
+                    <div className="mt-4 pt-4 border-t border-border/40">
+                      <p className="text-[11px] text-muted-foreground mb-1">Deskripsi</p>
                       <p className="text-[13px] text-muted-foreground leading-relaxed">{video.description}</p>
                     </div>
                   )}
                   {video.youtubeUrl && (
                     <a href={video.youtubeUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 mt-4 text-[12px] text-primary hover:underline">
-                      <ExternalLink className="h-3 w-3" strokeWidth={1.6} /> View on YouTube
+                      <ExternalLink className="h-3 w-3" strokeWidth={1.6} /> Lihat di YouTube
                     </a>
                   )}
                 </div>
@@ -227,29 +230,29 @@ export default function ContentEditor() {
             </>
           )}
 
-          {/* Blog: Cover Image Upload */}
+          {/* Blog: Cover Image */}
           {contentType === "blog" && (
-            <div className="rounded-xl border border-border bg-surface p-6 shadow-soft space-y-3">
+            <div className="rounded-[12px] border border-border bg-surface p-6 shadow-card space-y-3">
               <p className="text-[11px] font-medium text-muted-foreground">Cover Image</p>
-              <div className="border border-dashed border-border/80 rounded-xl p-12 text-center hover:border-primary/30 transition-colors cursor-pointer group">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent mx-auto mb-3 group-hover:bg-primary/10 transition-colors">
+              <div className="border border-dashed border-border/70 rounded-[12px] p-12 text-center hover:border-primary/30 transition-colors cursor-pointer group">
+                <div className="flex h-10 w-10 items-center justify-center rounded-[10px] bg-accent mx-auto mb-3 group-hover:bg-primary/10 transition-colors">
                   <Image className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" strokeWidth={1.6} />
                 </div>
-                <p className="text-[13px] text-foreground font-medium">Click to upload or drag & drop</p>
-                <p className="text-[11px] text-muted-foreground mt-1">PNG, JPG up to 5MB · Recommended 1200×630</p>
+                <p className="text-[13px] text-foreground font-medium">Klik untuk upload atau drag & drop</p>
+                <p className="text-[11px] text-muted-foreground mt-1">PNG, JPG maks 5MB · Rekomendasi 1200×630</p>
               </div>
             </div>
           )}
 
           {/* FAQ: Answer */}
           {contentType === "faq" && (
-            <div className="rounded-xl border border-border bg-surface p-6 shadow-soft space-y-3">
-              <p className="text-[11px] font-medium text-muted-foreground">Answer</p>
+            <div className="rounded-[12px] border border-border bg-surface p-6 shadow-card space-y-3">
+              <p className="text-[11px] font-medium text-muted-foreground">Jawaban</p>
               <Textarea
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 rows={10}
-                className="rounded-[10px] resize-none text-[14px] border-border bg-surface leading-relaxed focus-visible:ring-1 focus-visible:ring-ring"
+                className="rounded-[10px] resize-none text-[14px] border-border bg-background leading-relaxed focus-visible:ring-1 focus-visible:ring-ring"
                 placeholder="Tulis jawaban FAQ di sini..."
               />
             </div>
@@ -257,26 +260,28 @@ export default function ContentEditor() {
 
           {/* Guide: Structured Steps */}
           {contentType === "guide" && (
-            <div className="rounded-xl border border-border bg-surface shadow-soft">
-              <div className="flex items-center justify-between px-5 py-3.5 border-b border-border/60">
+            <div className="rounded-[12px] border border-border bg-surface shadow-card">
+              <div className="flex items-center justify-between px-5 py-3.5 border-b border-border/50">
                 <div className="flex items-center gap-2">
                   <BookOpen className="h-3.5 w-3.5 text-muted-foreground" strokeWidth={1.6} />
-                  <h3 className="text-[12px] font-semibold text-foreground uppercase tracking-[0.06em]">Guide Steps</h3>
+                  <h3 className="text-[12px] font-semibold text-foreground uppercase tracking-[0.06em]">Langkah-langkah</h3>
                 </div>
                 <Button
                   size="sm"
                   variant="ghost"
-                  className="h-7 rounded-[8px] text-xs text-muted-foreground hover:text-foreground hover:bg-accent"
-                  onClick={() => setSteps([...steps, { title: `Step ${steps.length + 1}`, content: "" }])}
+                  className="h-7 rounded-[8px] text-xs text-muted-foreground hover:text-foreground hover:bg-accent gap-1"
+                  onClick={() => setSteps([...steps, { title: `Langkah ${steps.length + 1}`, content: "" }])}
                 >
-                  <Plus className="h-3 w-3 mr-1" strokeWidth={1.8} /> Add Step
+                  <Plus className="h-3 w-3" strokeWidth={1.8} /> Tambah
                 </Button>
               </div>
               <div className="p-5 space-y-3">
                 {steps.map((step, i) => (
-                  <div key={i} className="rounded-xl border border-border/60 bg-background p-4 space-y-2.5">
+                  <div key={i} className="rounded-[10px] border border-border/50 bg-background p-4 space-y-2.5">
                     <div className="flex items-center gap-3">
-                      <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground text-[11px] font-semibold shrink-0">{i + 1}</span>
+                      <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground text-[11px] font-semibold shrink-0">
+                        {i + 1}
+                      </span>
                       <input
                         value={step.title}
                         onChange={(e) => {
@@ -285,7 +290,7 @@ export default function ContentEditor() {
                           setSteps(s);
                         }}
                         className="flex-1 bg-transparent text-[14px] font-medium text-foreground outline-none placeholder:text-muted-foreground/40"
-                        placeholder="Step title..."
+                        placeholder="Judul langkah..."
                       />
                       {steps.length > 1 && (
                         <Button
@@ -306,8 +311,8 @@ export default function ContentEditor() {
                         setSteps(s);
                       }}
                       rows={3}
-                      className="rounded-[10px] resize-none text-[13px] border-border/60 bg-surface leading-relaxed focus-visible:ring-1 focus-visible:ring-ring"
-                      placeholder="Describe this step..."
+                      className="rounded-[10px] resize-none text-[13px] border-border/50 bg-surface leading-relaxed focus-visible:ring-1 focus-visible:ring-ring"
+                      placeholder="Jelaskan langkah ini..."
                     />
                   </div>
                 ))}
@@ -315,13 +320,13 @@ export default function ContentEditor() {
             </div>
           )}
 
-          {/* Blog / Video: Rich Text Content */}
+          {/* Rich Text Editor (blog, video) */}
           {(contentType === "blog" || contentType === "video") && (
-            <div className="rounded-xl border border-border bg-surface shadow-soft">
-              <div className="flex items-center gap-1.5 px-5 py-2.5 border-b border-border/60">
+            <div className="rounded-[12px] border border-border bg-surface shadow-card">
+              <div className="flex items-center gap-1.5 px-5 py-2.5 border-b border-border/50">
                 {["B", "I", "U", "H1", "H2", "—", "Link", "List", "Image", "Code"].map((btn, i) =>
                   btn === "—" ? (
-                    <div key={i} className="w-px h-5 bg-border/60 mx-1" />
+                    <div key={i} className="w-px h-5 bg-border/50 mx-1" />
                   ) : (
                     <button key={btn} className="px-2.5 py-1.5 text-[11px] font-medium text-muted-foreground hover:bg-accent hover:text-foreground rounded-[6px] transition-colors">
                       {btn}
@@ -341,17 +346,17 @@ export default function ContentEditor() {
             </div>
           )}
 
-          {/* Media Embed Area (blog, guide) */}
+          {/* Media Embed */}
           {(contentType === "blog" || contentType === "guide") && (
-            <div className="rounded-xl border border-dashed border-border/70 bg-surface/50 p-8 text-center hover:border-primary/25 transition-colors cursor-pointer group">
+            <div className="rounded-[12px] border border-dashed border-border/60 bg-surface/50 p-8 text-center hover:border-primary/25 transition-colors cursor-pointer group">
               <Video className="h-5 w-5 mx-auto text-muted-foreground/30 mb-2 group-hover:text-primary/40 transition-colors" strokeWidth={1.6} />
-              <p className="text-[12px] text-muted-foreground">Embed images, videos, or other media</p>
+              <p className="text-[12px] text-muted-foreground">Embed gambar, video, atau media lainnya</p>
             </div>
           )}
 
-          {/* Content Preview */}
-          <div className="rounded-xl border border-border bg-surface shadow-soft">
-            <div className="flex items-center gap-2 px-5 py-3.5 border-b border-border/60">
+          {/* Preview */}
+          <div className="rounded-[12px] border border-border bg-surface shadow-card">
+            <div className="flex items-center gap-2 px-5 py-3.5 border-b border-border/50">
               <Eye className="h-3.5 w-3.5 text-muted-foreground" strokeWidth={1.6} />
               <h3 className="text-[12px] font-semibold text-foreground uppercase tracking-[0.06em]">Preview</h3>
             </div>
@@ -363,104 +368,104 @@ export default function ContentEditor() {
                   <p className="text-[14px] text-foreground/80 leading-relaxed whitespace-pre-wrap">{content || ""}</p>
                 </>
               ) : (
-                <p className="text-[13px] text-muted-foreground/50 italic">Preview will appear here as you write...</p>
+                <p className="text-[13px] text-muted-foreground/50 italic">Preview akan muncul saat Anda menulis...</p>
               )}
             </div>
           </div>
         </div>
 
-        {/* ─── RIGHT: Metadata Sidebar (30–35%) ─── */}
+        {/* ─── RIGHT: Metadata Sidebar ─── */}
         <div className="w-[320px] shrink-0 space-y-4 lg:sticky lg:top-[56px] lg:self-start">
-          {/* Status & Publishing */}
-          <SidebarCard title="Publishing" icon={CheckCircle}>
+          {/* Publishing */}
+          <SidebarCard title="Status & Publikasi" icon={CheckCircle}>
             <Field label="Status">
               <Select value={status} onValueChange={setStatus}>
-                <SelectTrigger className="rounded-[10px] h-9 text-[13px] border-border bg-surface"><SelectValue /></SelectTrigger>
+                <SelectTrigger className="rounded-[10px] h-9 text-[13px] border-border bg-background"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="draft">Draft</SelectItem>
-                  <SelectItem value="need_review">Need Review</SelectItem>
-                  <SelectItem value="published">Published</SelectItem>
-                  <SelectItem value="rejected">Rejected</SelectItem>
-                  <SelectItem value="archived">Archived</SelectItem>
+                  <SelectItem value="need_review">Perlu Review</SelectItem>
+                  <SelectItem value="published">Dipublikasikan</SelectItem>
+                  <SelectItem value="rejected">Ditolak</SelectItem>
+                  <SelectItem value="archived">Diarsipkan</SelectItem>
                 </SelectContent>
               </Select>
             </Field>
             <div className="space-y-2 pt-1">
               <ToggleRow label="Publish" checked={publishToggle} onChange={setPublishToggle} />
-              <ToggleRow label="Featured" checked={featured} onChange={setFeatured} />
+              <ToggleRow label="Unggulan" checked={featured} onChange={setFeatured} />
               {contentType === "video" && (
-                <ToggleRow label="Show on Homepage" checked={showOnHomepage} onChange={setShowOnHomepage} />
+                <ToggleRow label="Tampilkan di Beranda" checked={showOnHomepage} onChange={setShowOnHomepage} />
               )}
               {contentType === "faq" && (
-                <ToggleRow label="Pinned" checked={pinned} onChange={setPinned} hint="Show at top of FAQ list" />
+                <ToggleRow label="Sematkan" checked={pinned} onChange={setPinned} hint="Tampilkan di atas daftar FAQ" />
               )}
             </div>
-            <Field label="Schedule Publish" hint="Leave empty to publish immediately">
+            <Field label="Jadwal Publikasi" hint="Kosongkan untuk publish langsung">
               <div className="relative">
                 <Calendar className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" strokeWidth={1.6} />
-                <Input type="date" className="pl-9 rounded-[10px] h-9 text-[13px] border-border bg-surface" />
+                <Input type="date" className="pl-9 rounded-[10px] h-9 text-[13px] border-border bg-background" />
               </div>
             </Field>
           </SidebarCard>
 
           {/* Blog: Author */}
           {contentType === "blog" && (
-            <SidebarCard title="Author" icon={Users}>
-              <Field label="Author Name">
-                <Input value={author} onChange={(e) => setAuthor(e.target.value)} className="rounded-[10px] h-9 text-[13px] border-border bg-surface" placeholder="Nama penulis..." />
+            <SidebarCard title="Penulis" icon={Users}>
+              <Field label="Nama Penulis">
+                <Input value={author} onChange={(e) => setAuthor(e.target.value)} className="rounded-[10px] h-9 text-[13px] border-border bg-background" placeholder="Nama penulis..." />
               </Field>
-              <Field label="Excerpt" hint="Short excerpt for listing pages">
-                <Textarea value={summary} onChange={(e) => setSummary(e.target.value)} rows={2} className="rounded-[10px] resize-none text-[13px] border-border bg-surface leading-relaxed" placeholder="Ringkasan singkat..." />
+              <Field label="Kutipan" hint="Ringkasan singkat untuk halaman listing">
+                <Textarea value={summary} onChange={(e) => setSummary(e.target.value)} rows={2} className="rounded-[10px] resize-none text-[13px] border-border bg-background leading-relaxed" placeholder="Ringkasan singkat..." />
               </Field>
             </SidebarCard>
           )}
 
-          {/* FAQ: Additional Fields */}
+          {/* FAQ Settings */}
           {contentType === "faq" && (
-            <SidebarCard title="FAQ Settings" icon={Hash}>
-              <Field label="Display Order">
-                <Input type="number" defaultValue={faq?.order || 1} className="rounded-[10px] h-9 text-[13px] border-border bg-surface tabular-nums" />
+            <SidebarCard title="Pengaturan FAQ" icon={Hash}>
+              <Field label="Urutan Tampil">
+                <Input type="number" defaultValue={faq?.order || 1} className="rounded-[10px] h-9 text-[13px] border-border bg-background tabular-nums" />
               </Field>
             </SidebarCard>
           )}
 
-          {/* Guide: Additional Fields */}
+          {/* Guide Settings */}
           {contentType === "guide" && (
-            <SidebarCard title="Guide Settings" icon={Clock}>
-              <Field label="Estimated Reading Time">
-                <Input placeholder="e.g. 5 menit" className="rounded-[10px] h-9 text-[13px] border-border bg-surface" />
+            <SidebarCard title="Pengaturan Panduan" icon={Clock}>
+              <Field label="Estimasi Waktu Baca">
+                <Input placeholder="misal: 5 menit" className="rounded-[10px] h-9 text-[13px] border-border bg-background" />
               </Field>
-              <Field label="Difficulty Level">
+              <Field label="Tingkat Kesulitan">
                 <Select value={difficulty} onValueChange={setDifficulty}>
-                  <SelectTrigger className="rounded-[10px] h-9 text-[13px] border-border bg-surface"><SelectValue /></SelectTrigger>
+                  <SelectTrigger className="rounded-[10px] h-9 text-[13px] border-border bg-background"><SelectValue /></SelectTrigger>
                   <SelectContent>
                     {difficulties.map(d => <SelectItem key={d} value={d}>{d}</SelectItem>)}
                   </SelectContent>
                 </Select>
               </Field>
               <div className="flex items-center gap-3 pt-1">
-                <span className="text-[11px] text-muted-foreground">Helpful?</span>
+                <span className="text-[11px] text-muted-foreground">Apakah membantu?</span>
                 <button className="flex items-center gap-1 text-[11px] text-muted-foreground hover:text-primary transition-colors">
-                  <ThumbsUp className="h-3.5 w-3.5" strokeWidth={1.6} /> Yes
+                  <ThumbsUp className="h-3.5 w-3.5" strokeWidth={1.6} /> Ya
                 </button>
                 <button className="flex items-center gap-1 text-[11px] text-muted-foreground hover:text-destructive transition-colors">
-                  <ThumbsDown className="h-3.5 w-3.5" strokeWidth={1.6} /> No
+                  <ThumbsDown className="h-3.5 w-3.5" strokeWidth={1.6} /> Tidak
                 </button>
               </div>
             </SidebarCard>
           )}
 
-          {/* Categorization */}
-          <SidebarCard title="Categorization" icon={Hash}>
-            <Field label="Category">
+          {/* Kategorisasi */}
+          <SidebarCard title="Kategorisasi" icon={Hash}>
+            <Field label="Kategori">
               <Select value={category} onValueChange={setCategory}>
-                <SelectTrigger className="rounded-[10px] h-9 text-[13px] border-border bg-surface"><SelectValue placeholder="Select category" /></SelectTrigger>
+                <SelectTrigger className="rounded-[10px] h-9 text-[13px] border-border bg-background"><SelectValue placeholder="Pilih kategori" /></SelectTrigger>
                 <SelectContent>
                   {categories.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
                 </SelectContent>
               </Select>
             </Field>
-            <Field label="Tags">
+            <Field label="Tag">
               <div className="flex flex-wrap gap-1.5">
                 {allTags.map((t) => (
                   <button
@@ -479,11 +484,11 @@ export default function ContentEditor() {
             </Field>
           </SidebarCard>
 
-          {/* Relations */}
-          <SidebarCard title="Relations" icon={Link2}>
-            <Field label="Related Product">
+          {/* Relasi */}
+          <SidebarCard title="Relasi" icon={Link2}>
+            <Field label="Produk Terkait">
               <Select value={product} onValueChange={setProduct}>
-                <SelectTrigger className="rounded-[10px] h-9 text-[13px] border-border bg-surface"><SelectValue placeholder="Select product" /></SelectTrigger>
+                <SelectTrigger className="rounded-[10px] h-9 text-[13px] border-border bg-background"><SelectValue placeholder="Pilih produk" /></SelectTrigger>
                 <SelectContent>
                   {products.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}
                 </SelectContent>
@@ -491,53 +496,63 @@ export default function ContentEditor() {
             </Field>
             <Field label="Audience">
               <Select value={audience} onValueChange={setAudience}>
-                <SelectTrigger className="rounded-[10px] h-9 text-[13px] border-border bg-surface"><SelectValue placeholder="Select audience" /></SelectTrigger>
+                <SelectTrigger className="rounded-[10px] h-9 text-[13px] border-border bg-background"><SelectValue placeholder="Pilih audience" /></SelectTrigger>
                 <SelectContent>
                   {audiences.map((a) => <SelectItem key={a} value={a}>{a}</SelectItem>)}
                 </SelectContent>
               </Select>
             </Field>
-            <Field label="Organization Level">
+            <Field label="Level Organisasi">
               <Select value={orgLevel} onValueChange={setOrgLevel}>
-                <SelectTrigger className="rounded-[10px] h-9 text-[13px] border-border bg-surface"><SelectValue placeholder="Select level" /></SelectTrigger>
+                <SelectTrigger className="rounded-[10px] h-9 text-[13px] border-border bg-background"><SelectValue placeholder="Pilih level" /></SelectTrigger>
                 <SelectContent>
                   {orgLevels.map((l) => <SelectItem key={l} value={l}>{l}</SelectItem>)}
                 </SelectContent>
               </Select>
             </Field>
-            <Field label="Related Content">
-              <Input placeholder="Search related content..." className="rounded-[10px] h-9 text-[13px] border-border bg-surface" />
+            <Field label="Konten Terkait">
+              <Input placeholder="Cari konten terkait..." className="rounded-[10px] h-9 text-[13px] border-border bg-background" />
             </Field>
           </SidebarCard>
 
-          {/* Editor Notes */}
-          <SidebarCard title="Notes" icon={FileText}>
-            <Field label="Editor Notes" hint="Internal only — not visible to users">
-              <Textarea value={editorNotes} onChange={(e) => setEditorNotes(e.target.value)} rows={2} className="rounded-[10px] resize-none text-[13px] border-border bg-surface leading-relaxed" placeholder="Internal notes..." />
+          {/* Media */}
+          <SidebarCard title="Media" icon={Image}>
+            <Field label="Thumbnail">
+              <div className="border border-dashed border-border/60 rounded-[10px] p-6 text-center hover:border-primary/25 transition-colors cursor-pointer group">
+                <Image className="h-5 w-5 mx-auto text-muted-foreground/40 mb-1.5 group-hover:text-primary/50 transition-colors" strokeWidth={1.6} />
+                <p className="text-[11px] text-muted-foreground">Upload thumbnail</p>
+              </div>
+            </Field>
+          </SidebarCard>
+
+          {/* Catatan */}
+          <SidebarCard title="Catatan" icon={FileText}>
+            <Field label="Catatan Editor" hint="Internal — tidak terlihat oleh pengguna">
+              <Textarea value={editorNotes} onChange={(e) => setEditorNotes(e.target.value)} rows={2} className="rounded-[10px] resize-none text-[13px] border-border bg-background leading-relaxed" placeholder="Catatan internal..." />
             </Field>
             {contentType === "video" && (
-              <Field label="Reject Reason">
-                <Input value={rejectReason} onChange={(e) => setRejectReason(e.target.value)} placeholder="Reason if rejecting..." className="rounded-[10px] h-9 text-[13px] border-border bg-surface" />
+              <Field label="Alasan Penolakan">
+                <Input value={rejectReason} onChange={(e) => setRejectReason(e.target.value)} placeholder="Alasan jika ditolak..." className="rounded-[10px] h-9 text-[13px] border-border bg-background" />
               </Field>
             )}
           </SidebarCard>
 
           {/* Action Buttons */}
-          <div className="rounded-xl border border-border bg-surface shadow-soft p-4 space-y-2.5">
+          <div className="rounded-[12px] border border-border bg-surface shadow-card p-4 space-y-2.5">
             <div className="flex gap-2">
-              <Button variant="outline" className="flex-1 h-9 rounded-[10px] text-xs border-border" onClick={handleSave}>
-                <Save className="h-3.5 w-3.5 mr-1.5" strokeWidth={1.6} /> Save Draft
+              <Button variant="outline" className="flex-1 h-9 rounded-[10px] text-xs border-border gap-1.5" onClick={handleSave}>
+                <Save className="h-3.5 w-3.5" strokeWidth={1.6} /> Simpan Draft
               </Button>
-              <Button className="flex-1 h-9 rounded-[10px] text-xs bg-primary text-primary-foreground hover:bg-primary/90" onClick={handlePublish}>
-                <CheckCircle className="h-3.5 w-3.5 mr-1.5" strokeWidth={1.6} /> Publish
+              <Button className="flex-1 h-9 rounded-[10px] text-xs bg-primary text-primary-foreground hover:bg-primary/90 gap-1.5" onClick={handlePublish}>
+                <CheckCircle className="h-3.5 w-3.5" strokeWidth={1.6} /> Publikasikan
               </Button>
             </div>
             <Button
               variant="ghost"
-              className="w-full h-9 rounded-[10px] text-xs text-destructive hover:bg-status-danger-bg hover:text-status-danger-fg"
+              className="w-full h-9 rounded-[10px] text-xs text-destructive hover:bg-status-danger-bg hover:text-status-danger-fg gap-1.5"
               onClick={handleReject}
             >
-              <XCircle className="h-3.5 w-3.5 mr-1.5" strokeWidth={1.6} /> Reject
+              <XCircle className="h-3.5 w-3.5" strokeWidth={1.6} /> Tolak
             </Button>
           </div>
         </div>
