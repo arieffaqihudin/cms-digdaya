@@ -1,11 +1,11 @@
-import { ReactNode, useState, useEffect } from "react";
+import { ReactNode, useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard, Video, FileText, HelpCircle, PenSquare,
   FolderTree, Tag, Package, Tv2, FileClock, CheckCircle,
   Archive, Search, Bell, ChevronLeft, Menu, User, LogOut,
   CalendarClock, X, Shield, Users, Activity, ImageIcon,
-  BookOpen,
+  BookOpen, ChevronDown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
