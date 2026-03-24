@@ -88,6 +88,9 @@ const AppRoutes = () => {
                 <Route path="/repository" element={<RepositoryPage />} />
                 <Route path="/repository/new" element={<RepositoryFormPage />} />
                 <Route path="/repository/:id" element={<RepositoryFormPage />} />
+                <Route path="/banner" element={<BannerPage />} />
+                <Route path="/banner/new" element={<BannerFormPage />} />
+                <Route path="/banner/:id" element={<BannerFormPage />} />
                 <Route path="/faq" element={<FAQPage />} />
                 <Route path="/faq/new" element={<FAQFormPage />} />
                 <Route path="/content/:id" element={<ContentEditor />} />
