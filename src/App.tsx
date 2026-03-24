@@ -23,6 +23,8 @@ import FAQFormPage from "@/pages/FAQFormPage";
 import FAQCategoryFormPage from "@/pages/FAQCategoryFormPage";
 import FAQCategoryPage from "@/pages/FAQCategoryPage";
 import LoginPage from "@/pages/LoginPage";
+import ForgotPasswordPage from "@/pages/ForgotPasswordPage";
+import ResetPasswordPage from "@/pages/ResetPasswordPage";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
