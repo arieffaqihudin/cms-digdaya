@@ -15,6 +15,7 @@ import ArchivedContent from "@/pages/ArchivedContent";
 import DraftsPage from "@/pages/DraftsPage";
 import TaxonomyPage from "@/pages/TaxonomyPage";
 import PlaceholderPage from "@/pages/PlaceholderPage";
+import MediaLibrary from "@/pages/MediaLibrary";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -45,7 +46,7 @@ const App = () => (
                   <Route path="/tags" element={<TaxonomyPage defaultTab="tags" />} />
                   <Route path="/products" element={<TaxonomyPage defaultTab="products" />} />
                   <Route path="/channels" element={<TaxonomyPage defaultTab="channels" />} />
-                  <Route path="/media" element={<PlaceholderPage title="Media Library" />} />
+                  <Route path="/media" element={<MediaLibrary />} />
                   <Route path="/settings" element={<PlaceholderPage title="Pengaturan" />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
