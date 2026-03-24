@@ -105,7 +105,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
         <img
           src="https://play-lh.googleusercontent.com/kfeQ0QFBny3AVurQ9r_CSBJyCfceAymEBlh9t6SIU_lZX0tH7WqYaTN7NHqrKGoQGNFEc3y8nj-iyw6IxqbEug=w480-h960-rw"
           alt="Digdaya Logo"
-          className="h-9 w-9 shrink-0 rounded-[10px] object-contain"
+          className="h-8 w-8 shrink-0 rounded-[8px] object-contain"
         />
         {showLabels && (
           <div className="overflow-hidden">
