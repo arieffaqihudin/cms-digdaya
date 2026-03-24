@@ -40,12 +40,13 @@ const App = () => (
                   <Route path="/published" element={<PublishedContent />} />
                   <Route path="/archived" element={<ArchivedContent />} />
                   <Route path="/drafts" element={<DraftsPage />} />
+                  <Route path="/scheduled" element={<ScheduledPage />} />
                   <Route path="/categories" element={<TaxonomyPage defaultTab="categories" />} />
                   <Route path="/tags" element={<TaxonomyPage defaultTab="tags" />} />
                   <Route path="/products" element={<TaxonomyPage defaultTab="products" />} />
                   <Route path="/channels" element={<TaxonomyPage defaultTab="channels" />} />
                   <Route path="/media" element={<PlaceholderPage title="Media Library" />} />
-                  <Route path="/settings" element={<PlaceholderPage title="Settings" />} />
+                  <Route path="/settings" element={<PlaceholderPage title="Pengaturan" />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </AppLayout>
