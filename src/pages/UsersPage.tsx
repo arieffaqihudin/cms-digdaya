@@ -424,9 +424,9 @@ export default function UsersPage() {
       <Dialog open={modalOpen} onOpenChange={(v) => { if (!v) { setModalOpen(false); resetForm(); } else setModalOpen(true); }}>
         <DialogContent className="max-w-[640px] max-h-[92vh] flex flex-col rounded-[12px] border-border p-0 gap-0">
           <DialogHeader className="px-6 pt-5 pb-4 border-b border-border/60">
-            <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-[0.08em]">
-              {editingId ? "Edit" : "Tambah"}
-            </p>
+             <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-[0.08em]">
+               {editingId ? "Ubah" : "Tambah"}
+             </p>
             <DialogTitle className="text-[16px] font-semibold text-foreground mt-0.5">
               {editingId ? "Edit Pengguna" : "Tambah Pengguna"}
             </DialogTitle>
