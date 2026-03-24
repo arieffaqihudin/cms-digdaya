@@ -196,10 +196,24 @@ export default function UsersPage() {
     toast.success("Pengguna berhasil dihapus");
   };
 
-  const toggleStatus = (id: string) => {
+  // Toggle confirmation state
+  const [toggleTarget, setToggleTarget] = useState<{ id: string; currentActive: boolean } | null>(null);
+
+  const requestToggle = (id: string, currentActive: boolean) => {
+    setToggleTarget({ id, currentActive });
+  };
+
+  const confirmToggle = () => {
+    if (!toggleTarget) return;
     setUsers((prev) =>
-      prev.map((u) => (u.id === id ? { ...u, isActive: !u.isActive } : u))
+      prev.map((u) => (u.id === toggleTarget.id ? { ...u, isActive: !u.isActive } : u))
     );
+    if (toggleTarget.currentActive) {
+      toast.success("Pengguna berhasil dinonaktifkan.");
+    } else {
+      toast.success("Pengguna berhasil diaktifkan. Email verifikasi telah dikirim.");
+    }
+    setToggleTarget(null);
   };
 
   // ─── Filter selects ──────────────────────────────────────────────
@@ -327,7 +341,7 @@ export default function UsersPage() {
                   <p><span className="font-medium text-foreground/70">Kepengurusan:</span> {u.kepengurusan}</p>
                   <p><span className="font-medium text-foreground/70">Grup:</span> {u.grupPengguna}</p>
                   <div className="flex items-center gap-2 pt-1">
-                    <Switch checked={u.isActive} onCheckedChange={() => toggleStatus(u.id)} className="scale-[0.8]" />
+                    <Switch checked={u.isActive} onCheckedChange={() => requestToggle(u.id, u.isActive)} className="scale-[0.8]" />
                     <span className={cn("text-[10px] font-medium", u.isActive ? "text-[hsl(var(--status-success-fg))]" : "text-muted-foreground")}>
                       {u.isActive ? "Aktif" : "Nonaktif"}
                     </span>
@@ -364,7 +378,7 @@ export default function UsersPage() {
                       <span className="inline-flex rounded-full bg-primary/[0.07] px-2.5 py-[3px] text-[11px] font-medium text-primary">{u.grupPengguna}</span>
                     </td>
                     <td className="px-4 md:px-5 py-4">
-                      <Switch checked={u.isActive} onCheckedChange={() => toggleStatus(u.id)} />
+                      <Switch checked={u.isActive} onCheckedChange={() => requestToggle(u.id, u.isActive)} />
                     </td>
                     <td className="px-4 md:px-5 py-4">
                       <DropdownMenu>
@@ -642,6 +656,31 @@ export default function UsersPage() {
             <AlertDialogCancel className="h-9 rounded-[10px] text-[13px]">Batal</AlertDialogCancel>
             <AlertDialogAction className="h-9 rounded-[10px] text-[13px] bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={handleDelete}>
               Hapus
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Toggle status confirmation */}
+      <AlertDialog open={!!toggleTarget} onOpenChange={(v) => { if (!v) setToggleTarget(null); }}>
+        <AlertDialogContent className="rounded-[12px] border-border">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-[15px]">
+              {toggleTarget?.currentActive ? "Nonaktifkan Pengguna?" : "Aktifkan Pengguna?"}
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-[13px]">
+              {toggleTarget?.currentActive
+                ? "Pengguna tidak akan dapat mengakses sistem. Lanjutkan?"
+                : "Pengguna akan diaktifkan dan sistem akan mengirim email verifikasi ke alamat email pengguna tersebut. Lanjutkan?"}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="h-9 rounded-[10px] text-[13px]">Batal</AlertDialogCancel>
+            <AlertDialogAction
+              className="h-9 rounded-[10px] text-[13px] bg-primary text-primary-foreground hover:bg-primary/90"
+              onClick={confirmToggle}
+            >
+              {toggleTarget?.currentActive ? "Nonaktifkan" : "Aktifkan"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
