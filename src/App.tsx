@@ -21,6 +21,7 @@ import PanduanFormPage from "@/pages/PanduanFormPage";
 import ProductFormPage from "@/pages/ProductFormPage";
 import FAQFormPage from "@/pages/FAQFormPage";
 import FAQCategoryFormPage from "@/pages/FAQCategoryFormPage";
+import FAQCategoryPage from "@/pages/FAQCategoryPage";
 import LoginPage from "@/pages/LoginPage";
 import NotFound from "@/pages/NotFound";
 
