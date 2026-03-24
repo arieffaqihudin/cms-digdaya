@@ -9,8 +9,10 @@ import BlogPage from "@/pages/BlogPage";
 import PanduanPage from "@/pages/PanduanPage";
 import FAQPage from "@/pages/FAQPage";
 import ContentEditor from "@/pages/ContentEditor";
-import PublishedVideos from "@/pages/PublishedVideos";
-import RejectedVideos from "@/pages/RejectedVideos";
+import PublishedContent from "@/pages/PublishedContent";
+import ArchivedContent from "@/pages/ArchivedContent";
+import DraftsPage from "@/pages/DraftsPage";
+import TaxonomyPage from "@/pages/TaxonomyPage";
 import PlaceholderPage from "@/pages/PlaceholderPage";
 import NotFound from "@/pages/NotFound";
 
@@ -34,14 +36,14 @@ const App = () => (
                   <Route path="/panduan" element={<PanduanPage />} />
                   <Route path="/faq" element={<FAQPage />} />
                   <Route path="/content/:id" element={<ContentEditor />} />
-                  <Route path="/published" element={<PublishedVideos />} />
-                  <Route path="/archived" element={<RejectedVideos />} />
-                  <Route path="/categories" element={<PlaceholderPage title="Categories" />} />
-                  <Route path="/channels" element={<PlaceholderPage title="Channels" />} />
-                  <Route path="/tags" element={<PlaceholderPage title="Tags" />} />
-                  <Route path="/products" element={<PlaceholderPage title="Products" />} />
+                  <Route path="/published" element={<PublishedContent />} />
+                  <Route path="/archived" element={<ArchivedContent />} />
+                  <Route path="/drafts" element={<DraftsPage />} />
+                  <Route path="/categories" element={<TaxonomyPage defaultTab="categories" />} />
+                  <Route path="/tags" element={<TaxonomyPage defaultTab="tags" />} />
+                  <Route path="/products" element={<TaxonomyPage defaultTab="products" />} />
+                  <Route path="/channels" element={<TaxonomyPage defaultTab="channels" />} />
                   <Route path="/media" element={<PlaceholderPage title="Media Library" />} />
-                  <Route path="/drafts" element={<PlaceholderPage title="Drafts" />} />
                   <Route path="/settings" element={<PlaceholderPage title="Settings" />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
