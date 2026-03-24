@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Search, Plus, Edit, Trash2, Tv2 } from "lucide-react";
+import { Search, Plus, Pencil, Trash2, Tv2 } from "lucide-react";
 import { channels } from "@/lib/mock-data";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -74,9 +74,13 @@ export default function ChannelPage() {
                     </span>
                   </div>
                 </div>
-                <div className="flex items-center gap-0.5 shrink-0">
-                  <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground hover:bg-accent"><Edit className="h-3.5 w-3.5" strokeWidth={1.6} /></Button>
-                  <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive hover:bg-destructive/10"><Trash2 className="h-3.5 w-3.5" strokeWidth={1.6} /></Button>
+                <div className="flex items-center gap-1 shrink-0">
+                  <Button size="sm" variant="ghost" className="h-8 rounded-[8px] text-xs text-muted-foreground hover:text-foreground hover:bg-accent gap-1">
+                    <Pencil className="h-3.5 w-3.5" strokeWidth={1.6} /> Ubah
+                  </Button>
+                  <Button size="sm" variant="ghost" className="h-8 rounded-[8px] text-xs text-muted-foreground hover:text-destructive hover:bg-destructive/10 gap-1">
+                    <Trash2 className="h-3.5 w-3.5" strokeWidth={1.6} /> Hapus
+                  </Button>
                 </div>
               </div>
             ))}
@@ -108,9 +112,13 @@ export default function ChannelPage() {
                     </span>
                   </td>
                   <td className="px-4 md:px-5 py-4 text-right">
-                    <div className="flex items-center justify-end gap-0.5">
-                      <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground hover:bg-accent"><Edit className="h-3.5 w-3.5" strokeWidth={1.6} /></Button>
-                      <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive hover:bg-destructive/10"><Trash2 className="h-3.5 w-3.5" strokeWidth={1.6} /></Button>
+                    <div className="flex items-center justify-end gap-2">
+                      <button className="inline-flex items-center gap-1 text-[12px] font-medium text-primary hover:text-primary/80 transition-colors">
+                        <Pencil className="h-3 w-3" strokeWidth={1.6} /> Ubah
+                      </button>
+                      <button className="inline-flex items-center gap-1 text-[12px] font-medium text-muted-foreground hover:text-destructive transition-colors">
+                        <Trash2 className="h-3 w-3" strokeWidth={1.6} /> Hapus
+                      </button>
                     </div>
                   </td>
                 </tr>

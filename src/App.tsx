@@ -33,6 +33,8 @@ import FAQCategoryFormPage from "@/pages/FAQCategoryFormPage";
 import FAQCategoryPage from "@/pages/FAQCategoryPage";
 import DocCategoryPage from "@/pages/DocCategoryPage";
 import DocCategoryFormPage from "@/pages/DocCategoryFormPage";
+import VideoCategoryPage from "@/pages/VideoCategoryPage";
+import VideoCategoryFormPage from "@/pages/VideoCategoryFormPage";
 import LoginPage from "@/pages/LoginPage";
 import ForgotPasswordPage from "@/pages/ForgotPasswordPage";
 import ResetPasswordPage from "@/pages/ResetPasswordPage";
@@ -112,6 +114,9 @@ const AppRoutes = () => {
                 <Route path="/categories/dokumen" element={<DocCategoryPage />} />
                 <Route path="/categories/dokumen/new" element={<DocCategoryFormPage />} />
                 <Route path="/categories/dokumen/:id" element={<DocCategoryFormPage />} />
+                <Route path="/categories/video" element={<VideoCategoryPage />} />
+                <Route path="/categories/video/new" element={<VideoCategoryFormPage />} />
+                <Route path="/categories/video/:id" element={<VideoCategoryFormPage />} />
                 <Route path="/tags" element={<TagPage />} />
                 <Route path="/products" element={<ProdukPage />} />
                 <Route path="/products/new" element={<ProductFormPage />} />

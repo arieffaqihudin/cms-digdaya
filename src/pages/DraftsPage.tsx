@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Search, Edit } from "lucide-react";
+import { Search, Pencil } from "lucide-react";
 import { mockVideos, mockBlogs, mockGuides, mockFAQs } from "@/lib/mock-data";
 import StatusBadge from "@/components/StatusBadge";
 import Pagination from "@/components/Pagination";
@@ -75,8 +75,8 @@ export default function DraftsPage() {
                     <td className="px-4 md:px-5 py-4"><StatusBadge status={item.status} /></td>
                     <td className="px-4 md:px-5 py-4 text-right">
                       <Link to={item.editUrl}>
-                        <Button size="sm" variant="ghost" className="h-8 rounded-[8px] text-xs text-muted-foreground hover:text-foreground hover:bg-accent">
-                          <Edit className="h-3.5 w-3.5 mr-1" strokeWidth={1.6} /> <span className="hidden md:inline">Edit</span>
+                        <Button size="sm" variant="ghost" className="h-8 rounded-[8px] text-xs text-muted-foreground hover:text-foreground hover:bg-accent gap-1.5">
+                          <Pencil className="h-3.5 w-3.5" strokeWidth={1.6} /> <span className="hidden md:inline">Ubah</span>
                         </Button>
                       </Link>
                     </td>

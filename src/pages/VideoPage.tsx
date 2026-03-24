@@ -244,7 +244,7 @@ export default function VideoPage() {
                         <Link to={`/video/${v.id}`}>
                           <Button size="sm" variant="ghost" className="h-8 rounded-[8px] text-xs text-muted-foreground hover:text-foreground hover:bg-accent gap-1.5">
                             <Eye className="h-3.5 w-3.5" strokeWidth={1.6} />
-                            <span className="hidden md:inline">Review</span>
+                            <span className="hidden md:inline">Lihat</span>
                           </Button>
                         </Link>
                       </td>

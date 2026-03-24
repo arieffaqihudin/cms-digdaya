@@ -314,7 +314,7 @@ export default function UsersPage() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="rounded-[10px]">
                       <DropdownMenuItem onClick={() => openEdit(u)} className="gap-2 text-[13px]">
-                        <Pencil className="h-3.5 w-3.5" /> Edit
+                        <Pencil className="h-3.5 w-3.5" /> Ubah
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => setDeleteId(u.id)} className="gap-2 text-[13px] text-destructive focus:text-destructive">
                         <Trash2 className="h-3.5 w-3.5" /> Hapus
@@ -375,7 +375,7 @@ export default function UsersPage() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="rounded-[10px]">
                           <DropdownMenuItem onClick={() => openEdit(u)} className="gap-2 text-[13px]">
-                            <Pencil className="h-3.5 w-3.5" /> Edit
+                            <Pencil className="h-3.5 w-3.5" /> Ubah
                           </DropdownMenuItem>
                           <DropdownMenuItem onClick={() => setDeleteId(u.id)} className="gap-2 text-[13px] text-destructive focus:text-destructive">
                             <Trash2 className="h-3.5 w-3.5" /> Hapus
@@ -424,11 +424,11 @@ export default function UsersPage() {
       <Dialog open={modalOpen} onOpenChange={(v) => { if (!v) { setModalOpen(false); resetForm(); } else setModalOpen(true); }}>
         <DialogContent className="max-w-[640px] max-h-[92vh] flex flex-col rounded-[12px] border-border p-0 gap-0">
           <DialogHeader className="px-6 pt-5 pb-4 border-b border-border/60">
-            <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-[0.08em]">
-              {editingId ? "Edit" : "Tambah"}
-            </p>
+             <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-[0.08em]">
+               {editingId ? "Ubah" : "Tambah"}
+             </p>
             <DialogTitle className="text-[16px] font-semibold text-foreground mt-0.5">
-              {editingId ? "Edit Pengguna" : "Tambah Pengguna"}
+              {editingId ? "Ubah Pengguna" : "Tambah Pengguna"}
             </DialogTitle>
             {/* Step indicator */}
             <div className="flex items-center gap-3 mt-4">
