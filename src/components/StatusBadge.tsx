@@ -6,6 +6,7 @@ const statusConfig: Record<string, { label: string; dot: string; className: stri
   rejected: { label: "Rejected", dot: "bg-status-danger-fg", className: "bg-status-danger-bg text-status-danger-fg" },
   draft: { label: "Draft", dot: "bg-muted-foreground/50", className: "bg-muted text-muted-foreground" },
   archived: { label: "Archived", dot: "bg-muted-foreground/40", className: "bg-muted text-muted-foreground" },
+  scheduled: { label: "Terjadwal", dot: "bg-status-info-fg", className: "bg-status-info-bg text-status-info-fg" },
 };
 
 export default function StatusBadge({ status }: { status: string }) {
