@@ -18,6 +18,7 @@ import PlaceholderPage from "@/pages/PlaceholderPage";
 import MediaLibrary from "@/pages/MediaLibrary";
 import PanduanFormPage from "@/pages/PanduanFormPage";
 import ProductFormPage from "@/pages/ProductFormPage";
+import FAQFormPage from "@/pages/FAQFormPage";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -40,6 +41,7 @@ const App = () => (
                   <Route path="/panduan" element={<PanduanPage />} />
                   <Route path="/panduan/new" element={<PanduanFormPage />} />
                   <Route path="/faq" element={<FAQPage />} />
+                  <Route path="/faq/new" element={<FAQFormPage />} />
                   <Route path="/content/:id" element={<ContentEditor />} />
                   <Route path="/published" element={<PublishedContent />} />
                   <Route path="/archived" element={<ArchivedContent />} />
