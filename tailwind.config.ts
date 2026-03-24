@@ -60,6 +60,8 @@ export default {
           "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
+          muted: "hsl(var(--sidebar-muted))",
+          section: "hsl(var(--sidebar-section))",
         },
         status: {
           success: {
@@ -74,6 +76,10 @@ export default {
             bg: "hsl(var(--status-info-bg))",
             fg: "hsl(var(--status-info-fg))",
           },
+          danger: {
+            bg: "hsl(var(--status-danger-bg))",
+            fg: "hsl(var(--status-danger-fg))",
+          },
         },
       },
       borderRadius: {
@@ -82,7 +88,8 @@ export default {
         sm: "calc(var(--radius) - 6px)",
       },
       boxShadow: {
-        card: "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)",
+        card: "0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 3px 0 rgba(0, 0, 0, 0.04)",
+        soft: "0 1px 3px 0 rgba(0, 0, 0, 0.02)",
       },
       keyframes: {
         "accordion-down": {

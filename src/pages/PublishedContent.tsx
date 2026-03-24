@@ -19,49 +19,48 @@ export default function PublishedContent() {
     .sort((a, b) => b.date.localeCompare(a.date));
 
   return (
-    <div className="space-y-4">
-      <div className="rounded-lg border border-border bg-surface p-4 shadow-card">
+    <div className="space-y-5">
+      <div className="rounded-xl border border-border bg-surface p-4 shadow-card">
         <div className="relative max-w-sm">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input placeholder="Search published content..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9 h-9 rounded-md" />
+          <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+          <Input placeholder="Search published content..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9 h-9 rounded-lg text-[13px]" />
         </div>
       </div>
-
-      <div className="rounded-lg border border-border bg-surface shadow-card overflow-hidden">
+      <div className="rounded-xl border border-border bg-surface shadow-card overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-[13px]">
             <thead>
-              <tr className="border-b border-border bg-surface/80">
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Content</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Type</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Category</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Date</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Status</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Action</th>
+              <tr className="border-b border-border">
+                <th className="px-4 py-3.5 text-left text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Content</th>
+                <th className="px-4 py-3.5 text-left text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Type</th>
+                <th className="px-4 py-3.5 text-left text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Category</th>
+                <th className="px-4 py-3.5 text-left text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Date</th>
+                <th className="px-4 py-3.5 text-left text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Status</th>
+                <th className="px-4 py-3.5 text-right text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
               {allPublished.map((item) => (
-                <tr key={`${item.type}-${item.id}`} className="hover:bg-accent/50 transition-colors">
+                <tr key={`${item.type}-${item.id}`} className="hover:bg-accent/30 transition-colors">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
                       {item.thumbnail ? (
-                        <img src={item.thumbnail} alt="" className="h-10 w-16 rounded object-cover bg-muted shrink-0" />
+                        <img src={item.thumbnail} alt="" className="h-10 w-16 rounded-lg object-cover bg-muted shrink-0" />
                       ) : (
-                        <div className="h-10 w-16 rounded bg-muted shrink-0" />
+                        <div className="h-10 w-16 rounded-lg bg-accent shrink-0" />
                       )}
                       <span className="font-medium text-foreground truncate max-w-xs">{item.title}</span>
                     </div>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-2 py-0.5 text-[11px] font-medium text-primary">{item.type}</span>
+                    <span className="inline-flex items-center rounded-full bg-primary/8 px-2 py-0.5 text-[11px] font-medium text-primary">{item.type}</span>
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">{item.category || "—"}</td>
                   <td className="px-4 py-3 text-muted-foreground tabular-nums whitespace-nowrap">{item.date}</td>
                   <td className="px-4 py-3"><StatusBadge status={item.status} /></td>
                   <td className="px-4 py-3 text-right">
                     <Link to={item.editUrl}>
-                      <Button size="sm" variant="outline" className="h-8 rounded-md"><Edit className="h-3.5 w-3.5 mr-1" /> Edit</Button>
+                      <Button size="sm" variant="outline" className="h-8 rounded-lg text-xs"><Edit className="h-3.5 w-3.5 mr-1" /> Edit</Button>
                     </Link>
                   </td>
                 </tr>
@@ -69,9 +68,7 @@ export default function PublishedContent() {
             </tbody>
           </table>
         </div>
-        {allPublished.length === 0 && (
-          <div className="p-12 text-center text-sm text-muted-foreground">No published content found.</div>
-        )}
+        {allPublished.length === 0 && <div className="p-14 text-center text-[13px] text-muted-foreground">No published content found.</div>}
       </div>
     </div>
   );

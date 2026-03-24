@@ -30,23 +30,23 @@ export default function VideoPage() {
     setSelected((s) => (s.length === filtered.length ? [] : filtered.map((v) => v.id)));
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {/* Filters */}
-      <div className="rounded-lg border border-border bg-surface p-4 shadow-card">
+      <div className="rounded-xl border border-border bg-surface p-4 shadow-card">
         <div className="flex flex-wrap items-center gap-3">
           <div className="relative flex-1 min-w-[200px]">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input placeholder="Search videos..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9 h-9 rounded-md" />
+            <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+            <Input placeholder="Search videos..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9 h-9 rounded-lg text-[13px]" />
           </div>
           <Select value={channelFilter} onValueChange={setChannelFilter}>
-            <SelectTrigger className="w-[160px] h-9 rounded-md"><SelectValue placeholder="Channel" /></SelectTrigger>
+            <SelectTrigger className="w-[155px] h-9 rounded-lg text-[13px]"><SelectValue placeholder="Channel" /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Channels</SelectItem>
               {channels.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
             </SelectContent>
           </Select>
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-[160px] h-9 rounded-md"><SelectValue placeholder="Status" /></SelectTrigger>
+            <SelectTrigger className="w-[145px] h-9 rounded-lg text-[13px]"><SelectValue placeholder="Status" /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Status</SelectItem>
               <SelectItem value="need_review">Need Review</SelectItem>
@@ -56,7 +56,7 @@ export default function VideoPage() {
             </SelectContent>
           </Select>
           <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-            <SelectTrigger className="w-[160px] h-9 rounded-md"><SelectValue placeholder="Category" /></SelectTrigger>
+            <SelectTrigger className="w-[155px] h-9 rounded-lg text-[13px]"><SelectValue placeholder="Category" /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Categories</SelectItem>
               {categories.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
@@ -67,53 +67,53 @@ export default function VideoPage() {
 
       {/* Bulk actions */}
       {selected.length > 0 && (
-        <div className="flex items-center gap-3 rounded-lg border border-primary/20 bg-primary/5 p-3">
-          <span className="text-sm font-medium text-foreground tabular-nums">{selected.length} selected</span>
+        <div className="flex items-center gap-3 rounded-xl border border-primary/15 bg-primary/5 p-3.5">
+          <span className="text-[13px] font-medium text-foreground tabular-nums">{selected.length} selected</span>
           <div className="flex gap-2 ml-auto">
-            <Button size="sm" className="h-8 rounded-md bg-primary text-primary-foreground hover:bg-primary/90"><CheckCircle className="h-3.5 w-3.5 mr-1.5" /> Publish</Button>
-            <Button size="sm" variant="outline" className="h-8 rounded-md"><XCircle className="h-3.5 w-3.5 mr-1.5" /> Reject</Button>
-            <Button size="sm" variant="outline" className="h-8 rounded-md"><FolderTree className="h-3.5 w-3.5 mr-1.5" /> Category</Button>
-            <Button size="sm" variant="outline" className="h-8 rounded-md"><Tag className="h-3.5 w-3.5 mr-1.5" /> Tags</Button>
+            <Button size="sm" className="h-8 rounded-lg text-xs bg-primary text-primary-foreground hover:bg-primary/90"><CheckCircle className="h-3.5 w-3.5 mr-1.5" /> Publish</Button>
+            <Button size="sm" variant="outline" className="h-8 rounded-lg text-xs"><XCircle className="h-3.5 w-3.5 mr-1.5" /> Reject</Button>
+            <Button size="sm" variant="outline" className="h-8 rounded-lg text-xs"><FolderTree className="h-3.5 w-3.5 mr-1.5" /> Category</Button>
+            <Button size="sm" variant="outline" className="h-8 rounded-lg text-xs"><Tag className="h-3.5 w-3.5 mr-1.5" /> Tags</Button>
           </div>
         </div>
       )}
 
       {/* Table */}
-      <div className="rounded-lg border border-border bg-surface shadow-card overflow-hidden">
+      <div className="rounded-xl border border-border bg-surface shadow-card overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-[13px]">
             <thead>
-              <tr className="border-b border-border bg-surface/80">
-                <th className="px-4 py-3 text-left w-10"><Checkbox checked={selected.length === filtered.length && filtered.length > 0} onCheckedChange={toggleAll} /></th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Video</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Channel</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Date</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">AI Suggestion</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Status</th>
-                <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-muted-foreground">Publish</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Action</th>
+              <tr className="border-b border-border">
+                <th className="px-4 py-3.5 text-left w-10"><Checkbox checked={selected.length === filtered.length && filtered.length > 0} onCheckedChange={toggleAll} /></th>
+                <th className="px-4 py-3.5 text-left text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Video</th>
+                <th className="px-4 py-3.5 text-left text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Channel</th>
+                <th className="px-4 py-3.5 text-left text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Date</th>
+                <th className="px-4 py-3.5 text-left text-[11px] font-medium uppercase tracking-wider text-muted-foreground">AI Suggestion</th>
+                <th className="px-4 py-3.5 text-left text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Status</th>
+                <th className="px-4 py-3.5 text-center text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Publish</th>
+                <th className="px-4 py-3.5 text-right text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
               {filtered.map((v) => (
-                <tr key={v.id} className="hover:bg-accent/50 transition-colors">
+                <tr key={v.id} className="hover:bg-accent/30 transition-colors">
                   <td className="px-4 py-3"><Checkbox checked={selected.includes(v.id)} onCheckedChange={() => toggleSelect(v.id)} /></td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
-                      <img src={v.thumbnail} alt="" className="h-14 w-24 rounded object-cover bg-muted shrink-0" />
+                      <img src={v.thumbnail} alt="" className="h-12 w-20 rounded-lg object-cover bg-muted shrink-0" />
                       <span className="font-medium text-foreground line-clamp-2 max-w-xs">{v.title}</span>
                     </div>
                   </td>
                   <td className="px-4 py-3 text-muted-foreground whitespace-nowrap">{v.channel}</td>
                   <td className="px-4 py-3 text-muted-foreground tabular-nums whitespace-nowrap">{v.publishDate}</td>
                   <td className="px-4 py-3">
-                    <span className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-2 py-0.5 text-[11px] font-medium text-primary">{v.aiSuggestion}</span>
+                    <span className="inline-flex items-center rounded-full bg-primary/8 px-2 py-0.5 text-[11px] font-medium text-primary">{v.aiSuggestion}</span>
                   </td>
                   <td className="px-4 py-3"><StatusBadge status={v.status} /></td>
                   <td className="px-4 py-3 text-center"><Switch checked={v.status === "published"} /></td>
                   <td className="px-4 py-3 text-right">
                     <Link to={`/video/${v.id}`}>
-                      <Button size="sm" variant="outline" className="h-8 rounded-md"><Eye className="h-3.5 w-3.5 mr-1" /> Review</Button>
+                      <Button size="sm" variant="outline" className="h-8 rounded-lg text-xs"><Eye className="h-3.5 w-3.5 mr-1" /> Review</Button>
                     </Link>
                   </td>
                 </tr>
@@ -122,7 +122,7 @@ export default function VideoPage() {
           </table>
         </div>
         {filtered.length === 0 && (
-          <div className="p-12 text-center text-sm text-muted-foreground">No videos match your filters.</div>
+          <div className="p-14 text-center text-[13px] text-muted-foreground">No videos match your filters.</div>
         )}
       </div>
     </div>

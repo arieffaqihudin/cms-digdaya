@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,55 +6,65 @@
 
 @layer base {
   :root {
-    --background: 210 40% 98%;
-    --foreground: 222 47% 11%;
+    /* Main background: very light warm gray */
+    --background: 200 12% 95%;
+    --foreground: 220 20% 20%;
 
+    /* Cards: clean white */
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 220 20% 20%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 220 20% 20%;
 
-    --primary: 147 78% 26%;
+    /* Primary: muted sage green — soft, not saturated */
+    --primary: 152 45% 35%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222 47% 11%;
+    --secondary: 150 12% 92%;
+    --secondary-foreground: 220 20% 20%;
 
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 200 10% 92%;
+    --muted-foreground: 215 12% 52%;
 
-    --accent: 210 40% 96%;
-    --accent-foreground: 222 47% 11%;
+    --accent: 150 14% 93%;
+    --accent-foreground: 220 20% 20%;
 
-    --destructive: 0 84% 60%;
+    /* Destructive: soft salmon */
+    --destructive: 4 60% 58%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 147 78% 26%;
+    /* Borders: very thin light gray */
+    --border: 210 14% 89%;
+    --input: 210 14% 89%;
+    --ring: 152 30% 50%;
 
-    --radius: 10px;
+    --radius: 12px;
 
+    /* Surface: white */
     --surface: 0 0% 100%;
-    --text-main: 222 47% 11%;
-    --text-muted: 215 16% 47%;
 
-    --status-success-bg: 141 79% 85%;
-    --status-success-fg: 143 64% 24%;
-    --status-warning-bg: 48 96% 89%;
-    --status-warning-fg: 32 95% 44%;
-    --status-info-bg: 214 95% 93%;
-    --status-info-fg: 221 83% 53%;
+    /* Status: soft pastels */
+    --status-success-bg: 148 40% 90%;
+    --status-success-fg: 152 40% 30%;
+    --status-warning-bg: 42 60% 90%;
+    --status-warning-fg: 35 55% 42%;
+    --status-info-bg: 210 50% 92%;
+    --status-info-fg: 215 55% 45%;
+    --status-danger-bg: 4 55% 92%;
+    --status-danger-fg: 4 50% 48%;
 
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 215 16% 47%;
-    --sidebar-primary: 147 78% 26%;
+    /* Sidebar: soft pale sage green */
+    --sidebar-background: 148 18% 95%;
+    --sidebar-foreground: 160 10% 42%;
+    --sidebar-primary: 152 45% 35%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 40% 96%;
-    --sidebar-accent-foreground: 222 47% 11%;
-    --sidebar-border: 214 32% 91%;
-    --sidebar-ring: 147 78% 26%;
+    --sidebar-accent: 150 22% 88%;
+    --sidebar-accent-foreground: 152 35% 28%;
+    --sidebar-border: 150 12% 88%;
+    --sidebar-ring: 152 30% 50%;
+    --sidebar-muted: 155 10% 55%;
+    --sidebar-section: 155 8% 62%;
   }
 }
 
@@ -67,15 +77,13 @@
     @apply bg-background text-foreground font-sans antialiased;
   }
 
-  /* Tabular numbers for data */
   .tabular-nums {
     font-feature-settings: "tnum";
   }
 
-  /* Custom scrollbar */
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 5px;
+    height: 5px;
   }
   ::-webkit-scrollbar-track {
     background: transparent;
@@ -85,6 +93,6 @@
     border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--muted-foreground) / 0.3);
+    background: hsl(var(--muted-foreground) / 0.25);
   }
 }

@@ -7,7 +7,7 @@ const statCards = [
   { label: "Videos Need Review", value: dashboardStats.videosNeedReview, icon: Eye, change: "+12 from yesterday", color: "text-status-warning-fg" },
   { label: "Total Guides", value: dashboardStats.totalGuides, icon: BookOpen, change: "+3 this week", color: "text-primary" },
   { label: "Total FAQs", value: dashboardStats.totalFAQs, icon: HelpCircle, change: "+5 this week", color: "text-status-info-fg" },
-  { label: "Blog Drafts", value: dashboardStats.blogDrafts, icon: PenSquare, change: "4 pending review", color: "text-destructive" },
+  { label: "Blog Drafts", value: dashboardStats.blogDrafts, icon: PenSquare, change: "4 pending review", color: "text-status-danger-fg" },
 ];
 
 export default function Dashboard() {
@@ -31,26 +31,28 @@ export default function Dashboard() {
   }));
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-7">
       <div>
-        <h3 className="text-xl font-semibold tracking-tight text-foreground">Good morning, Editor.</h3>
+        <h3 className="text-lg font-semibold text-foreground">Good morning, Editor.</h3>
         <p className="text-sm text-muted-foreground mt-1">
           You have {dashboardStats.videosNeedReview} videos and {dashboardStats.blogDrafts} blog drafts awaiting review.
         </p>
       </div>
 
       {/* Stat cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {statCards.map((stat) => {
           const Icon = stat.icon;
           return (
-            <div key={stat.label} className="rounded-lg border border-border bg-surface p-6 shadow-card">
+            <div key={stat.label} className="rounded-xl border border-border bg-surface p-5 shadow-card">
               <div className="flex items-center justify-between">
-                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{stat.label}</p>
-                <Icon className={`h-4 w-4 ${stat.color}`} />
+                <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">{stat.label}</p>
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent">
+                  <Icon className={`h-4 w-4 ${stat.color}`} />
+                </div>
               </div>
-              <h3 className="mt-2 text-2xl font-bold tabular-nums text-foreground">{stat.value}</h3>
-              <div className="mt-2 flex items-center gap-1 text-xs font-medium text-primary">
+              <h3 className="mt-3 text-2xl font-semibold tabular-nums text-foreground">{stat.value}</h3>
+              <div className="mt-2 flex items-center gap-1 text-[11px] font-medium text-primary">
                 <TrendingUp className="h-3 w-3" />
                 <span>{stat.change}</span>
               </div>
@@ -61,23 +63,23 @@ export default function Dashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent Content */}
-        <div className="lg:col-span-2 rounded-lg border border-border bg-surface shadow-card">
-          <div className="flex items-center justify-between border-b border-border p-4">
-            <h4 className="text-sm font-semibold text-foreground">Recent Content</h4>
+        <div className="lg:col-span-2 rounded-xl border border-border bg-surface shadow-card">
+          <div className="flex items-center justify-between border-b border-border px-5 py-4">
+            <h4 className="text-[13px] font-semibold text-foreground">Recent Content</h4>
           </div>
           <div className="divide-y divide-border">
             {recentContent.map((item) => (
-              <div key={item.id} className="flex items-center gap-4 p-4 hover:bg-accent/50 transition-colors">
+              <div key={item.id} className="flex items-center gap-4 px-5 py-3.5 hover:bg-accent/40 transition-colors">
                 {item.thumbnail ? (
-                  <img src={item.thumbnail} alt="" className="h-12 w-20 rounded object-cover bg-muted shrink-0" />
+                  <img src={item.thumbnail} alt="" className="h-11 w-[72px] rounded-lg object-cover bg-muted shrink-0" />
                 ) : (
-                  <div className="h-12 w-20 rounded bg-muted shrink-0 flex items-center justify-center">
-                    <BookOpen className="h-5 w-5 text-muted-foreground" />
+                  <div className="h-11 w-[72px] rounded-lg bg-accent shrink-0 flex items-center justify-center">
+                    <BookOpen className="h-4 w-4 text-muted-foreground" />
                   </div>
                 )}
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-foreground truncate">{item.title}</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">{item.type} · {item.date}</p>
+                  <p className="text-[13px] font-medium text-foreground truncate">{item.title}</p>
+                  <p className="text-[11px] text-muted-foreground mt-0.5">{item.type} · {item.date}</p>
                 </div>
                 <StatusBadge status={item.status} />
               </div>
@@ -86,22 +88,22 @@ export default function Dashboard() {
         </div>
 
         {/* Right col */}
-        <div className="space-y-6">
+        <div className="space-y-5">
           {/* Content Needing Review */}
-          <div className="rounded-lg border border-border bg-surface shadow-card">
-            <div className="flex items-center justify-between border-b border-border p-4">
-              <h4 className="text-sm font-semibold text-foreground">Needing Review</h4>
-              <Link to="/video" className="flex items-center gap-1 text-xs font-medium text-primary hover:underline">
+          <div className="rounded-xl border border-border bg-surface shadow-card">
+            <div className="flex items-center justify-between border-b border-border px-5 py-4">
+              <h4 className="text-[13px] font-semibold text-foreground">Needing Review</h4>
+              <Link to="/video" className="flex items-center gap-1 text-[11px] font-medium text-primary hover:underline">
                 View all <ArrowUpRight className="h-3 w-3" />
               </Link>
             </div>
             <div className="divide-y divide-border">
               {needReviewVideos.map((v) => (
-                <Link key={v.id} to={`/video/${v.id}`} className="flex items-center gap-3 p-3 hover:bg-accent/50 transition-colors">
-                  <img src={v.thumbnail} alt="" className="h-10 w-16 rounded object-cover bg-muted shrink-0" />
+                <Link key={v.id} to={`/video/${v.id}`} className="flex items-center gap-3 px-5 py-3 hover:bg-accent/40 transition-colors">
+                  <img src={v.thumbnail} alt="" className="h-9 w-14 rounded-md object-cover bg-muted shrink-0" />
                   <div className="min-w-0 flex-1">
-                    <p className="text-xs font-medium text-foreground truncate">{v.title}</p>
-                    <p className="text-[11px] text-muted-foreground">{v.channel}</p>
+                    <p className="text-[12px] font-medium text-foreground truncate">{v.title}</p>
+                    <p className="text-[10px] text-muted-foreground">{v.channel}</p>
                   </div>
                 </Link>
               ))}
@@ -109,19 +111,19 @@ export default function Dashboard() {
           </div>
 
           {/* Top Categories */}
-          <div className="rounded-lg border border-border bg-surface shadow-card">
-            <div className="border-b border-border p-4">
-              <h4 className="text-sm font-semibold text-foreground">Top Categories</h4>
+          <div className="rounded-xl border border-border bg-surface shadow-card">
+            <div className="border-b border-border px-5 py-4">
+              <h4 className="text-[13px] font-semibold text-foreground">Top Categories</h4>
             </div>
-            <div className="p-4 space-y-3">
+            <div className="px-5 py-4 space-y-3.5">
               {topCategories.map((c) => (
                 <div key={c.name}>
-                  <div className="flex items-center justify-between text-xs mb-1">
+                  <div className="flex items-center justify-between text-[12px] mb-1.5">
                     <span className="font-medium text-foreground">{c.name}</span>
-                    <span className="tabular-nums text-muted-foreground">{c.count} items</span>
+                    <span className="tabular-nums text-muted-foreground">{c.count}</span>
                   </div>
-                  <div className="h-1.5 rounded-full bg-muted overflow-hidden">
-                    <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${c.percentage}%` }} />
+                  <div className="h-1.5 rounded-full bg-accent overflow-hidden">
+                    <div className="h-full rounded-full bg-primary/60 transition-all" style={{ width: `${c.percentage}%` }} />
                   </div>
                 </div>
               ))}
@@ -129,16 +131,16 @@ export default function Dashboard() {
           </div>
 
           {/* Recently Published */}
-          <div className="rounded-lg border border-border bg-surface shadow-card">
-            <div className="border-b border-border p-4">
-              <h4 className="text-sm font-semibold text-foreground">Recently Published</h4>
+          <div className="rounded-xl border border-border bg-surface shadow-card">
+            <div className="border-b border-border px-5 py-4">
+              <h4 className="text-[13px] font-semibold text-foreground">Recently Published</h4>
             </div>
             <div className="divide-y divide-border">
               {recentPublished.map((item, i) => (
-                <div key={i} className="flex items-center justify-between p-3">
+                <div key={i} className="flex items-center justify-between px-5 py-3">
                   <div className="min-w-0 flex-1">
-                    <p className="text-xs font-medium text-foreground truncate">{item.title}</p>
-                    <p className="text-[11px] text-muted-foreground">{item.type} · {item.date}</p>
+                    <p className="text-[12px] font-medium text-foreground truncate">{item.title}</p>
+                    <p className="text-[10px] text-muted-foreground">{item.type} · {item.date}</p>
                   </div>
                 </div>
               ))}
