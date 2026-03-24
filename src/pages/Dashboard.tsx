@@ -80,55 +80,55 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="space-y-7">
+    <div className="space-y-5 md:space-y-7">
       {/* Header greeting */}
       <div>
-        <h3 className="text-lg font-semibold text-foreground">Selamat datang, Editor.</h3>
-        <p className="text-[13px] text-muted-foreground mt-1">
+        <h3 className="text-base md:text-lg font-semibold text-foreground">Selamat datang, Editor.</h3>
+        <p className="text-[12px] md:text-[13px] text-muted-foreground mt-1">
           Ada {dashboardStats.videosNeedReview} video dan {dashboardStats.blogDrafts} draft blog yang menunggu review.
         </p>
       </div>
 
-      {/* Stat cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Stat cards — 2 cols mobile, 4 cols desktop */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
         {statCards.map((stat) => {
           const Icon = stat.icon;
           return (
             <div
               key={stat.label}
-              className="rounded-[12px] border border-border bg-surface p-5 shadow-card hover:shadow-soft transition-shadow duration-200"
+              className="rounded-[12px] border border-border bg-surface p-4 md:p-5 shadow-card hover:shadow-soft transition-shadow duration-200"
             >
               <div className="flex items-start justify-between">
-                <div className="space-y-1">
-                  <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground">
+                <div className="space-y-1 min-w-0">
+                  <p className="text-[10px] md:text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground leading-tight">
                     {stat.label}
                   </p>
-                  <h3 className="text-[28px] font-semibold tabular-nums leading-tight text-foreground">
+                  <h3 className="text-[22px] md:text-[28px] font-semibold tabular-nums leading-tight text-foreground">
                     {stat.value}
                   </h3>
                 </div>
-                <div className={`flex h-10 w-10 items-center justify-center rounded-[10px] ${stat.iconBg}`}>
-                  <Icon className={`h-[18px] w-[18px] ${stat.iconColor}`} strokeWidth={1.8} />
+                <div className={`flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-[10px] ${stat.iconBg} shrink-0`}>
+                  <Icon className={`h-4 w-4 md:h-[18px] md:w-[18px] ${stat.iconColor}`} strokeWidth={1.8} />
                 </div>
               </div>
-              <div className="mt-3 flex items-center gap-1.5 text-[11px] font-medium">
+              <div className="mt-2 md:mt-3 flex items-center gap-1.5 text-[10px] md:text-[11px] font-medium">
                 {stat.trendUp ? (
                   <TrendingUp className="h-3 w-3 text-status-success-fg" />
                 ) : (
                   <TrendingDown className="h-3 w-3 text-status-warning-fg" />
                 )}
-                <span className="text-muted-foreground">{stat.trend}</span>
+                <span className="text-muted-foreground truncate">{stat.trend}</span>
               </div>
             </div>
           );
         })}
       </div>
 
-      {/* Main grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        {/* Konten Terbaru - spans 2 cols */}
+      {/* Main grid — stacked on mobile */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-5">
+        {/* Konten Terbaru - spans 2 cols on desktop */}
         <div className="lg:col-span-2 rounded-[12px] border border-border bg-surface shadow-card">
-          <div className="flex items-center justify-between border-b border-border/60 px-5 py-4">
+          <div className="flex items-center justify-between border-b border-border/60 px-4 md:px-5 py-3 md:py-4">
             <h4 className="text-[13px] font-semibold text-foreground">Konten Terbaru</h4>
             <Link to="/published" className="flex items-center gap-1 text-[11px] font-medium text-primary hover:underline">
               Lihat semua <ArrowUpRight className="h-3 w-3" />
@@ -141,30 +141,28 @@ export default function Dashboard() {
                 <Link
                   key={item.id}
                   to={item.editUrl}
-                  className="flex items-center gap-4 px-5 py-3.5 hover:bg-accent/40 transition-colors"
+                  className="flex items-center gap-3 md:gap-4 px-4 md:px-5 py-3 md:py-3.5 hover:bg-accent/40 transition-colors"
                 >
                   {item.thumbnail ? (
                     <img
                       src={item.thumbnail}
                       alt=""
-                      className="h-12 w-[78px] rounded-[8px] object-cover bg-muted shrink-0"
+                      className="h-10 w-16 md:h-12 md:w-[78px] rounded-[8px] object-cover bg-muted shrink-0"
                     />
                   ) : (
-                    <div className="h-12 w-[78px] rounded-[8px] bg-accent shrink-0 flex items-center justify-center">
+                    <div className="h-10 w-16 md:h-12 md:w-[78px] rounded-[8px] bg-accent shrink-0 flex items-center justify-center">
                       <TypeIcon className="h-4 w-4 text-muted-foreground" strokeWidth={1.6} />
                     </div>
                   )}
                   <div className="flex-1 min-w-0">
-                    <p className="text-[13px] font-medium text-foreground truncate">{item.title}</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
+                    <p className="text-[12px] md:text-[13px] font-medium text-foreground truncate">{item.title}</p>
+                    <div className="flex items-center gap-2 mt-1 flex-wrap">
+                      <span className="inline-flex items-center gap-1 text-[10px] md:text-[11px] text-muted-foreground">
                         <TypeIcon className="h-3 w-3" strokeWidth={1.6} />
                         {item.type}
                       </span>
-                      <span className="text-[11px] text-muted-foreground/50">·</span>
-                      <span className="text-[11px] text-muted-foreground">{item.channel}</span>
-                      <span className="text-[11px] text-muted-foreground/50">·</span>
-                      <span className="text-[11px] text-muted-foreground">{item.date}</span>
+                      <span className="text-[11px] text-muted-foreground/50 hidden sm:inline">·</span>
+                      <span className="text-[10px] md:text-[11px] text-muted-foreground hidden sm:inline">{item.channel}</span>
                     </div>
                   </div>
                   <StatusBadge status={item.status} />
@@ -175,10 +173,10 @@ export default function Dashboard() {
         </div>
 
         {/* Right column */}
-        <div className="space-y-5">
+        <div className="space-y-4 md:space-y-5">
           {/* Perlu Review */}
           <div className="rounded-[12px] border border-border bg-surface shadow-card">
-            <div className="flex items-center justify-between border-b border-border/60 px-5 py-4">
+            <div className="flex items-center justify-between border-b border-border/60 px-4 md:px-5 py-3 md:py-4">
               <h4 className="text-[13px] font-semibold text-foreground">Perlu Review</h4>
               <Link to="/video" className="flex items-center gap-1 text-[11px] font-medium text-primary hover:underline">
                 Semua <ArrowUpRight className="h-3 w-3" />
@@ -189,15 +187,15 @@ export default function Dashboard() {
                 <Link
                   key={v.id}
                   to={`/video/${v.id}`}
-                  className="flex items-center gap-3 px-5 py-3 hover:bg-accent/40 transition-colors"
+                  className="flex items-center gap-3 px-4 md:px-5 py-2.5 md:py-3 hover:bg-accent/40 transition-colors"
                 >
                   <img
                     src={v.thumbnail}
                     alt=""
-                    className="h-9 w-14 rounded-md object-cover bg-muted shrink-0"
+                    className="h-8 w-12 md:h-9 md:w-14 rounded-md object-cover bg-muted shrink-0"
                   />
                   <div className="min-w-0 flex-1">
-                    <p className="text-[12px] font-medium text-foreground truncate">{v.title}</p>
+                    <p className="text-[11px] md:text-[12px] font-medium text-foreground truncate">{v.title}</p>
                     <p className="text-[10px] text-muted-foreground mt-0.5">{v.channel} · {v.publishDate}</p>
                   </div>
                 </Link>
@@ -207,13 +205,13 @@ export default function Dashboard() {
 
           {/* Kategori Terpopuler */}
           <div className="rounded-[12px] border border-border bg-surface shadow-card">
-            <div className="border-b border-border/60 px-5 py-4">
+            <div className="border-b border-border/60 px-4 md:px-5 py-3 md:py-4">
               <h4 className="text-[13px] font-semibold text-foreground">Kategori Terpopuler</h4>
             </div>
-            <div className="px-5 py-4 space-y-4">
+            <div className="px-4 md:px-5 py-3 md:py-4 space-y-3 md:space-y-4">
               {topCategories.map((c) => (
                 <div key={c.name}>
-                  <div className="flex items-center justify-between text-[12px] mb-1.5">
+                  <div className="flex items-center justify-between text-[11px] md:text-[12px] mb-1.5">
                     <span className="font-medium text-foreground">{c.name}</span>
                     <span className="tabular-nums text-muted-foreground">{c.count} konten</span>
                   </div>
