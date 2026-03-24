@@ -387,9 +387,6 @@ export default function ContentEditor() {
             {!isNew && <span className="hidden sm:inline"><StatusBadge status={status} /></span>}
           </div>
           <div className="flex items-center gap-2 shrink-0 max-sm:w-full max-sm:pt-2 max-sm:border-t max-sm:border-border/40">
-            <Button variant="ghost" size="sm" className="h-8 rounded-[10px] text-xs text-muted-foreground hover:text-foreground hover:bg-accent gap-1.5 hidden sm:flex">
-              <Eye className="h-3.5 w-3.5" strokeWidth={1.6} /> Preview
-            </Button>
             <Button variant="outline" size="sm" className={cn("h-8 rounded-[10px] text-xs border-border gap-1.5", screenSize === "mobile" ? "flex-1" : "")} onClick={handleSave}>
               <Save className="h-3.5 w-3.5" strokeWidth={1.6} /> Simpan Draft
             </Button>
