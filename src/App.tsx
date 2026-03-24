@@ -46,7 +46,7 @@ const App = () => (
                   <Route path="/tags" element={<TaxonomyPage defaultTab="tags" />} />
                   <Route path="/products" element={<TaxonomyPage defaultTab="products" />} />
                   <Route path="/channels" element={<TaxonomyPage defaultTab="channels" />} />
-                  <Route path="/media" element={<PlaceholderPage title="Media Library" />} />
+                  <Route path="/media" element={<MediaLibrary />} />
                   <Route path="/settings" element={<PlaceholderPage title="Pengaturan" />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
