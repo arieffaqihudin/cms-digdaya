@@ -74,6 +74,8 @@ export { useScreenSize };
 export type { ScreenSize };
 
 export default function AppLayout({ children }: { children: ReactNode }) {
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
   const location = useLocation();
   const screenSize = useScreenSize();
   const [collapsed, setCollapsed] = useState(false);
