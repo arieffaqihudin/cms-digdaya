@@ -566,8 +566,8 @@ export default function ContentEditor() {
 
         {/* ─── RIGHT: Metadata Sidebar ─── */}
         <div className={cn(
-          "space-y-4",
-          screenSize !== "mobile" ? "w-[300px] lg:w-[320px] shrink-0 lg:sticky lg:top-[56px] lg:self-start" : ""
+          "space-y-5",
+          screenSize !== "mobile" ? "w-[300px] lg:w-[320px] shrink-0 sticky top-4 self-start" : ""
         )}>
           {sidebarPanels}
         </div>

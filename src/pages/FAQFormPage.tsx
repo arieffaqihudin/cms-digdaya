@@ -97,7 +97,7 @@ export default function FAQFormPage() {
   };
 
   const metadataPanel = (
-    <div className="space-y-5 lg:sticky lg:top-6 self-start">
+    <div className="space-y-5 lg:sticky lg:top-4 self-start">
       {/* Publikasi */}
       <SectionCard title="Publikasi">
         <div className="flex items-center justify-between">

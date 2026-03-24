@@ -291,5 +291,6 @@ export default function PanduanFormPage() {
         </div>
       </div>
     </div>
+  </div>
   );
 }
