@@ -2,9 +2,10 @@ import { ReactNode, useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard, Video, FileText, HelpCircle, PenSquare,
-  FolderTree, Tag, Package, Tv2, Image, FileClock, CheckCircle,
-  Archive, Settings, Search, Bell, ChevronLeft, Menu, User, LogOut,
-  CalendarClock, X,
+  FolderTree, Tag, Package, Tv2, FileClock, CheckCircle,
+  Archive, Search, Bell, ChevronLeft, Menu, User, LogOut,
+  CalendarClock, X, Shield, Users, Activity, ImageIcon,
+  BookOpen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
@@ -16,22 +17,25 @@ const navItems = [
   { divider: true, section: "Konten" },
   { label: "Video", icon: Video, path: "/video" },
   { label: "Blog", icon: PenSquare, path: "/blog" },
-  { label: "Panduan", icon: FileText, path: "/panduan" },
+  { label: "Panduan", icon: BookOpen, path: "/panduan" },
   { label: "FAQ", icon: HelpCircle, path: "/faq" },
-  { divider: true, section: "Taksonomi" },
-  { label: "Kategori", icon: FolderTree, path: "/categories" },
-  { label: "Tag", icon: Tag, path: "/tags" },
+  { label: "Repository", icon: FileText, path: "/repository" },
+  { label: "Banner App", icon: ImageIcon, path: "/banner" },
+  { divider: true, section: "Master" },
+  { label: "Kategori FAQ", icon: FolderTree, path: "/categories/faq" },
   { label: "Produk", icon: Package, path: "/products" },
+  { label: "Tag", icon: Tag, path: "/tags" },
   { label: "Channel", icon: Tv2, path: "/channels" },
-  { divider: true, section: "Media" },
-  { label: "Media Library", icon: Image, path: "/media" },
   { divider: true, section: "Workflow" },
   { label: "Draft", icon: FileClock, path: "/drafts" },
   { label: "Terjadwal", icon: CalendarClock, path: "/scheduled" },
   { label: "Dipublikasikan", icon: CheckCircle, path: "/published" },
   { label: "Arsip", icon: Archive, path: "/archived" },
   { divider: true, section: "Pengaturan" },
-  { label: "Pengaturan", icon: Settings, path: "/settings" },
+  { label: "Hak Akses", icon: Shield, path: "/access" },
+  { label: "Pengguna", icon: Users, path: "/users" },
+  { divider: true, section: "Log Aktivitas" },
+  { label: "Aktivitas", icon: Activity, path: "/activity" },
 ] as const;
 
 const pageTitles: Record<string, string> = {
@@ -40,16 +44,19 @@ const pageTitles: Record<string, string> = {
   "/blog": "Blog",
   "/panduan": "Panduan",
   "/faq": "FAQ",
-  "/categories": "Kategori",
+  "/repository": "Repository",
+  "/banner": "Banner App",
+  "/categories/faq": "Kategori FAQ",
   "/tags": "Tag",
   "/products": "Produk",
   "/channels": "Channel",
-  "/media": "Media Library",
   "/drafts": "Draft",
   "/scheduled": "Terjadwal",
   "/published": "Dipublikasikan",
   "/archived": "Arsip",
-  "/settings": "Pengaturan",
+  "/access": "Hak Akses",
+  "/users": "Pengguna",
+  "/activity": "Aktivitas",
 };
 
 type ScreenSize = "mobile" | "tablet" | "desktop";
@@ -166,11 +173,17 @@ export default function AppLayout({ children }: { children: ReactNode }) {
         })}
       </nav>
 
-      {/* Footer */}
-      <div className="px-3 pb-4 space-y-1">
+      {/* Footer - Profil section */}
+      <div className="px-3 pb-4 space-y-1 border-t border-sidebar-border pt-3">
         {showLabels && (
-          <div className="flex items-center gap-3 rounded-[10px] px-3 py-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-sidebar-accent">
+          <p className="px-3 pb-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-sidebar-section">
+            Profil
+          </p>
+        )}
+        {/* User info */}
+        {showLabels && (
+          <div className="flex items-center gap-3 rounded-[10px] px-3 py-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-sidebar-accent shrink-0">
               <User className="h-4 w-4 text-sidebar-accent-foreground" strokeWidth={1.6} />
             </div>
             <div className="flex-1 min-w-0">
@@ -179,18 +192,34 @@ export default function AppLayout({ children }: { children: ReactNode }) {
               </p>
               <p className="text-[10px] text-sidebar-muted truncate">{user?.email || ""}</p>
             </div>
-            <button
-              onClick={async () => { await signOut(); navigate("/login"); }}
-              className="p-1 rounded-md text-sidebar-muted hover:text-sidebar-accent-foreground hover:bg-sidebar-accent/50 transition-colors"
-            >
-              <LogOut className="h-3.5 w-3.5" strokeWidth={1.6} />
-            </button>
           </div>
         )}
+        {/* Profile link */}
+        <Link
+          to="/profile"
+          className={cn(
+            "flex items-center gap-3 rounded-[10px] px-3 py-[10px] text-[13px] transition-all duration-150 ease-in-out",
+            currentPath === "/profile"
+              ? "bg-sidebar-accent font-medium text-sidebar-accent-foreground"
+              : "font-normal text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
+          )}
+        >
+          <User className={cn("h-[18px] w-[18px] shrink-0", currentPath === "/profile" ? "text-sidebar-accent-foreground" : "text-sidebar-muted")} strokeWidth={currentPath === "/profile" ? 2 : 1.6} />
+          {showLabels && <span className="truncate">Profil</span>}
+        </Link>
+        {/* Keluar */}
+        <button
+          onClick={async () => { await signOut(); navigate("/login"); }}
+          className="flex w-full items-center gap-3 rounded-[10px] px-3 py-[10px] text-[13px] font-normal text-status-danger-fg hover:bg-destructive/10 hover:text-destructive transition-all duration-150 ease-in-out"
+        >
+          <LogOut className="h-[18px] w-[18px] shrink-0 text-status-danger-fg/70" strokeWidth={1.6} />
+          {showLabels && <span className="truncate">Keluar</span>}
+        </button>
+        {/* Collapse toggle */}
         {screenSize !== "mobile" && (
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="flex w-full items-center justify-center rounded-[10px] p-2.5 text-sidebar-muted hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground transition-colors duration-150"
+            className="flex w-full items-center justify-center rounded-[10px] p-2.5 text-sidebar-muted hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground transition-colors duration-150 mt-1"
           >
             {collapsed ? <Menu className="h-4 w-4" strokeWidth={1.6} /> : <ChevronLeft className="h-4 w-4" strokeWidth={1.6} />}
           </button>
