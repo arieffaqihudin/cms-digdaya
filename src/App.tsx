@@ -19,6 +19,8 @@ import TagPage from "@/pages/TagPage";
 import ChannelPage from "@/pages/ChannelPage";
 import AccessPage from "@/pages/AccessPage";
 import UsersPage from "@/pages/UsersPage";
+import ActivityPage from "@/pages/ActivityPage";
+import ProfilePage from "@/pages/ProfilePage";
 import MediaLibrary from "@/pages/MediaLibrary";
 import PanduanFormPage from "@/pages/PanduanFormPage";
 import RepositoryPage from "@/pages/RepositoryPage";
@@ -117,6 +119,8 @@ const AppRoutes = () => {
                 <Route path="/media" element={<MediaLibrary />} />
                 <Route path="/access" element={<AccessPage />} />
                 <Route path="/users" element={<UsersPage />} />
+                <Route path="/activity" element={<ActivityPage />} />
+                <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/settings" element={<NotFound />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
