@@ -37,6 +37,8 @@ const navItems = [
   { label: "Pengguna", icon: Users, path: "/users" },
   { divider: true, section: "Log Aktivitas" },
   { label: "Aktivitas", icon: Activity, path: "/activity" },
+  { divider: true, section: "Profil" },
+  { label: "Profil", icon: User, path: "/profile" },
 ] as const;
 
 const pageTitles: Record<string, string> = {
