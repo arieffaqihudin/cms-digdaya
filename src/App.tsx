@@ -113,7 +113,7 @@ const AppRoutes = () => {
                 <Route path="/products/new" element={<ProductFormPage />} />
                 <Route path="/channels" element={<ChannelPage />} />
                 <Route path="/media" element={<MediaLibrary />} />
-                <Route path="/settings" element={<PlaceholderPage title="Pengaturan" />} />
+                <Route path="/settings" element={<NotFound />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </AppLayout>
