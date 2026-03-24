@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Save, Upload, FileText, Video, Image, Link2, Eye } from "lucide-react";
+import { ArrowLeft, Save, Upload, FileText, Video, Image, Link2, Eye, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -12,14 +12,11 @@ import {
 } from "@/components/ui/select";
 import { products } from "@/lib/mock-data";
 import { toast } from "sonner";
+import { useScreenSize } from "@/components/AppLayout";
+import { cn } from "@/lib/utils";
 
 function slugify(text: string) {
-  return text
-    .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
-    .trim();
+  return text.toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-").replace(/-+/g, "-").trim();
 }
 
 function SectionCard({ title, children }: { title?: string; children: React.ReactNode }) {
@@ -43,6 +40,7 @@ function Field({ label, hint, children }: { label: string; hint?: string; childr
 
 export default function PanduanFormPage() {
   const navigate = useNavigate();
+  const screenSize = useScreenSize();
 
   const [namaTopic, setNamaTopic] = useState("");
   const [product, setProduct] = useState("");
@@ -54,34 +52,23 @@ export default function PanduanFormPage() {
   const slug = useMemo(() => slugify(namaTopic), [namaTopic]);
 
   const handleSave = () => {
-    if (!namaTopic.trim()) {
-      toast.error("Nama Topik wajib diisi");
-      return;
-    }
+    if (!namaTopic.trim()) { toast.error("Nama Topik wajib diisi"); return; }
     toast.success("Panduan berhasil disimpan");
     navigate("/panduan");
   };
 
   const handlePublish = () => {
-    if (!namaTopic.trim()) {
-      toast.error("Nama Topik wajib diisi");
-      return;
-    }
+    if (!namaTopic.trim()) { toast.error("Nama Topik wajib diisi"); return; }
     toast.success("Panduan berhasil dipublikasikan");
     navigate("/panduan");
   };
 
   return (
-    <div className="-m-4 md:-m-5 lg:-m-7">
-      {/* Editor Page Header */}
-      <div className="sticky top-0 z-20 border-b border-border/60 bg-card px-4 md:px-6 py-3">
+    <div className="space-y-6">
+      {/* Editor Header — normal flow */}
+      <div className="rounded-[12px] border border-border bg-card p-4 md:px-6 md:py-4 shadow-card">
         <div className="flex flex-wrap items-center gap-3 md:gap-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate("/panduan")}
-            className="rounded-[10px] text-muted-foreground hover:text-foreground h-8 w-8 shrink-0"
-          >
+          <Button variant="ghost" size="icon" onClick={() => navigate("/panduan")} className="rounded-[10px] text-muted-foreground hover:text-foreground h-8 w-8 shrink-0">
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div className="flex items-center gap-2 min-w-0 flex-1">
@@ -92,41 +79,27 @@ export default function PanduanFormPage() {
             <h1 className="text-sm md:text-[15px] font-semibold text-foreground truncate">Buat Panduan Baru</h1>
           </div>
           <div className="flex items-center gap-2 shrink-0 max-sm:w-full max-sm:pt-2 max-sm:border-t max-sm:border-border/40">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleSave}
-              className="rounded-[10px] text-xs gap-1.5 h-8 max-sm:flex-1"
-            >
-              <Save className="h-3.5 w-3.5" />
-              Simpan Draft
+            <Button variant="ghost" size="sm" className="h-8 rounded-[10px] text-xs text-muted-foreground hover:text-foreground hover:bg-accent gap-1.5 hidden sm:flex">
+              <Eye className="h-3.5 w-3.5" strokeWidth={1.6} /> Preview
             </Button>
-            <Button
-              size="sm"
-              onClick={handlePublish}
-              className="rounded-[10px] text-xs gap-1.5 h-8 bg-primary hover:bg-primary/90 max-sm:flex-1"
-            >
-              Publikasikan
+            <Button variant="outline" size="sm" onClick={handleSave} className={cn("rounded-[10px] text-xs gap-1.5 h-8", screenSize === "mobile" && "flex-1")}>
+              <Save className="h-3.5 w-3.5" /> Simpan Draft
+            </Button>
+            <Button size="sm" onClick={handlePublish} className={cn("rounded-[10px] text-xs gap-1.5 h-8 bg-primary hover:bg-primary/90", screenSize === "mobile" && "flex-1")}>
+              <CheckCircle className="h-3.5 w-3.5" strokeWidth={1.6} /> Publikasikan
             </Button>
           </div>
         </div>
       </div>
 
       {/* Two Column Layout */}
-      <div className="p-4 md:p-6 lg:p-7 pt-6 md:pt-7 lg:pt-8 grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
-        {/* LEFT – Main Fields */}
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
+        {/* LEFT */}
         <div className="space-y-5">
-          {/* Nama Topik & Slug */}
           <SectionCard>
             <Field label="Nama Topik">
-              <Input
-                placeholder="Masukkan nama topik panduan..."
-                value={namaTopic}
-                onChange={(e) => setNamaTopic(e.target.value)}
-                className="rounded-[10px] border-border/60 focus-visible:ring-primary/30 text-sm"
-              />
+              <Input placeholder="Masukkan nama topik panduan..." value={namaTopic} onChange={(e) => setNamaTopic(e.target.value)} className="rounded-[10px] border-border/60 focus-visible:ring-primary/30 text-sm" />
             </Field>
-
             <Field label="Slug" hint="Otomatis dibuat dari Nama Topik">
               <div className="flex items-center gap-2 rounded-[10px] border border-border/60 bg-muted/30 px-3 py-2 text-sm text-muted-foreground">
                 <Link2 className="h-3.5 w-3.5 shrink-0" />
@@ -135,49 +108,25 @@ export default function PanduanFormPage() {
             </Field>
           </SectionCard>
 
-          {/* Tipe Konten */}
           <SectionCard title="Tipe Konten">
-            <RadioGroup
-              value={contentType}
-              onValueChange={(v) => setContentType(v as "video" | "dokumen")}
-              className="flex gap-4"
-            >
-              <label className={`flex items-center gap-3 rounded-[10px] border px-4 py-3 cursor-pointer transition-colors flex-1 ${contentType === "video" ? "border-primary/50 bg-primary/5" : "border-border/60 hover:border-border"}`}>
+            <RadioGroup value={contentType} onValueChange={(v) => setContentType(v as "video" | "dokumen")} className="flex gap-4">
+              <label className={cn("flex items-center gap-3 rounded-[10px] border px-4 py-3 cursor-pointer transition-colors flex-1", contentType === "video" ? "border-primary/50 bg-primary/5" : "border-border/60 hover:border-border")}>
                 <RadioGroupItem value="video" id="type-video" />
                 <Video className="h-4 w-4 text-primary/70" />
                 <span className="text-sm font-medium text-foreground/80">Video</span>
               </label>
-              <label className={`flex items-center gap-3 rounded-[10px] border px-4 py-3 cursor-pointer transition-colors flex-1 ${contentType === "dokumen" ? "border-primary/50 bg-primary/5" : "border-border/60 hover:border-border"}`}>
+              <label className={cn("flex items-center gap-3 rounded-[10px] border px-4 py-3 cursor-pointer transition-colors flex-1", contentType === "dokumen" ? "border-primary/50 bg-primary/5" : "border-border/60 hover:border-border")}>
                 <RadioGroupItem value="dokumen" id="type-dokumen" />
                 <FileText className="h-4 w-4 text-primary/70" />
                 <span className="text-sm font-medium text-foreground/80">Dokumen</span>
               </label>
             </RadioGroup>
 
-            {/* Dynamic Fields based on content type */}
             {contentType === "video" ? (
               <div className="space-y-5 pt-2">
                 <Field label="URL Video" hint="Masukkan link YouTube atau platform lainnya">
-                  <Input
-                    placeholder="https://youtube.com/watch?v=..."
-                    value={videoUrl}
-                    onChange={(e) => setVideoUrl(e.target.value)}
-                    className="rounded-[10px] border-border/60 focus-visible:ring-primary/30 text-sm"
-                  />
+                  <Input placeholder="https://youtube.com/watch?v=..." value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} className="rounded-[10px] border-border/60 focus-visible:ring-primary/30 text-sm" />
                 </Field>
-
-                {videoUrl && videoUrl.includes("youtube") && (
-                  <div className="rounded-[10px] overflow-hidden border border-border/60 aspect-video bg-muted/20">
-                    <iframe
-                      src={`https://www.youtube.com/embed/${new URL(videoUrl).searchParams.get("v") || ""}`}
-                      className="w-full h-full"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
-                      allowFullScreen
-                      title="Video preview"
-                    />
-                  </div>
-                )}
-
                 <Field label="Thumbnail Video">
                   <div className="flex items-center justify-center rounded-[10px] border-2 border-dashed border-border/60 hover:border-primary/30 transition-colors p-8 cursor-pointer bg-muted/10">
                     <div className="text-center space-y-2">
@@ -199,7 +148,6 @@ export default function PanduanFormPage() {
                     </div>
                   </div>
                 </Field>
-
                 <Field label="Thumbnail Dokumen">
                   <div className="flex items-center justify-center rounded-[10px] border-2 border-dashed border-border/60 hover:border-primary/30 transition-colors p-8 cursor-pointer bg-muted/10">
                     <div className="text-center space-y-2">
@@ -213,23 +161,15 @@ export default function PanduanFormPage() {
             )}
           </SectionCard>
 
-          {/* Deskripsi */}
           <SectionCard>
             <Field label="Deskripsi Singkat" hint="Ringkasan singkat panduan ini">
-              <Textarea
-                placeholder="Tulis deskripsi singkat..."
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                rows={4}
-                className="rounded-[10px] border-border/60 focus-visible:ring-primary/30 text-sm resize-none"
-              />
+              <Textarea placeholder="Tulis deskripsi singkat..." value={description} onChange={(e) => setDescription(e.target.value)} rows={4} className="rounded-[10px] border-border/60 focus-visible:ring-primary/30 text-sm resize-none" />
             </Field>
           </SectionCard>
         </div>
 
-        {/* RIGHT – Metadata & Publish */}
+        {/* RIGHT */}
         <div className="space-y-5 lg:sticky lg:top-4 self-start">
-          {/* Status & Publish */}
           <SectionCard title="Publikasi">
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
@@ -238,53 +178,32 @@ export default function PanduanFormPage() {
               </div>
               <Switch checked={isPublished} onCheckedChange={setIsPublished} />
             </div>
-
             <div className="flex items-center gap-2 rounded-[10px] border border-border/60 bg-muted/20 px-3 py-2.5 text-xs text-muted-foreground">
               <Eye className="h-3.5 w-3.5" />
               <span>Status: {isPublished ? "Dipublikasikan" : "Draft"}</span>
             </div>
           </SectionCard>
 
-          {/* Produk */}
           <SectionCard title="Produk Terkait">
             <Field label="Produk">
               <Select value={product} onValueChange={setProduct}>
-                <SelectTrigger className="rounded-[10px] border-border/60 focus:ring-primary/30 text-sm">
-                  <SelectValue placeholder="Pilih produk..." />
-                </SelectTrigger>
-                <SelectContent className="rounded-[10px]">
-                  {products.map((p) => (
-                    <SelectItem key={p} value={p}>{p}</SelectItem>
-                  ))}
-                </SelectContent>
+                <SelectTrigger className="rounded-[10px] border-border/60 focus:ring-primary/30 text-sm"><SelectValue placeholder="Pilih produk..." /></SelectTrigger>
+                <SelectContent className="rounded-[10px]">{products.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}</SelectContent>
               </Select>
             </Field>
           </SectionCard>
 
-          {/* Preview Summary */}
           <SectionCard title="Ringkasan">
             <div className="space-y-3 text-xs">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Topik</span>
-                <span className="text-foreground/80 font-medium truncate max-w-[180px]">{namaTopic || "—"}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Slug</span>
-                <span className="text-foreground/80 font-medium truncate max-w-[180px]">{slug || "—"}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Tipe</span>
-                <span className="text-foreground/80 font-medium capitalize">{contentType}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Produk</span>
-                <span className="text-foreground/80 font-medium truncate max-w-[180px]">{product || "—"}</span>
-              </div>
+              {[["Topik", namaTopic], ["Slug", slug], ["Tipe", contentType], ["Produk", product]].map(([l, v]) => (
+                <div key={l} className="flex justify-between">
+                  <span className="text-muted-foreground">{l}</span>
+                  <span className="text-foreground/80 font-medium truncate max-w-[180px] capitalize">{v || "—"}</span>
+                </div>
+              ))}
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Status</span>
-                <span className={`font-medium ${isPublished ? "text-success" : "text-muted-foreground"}`}>
-                  {isPublished ? "Published" : "Draft"}
-                </span>
+                <span className={`font-medium ${isPublished ? "text-success" : "text-muted-foreground"}`}>{isPublished ? "Published" : "Draft"}</span>
               </div>
             </div>
           </SectionCard>
