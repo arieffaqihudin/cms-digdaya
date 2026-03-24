@@ -23,7 +23,7 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { restrictToVerticalAxis } from "@dnd-kit/modifiers" as any;
+
 import { SortableTableRow, SortableMobileCard } from "@/components/SortableTableRow";
 
 interface PanduanItem {
