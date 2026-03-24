@@ -55,16 +55,16 @@
     --status-danger-fg: 4 50% 48%;
 
     /* Sidebar: soft pale sage green */
-    --sidebar-background: 148 18% 95%;
-    --sidebar-foreground: 160 10% 42%;
-    --sidebar-primary: 152 45% 35%;
+    --sidebar-background: 150 16% 96%;
+    --sidebar-foreground: 155 8% 46%;
+    --sidebar-primary: 152 42% 34%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 150 22% 88%;
-    --sidebar-accent-foreground: 152 35% 28%;
-    --sidebar-border: 150 12% 88%;
+    --sidebar-accent: 150 18% 90%;
+    --sidebar-accent-foreground: 152 32% 26%;
+    --sidebar-border: 150 10% 90%;
     --sidebar-ring: 152 30% 50%;
-    --sidebar-muted: 155 10% 55%;
-    --sidebar-section: 155 8% 62%;
+    --sidebar-muted: 155 8% 58%;
+    --sidebar-section: 155 6% 66%;
   }
 }
 
