@@ -161,29 +161,9 @@ export default function PanduanFormPage() {
                 </div>
               ))}
             </div>
+          {items.length === 0 && (
+            <p className="text-sm text-muted-foreground py-4">Belum ada konten. Klik "Tambah Konten" untuk menambahkan dokumen atau video.</p>
           )}
-
-          <Popover open={addOpen} onOpenChange={setAddOpen}>
-            <PopoverTrigger asChild>
-              <Button variant="outline" size="sm" className="gap-2">
-                <Plus className="h-4 w-4" /> Tambah Konten
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-44 p-1.5" align="start">
-              <button
-                className="flex w-full items-center gap-2.5 rounded-md px-3 py-2 text-sm hover:bg-muted"
-                onClick={() => addItem("document")}
-              >
-                <FileText className="h-4 w-4 text-muted-foreground" /> Dokumen
-              </button>
-              <button
-                className="flex w-full items-center gap-2.5 rounded-md px-3 py-2 text-sm hover:bg-muted"
-                onClick={() => addItem("video")}
-              >
-                <Video className="h-4 w-4 text-muted-foreground" /> Video
-              </button>
-            </PopoverContent>
-          </Popover>
         </div>
       </div>
 
