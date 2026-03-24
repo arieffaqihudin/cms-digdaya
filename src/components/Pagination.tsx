@@ -25,22 +25,25 @@ export default function Pagination({ currentPage, totalPages, totalItems, itemsP
   }
 
   return (
-    <div className="flex items-center justify-between px-5 py-3.5 border-t border-border">
-      <p className="text-[12px] text-muted-foreground">
-        Showing <span className="font-medium tabular-nums text-foreground">{start}–{end}</span> of{" "}
+    <div className="flex items-center justify-between px-4 md:px-5 py-3 md:py-3.5 border-t border-border">
+      <p className="text-[11px] md:text-[12px] text-muted-foreground">
+        <span className="hidden sm:inline">Showing </span>
+        <span className="font-medium tabular-nums text-foreground">{start}–{end}</span>
+        <span className="hidden sm:inline"> of</span>
+        <span className="sm:hidden">/</span>{" "}
         <span className="font-medium tabular-nums text-foreground">{totalItems}</span>
       </p>
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-0.5 md:gap-1">
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:opacity-30 disabled:pointer-events-none"
+          className="flex h-7 w-7 md:h-8 md:w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:opacity-30 disabled:pointer-events-none"
         >
           <ChevronLeft className="h-4 w-4" strokeWidth={1.6} />
         </button>
         {pages.map((page, i) =>
           page === "..." ? (
-            <span key={`e${i}`} className="flex h-8 w-8 items-center justify-center text-[12px] text-muted-foreground">
+            <span key={`e${i}`} className="flex h-7 w-7 md:h-8 md:w-8 items-center justify-center text-[12px] text-muted-foreground">
               …
             </span>
           ) : (
@@ -48,7 +51,7 @@ export default function Pagination({ currentPage, totalPages, totalItems, itemsP
               key={page}
               onClick={() => onPageChange(page)}
               className={cn(
-                "flex h-8 w-8 items-center justify-center rounded-lg text-[12px] font-medium tabular-nums transition-colors",
+                "flex h-7 w-7 md:h-8 md:w-8 items-center justify-center rounded-lg text-[12px] font-medium tabular-nums transition-colors",
                 currentPage === page
                   ? "bg-primary text-primary-foreground"
                   : "text-muted-foreground hover:bg-accent hover:text-foreground"
@@ -61,7 +64,7 @@ export default function Pagination({ currentPage, totalPages, totalItems, itemsP
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:opacity-30 disabled:pointer-events-none"
+          className="flex h-7 w-7 md:h-8 md:w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:opacity-30 disabled:pointer-events-none"
         >
           <ChevronRight className="h-4 w-4" strokeWidth={1.6} />
         </button>
