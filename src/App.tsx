@@ -48,6 +48,7 @@ const App = () => (
                   <Route path="/categories" element={<TaxonomyPage defaultTab="categories" />} />
                   <Route path="/tags" element={<TaxonomyPage defaultTab="tags" />} />
                   <Route path="/products" element={<TaxonomyPage defaultTab="products" />} />
+                  <Route path="/products/new" element={<ProductFormPage />} />
                   <Route path="/channels" element={<TaxonomyPage defaultTab="channels" />} />
                   <Route path="/media" element={<MediaLibrary />} />
                   <Route path="/settings" element={<PlaceholderPage title="Pengaturan" />} />
