@@ -268,5 +268,6 @@ export default function FAQFormPage() {
         {metadataPanel}
       </div>
     </div>
+  </div>
   );
 }
