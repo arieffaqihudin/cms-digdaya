@@ -15,6 +15,7 @@ import ArchivedContent from "@/pages/ArchivedContent";
 import DraftsPage from "@/pages/DraftsPage";
 import TaxonomyPage from "@/pages/TaxonomyPage";
 import PlaceholderPage from "@/pages/PlaceholderPage";
+import MediaLibrary from "@/pages/MediaLibrary";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
