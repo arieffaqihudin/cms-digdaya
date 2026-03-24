@@ -1,229 +1,270 @@
 import { Link } from "react-router-dom";
 import {
   Video, BookOpen, HelpCircle, PenSquare, ArrowUpRight,
-  TrendingUp, TrendingDown, Clock, CheckCircle2, XCircle, Inbox,
+  FileText, Image, Layers, FolderTree, Tag, Radio,
+  Users, Shield, Plus, Upload, Clock, CheckCircle2,
+  CalendarClock, Archive,
 } from "lucide-react";
-import { dashboardStats, mockVideos, mockGuides, mockBlogs, mockFAQs, categories } from "@/lib/mock-data";
-import StatusBadge from "@/components/StatusBadge";
+import { Button } from "@/components/ui/button";
+import { mockVideos, mockGuides, mockFAQs, mockBlogs, products, categories, channels, tags } from "@/lib/mock-data";
 
-const statCards = [
-  {
-    label: "Video Masuk Hari Ini",
-    value: 18,
-    icon: Inbox,
-    trend: "+5 dari kemarin",
-    trendUp: true,
-    iconBg: "bg-primary/10",
-    iconColor: "text-primary",
-  },
-  {
-    label: "Perlu Review",
-    value: dashboardStats.videosNeedReview,
-    icon: Clock,
-    trend: "+12 menunggu",
-    trendUp: false,
-    iconBg: "bg-status-warning-bg",
-    iconColor: "text-status-warning-fg",
-  },
-  {
-    label: "Dipublikasikan",
-    value: 312,
-    icon: CheckCircle2,
-    trend: "+28 minggu ini",
-    trendUp: true,
-    iconBg: "bg-status-success-bg",
-    iconColor: "text-status-success-fg",
-  },
-  {
-    label: "Ditolak",
-    value: 9,
-    icon: XCircle,
-    trend: "-3 dari kemarin",
-    trendUp: true,
-    iconBg: "bg-status-danger-bg",
-    iconColor: "text-status-danger-fg",
-  },
+// ── Derive real counts ──
+const contentCounts = [
+  { label: "Total Video", value: mockVideos.length, icon: Video, href: "/video" },
+  { label: "Total Blog", value: mockBlogs.length, icon: PenSquare, href: "/blog" },
+  { label: "Total Panduan", value: mockGuides.length, icon: BookOpen, href: "/panduan" },
+  { label: "Total FAQ", value: mockFAQs.length, icon: HelpCircle, href: "/faq" },
+  { label: "Total Repository", value: 5, icon: FileText, href: "/repository" },
+  { label: "Total Banner App", value: 3, icon: Image, href: "/banner" },
 ];
 
+const allContent = [
+  ...mockVideos.map((v) => ({ status: v.status === "need_review" ? "draft" : v.status })),
+  ...mockBlogs.map((b) => ({ status: b.status })),
+  ...mockGuides.map((g) => ({ status: g.status })),
+  ...mockFAQs.map((f) => ({ status: f.status })),
+];
+
+const workflowCards = [
+  { label: "Draft", value: allContent.filter((c) => c.status === "draft").length, icon: Clock, color: "text-muted-foreground", bg: "bg-muted", href: "/drafts" },
+  { label: "Terjadwal", value: 0, icon: CalendarClock, color: "text-blue-600", bg: "bg-blue-50", href: "/scheduled" },
+  { label: "Dipublikasikan", value: allContent.filter((c) => c.status === "published").length, icon: CheckCircle2, color: "text-[hsl(var(--status-success-fg))]", bg: "bg-[hsl(var(--status-success-bg))]", href: "/published" },
+  { label: "Arsip", value: allContent.filter((c) => c.status === "archived").length, icon: Archive, color: "text-[hsl(var(--status-warning-fg))]", bg: "bg-[hsl(var(--status-warning-bg))]", href: "/archived" },
+];
+
+const recentActivities = [
+  { nama: "Arief Faqihudin", menu: "Pengguna", aktivitas: "Menambahkan pengguna baru", waktu: "24 Mar 2026, 23:10" },
+  { nama: "Admin Digdaya", menu: "FAQ", aktivitas: "Mengubah FAQ", waktu: "24 Mar 2026, 22:40" },
+  { nama: "Editor Konten", menu: "Blog", aktivitas: "Mempublikasikan artikel", waktu: "24 Mar 2026, 21:15" },
+  { nama: "Super Admin", menu: "Repository", aktivitas: "Mengunggah dokumen baru", waktu: "24 Mar 2026, 20:00" },
+  { nama: "Arief Faqihudin", menu: "Video", aktivitas: "Sinkronisasi video YouTube", waktu: "24 Mar 2026, 18:30" },
+];
+
+const recentlyUpdated = [
+  { judul: "Refleksi Ramadhan: Memaknai Bulan Suci", modul: "Blog", user: "Ahmad Fauzi", waktu: "24 Mar 2026, 23:00" },
+  { judul: "Cara Membuat Surat Keluar", modul: "Panduan", user: "Editor Konten", waktu: "24 Mar 2026, 22:30" },
+  { judul: "Bagaimana cara mendaftar akun?", modul: "FAQ", user: "Admin Digdaya", waktu: "24 Mar 2026, 21:00" },
+  { judul: "Khutbah Jumat: Keutamaan Ramadhan", modul: "Video", user: "Super Admin", waktu: "24 Mar 2026, 20:15" },
+  { judul: "Panduan Arsip Digital", modul: "Panduan", user: "Arief Faqihudin", waktu: "24 Mar 2026, 19:45" },
+];
+
+const faqCategoryCount = 8;
+const docCategoryCount = 6;
+const videoCategoryCount = 4;
+
+const masterCards = [
+  { label: "Produk", value: products.length, icon: Layers, href: "/produk" },
+  { label: "Kategori FAQ", value: faqCategoryCount, icon: FolderTree, href: "/categories/faq" },
+  { label: "Kategori Dokumen", value: docCategoryCount, icon: FolderTree, href: "/categories/document" },
+  { label: "Kategori Video", value: videoCategoryCount, icon: FolderTree, href: "/categories/video" },
+  { label: "Tag", value: tags.length, icon: Tag, href: "/tags" },
+  { label: "Channel", value: channels.length, icon: Radio, href: "/channels" },
+];
+
+const modulIcons: Record<string, typeof Video> = {
+  Video: Video,
+  Blog: PenSquare,
+  Panduan: BookOpen,
+  FAQ: HelpCircle,
+  Repository: FileText,
+};
+
 export default function Dashboard() {
-  const recentContent = [
-    ...mockVideos.slice(0, 3).map(v => ({
-      id: v.id, type: "Video" as const, title: v.title, date: v.publishDate,
-      status: v.status, thumbnail: v.thumbnail, channel: v.channel,
-      editUrl: `/video/${v.id}`,
-    })),
-    ...mockBlogs.slice(0, 2).map(b => ({
-      id: b.id, type: "Blog" as const, title: b.title, date: b.publishDate,
-      status: b.status, thumbnail: b.coverImage, channel: b.author,
-      editUrl: `/content/${b.id}?type=blog`,
-    })),
-    ...mockGuides.slice(0, 1).map(g => ({
-      id: g.id, type: "Panduan" as const, title: g.title, date: g.lastUpdated,
-      status: g.status, thumbnail: undefined, channel: g.relatedProduct,
-      editUrl: `/content/${g.id}?type=guide`,
-    })),
-  ].sort((a, b) => b.date.localeCompare(a.date));
-
-  const needReviewVideos = mockVideos.filter(v => v.status === "need_review").slice(0, 5);
-
-  const topCategories = categories.slice(0, 6).map((c, i) => ({
-    name: c,
-    count: [38, 31, 27, 22, 18, 14][i] || 10,
-    percentage: [85, 70, 60, 50, 40, 32][i] || 20,
-  }));
-
-  const typeIcons: Record<string, typeof Video> = {
-    Video: Video,
-    Blog: PenSquare,
-    Panduan: BookOpen,
-    FAQ: HelpCircle,
-  };
-
   return (
     <div className="space-y-5 md:space-y-7">
-      {/* Header greeting */}
+      {/* Header */}
       <div>
-        <h3 className="text-base md:text-lg font-semibold text-foreground">Selamat datang, Editor.</h3>
-        <p className="text-[12px] md:text-[13px] text-muted-foreground mt-1">
-          Ada {dashboardStats.videosNeedReview} video dan {dashboardStats.blogDrafts} draft blog yang menunggu review.
+        <h3 className="text-base md:text-lg font-semibold text-foreground">Dashboard</h3>
+        <p className="text-[12px] md:text-[13px] text-muted-foreground mt-0.5">
+          Pusat kendali konten dan operasional CMS Digdaya.
         </p>
       </div>
 
-      {/* Stat cards — 2 cols mobile, 4 cols desktop */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-        {statCards.map((stat) => {
-          const Icon = stat.icon;
-          return (
-            <div
-              key={stat.label}
-              className="rounded-[12px] border border-border bg-surface p-4 md:p-5 shadow-card hover:shadow-soft transition-shadow duration-200"
-            >
-              <div className="flex items-start justify-between">
-                <div className="space-y-1 min-w-0">
-                  <p className="text-[10px] md:text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground leading-tight">
-                    {stat.label}
-                  </p>
-                  <h3 className="text-[22px] md:text-[28px] font-semibold tabular-nums leading-tight text-foreground">
-                    {stat.value}
-                  </h3>
+      {/* SECTION A – Ringkasan Konten */}
+      <div>
+        <h4 className="text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground mb-3">Ringkasan Konten</h4>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+          {contentCounts.map((c) => {
+            const Icon = c.icon;
+            return (
+              <Link
+                key={c.label}
+                to={c.href}
+                className="rounded-[12px] border border-border bg-surface p-4 shadow-card hover:shadow-soft transition-shadow duration-200 group"
+              >
+                <div className="flex items-center gap-2.5 mb-2">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-primary/10 shrink-0">
+                    <Icon className="h-4 w-4 text-primary" strokeWidth={1.8} />
+                  </div>
                 </div>
-                <div className={`flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-[10px] ${stat.iconBg} shrink-0`}>
-                  <Icon className={`h-4 w-4 md:h-[18px] md:w-[18px] ${stat.iconColor}`} strokeWidth={1.8} />
-                </div>
-              </div>
-              <div className="mt-2 md:mt-3 flex items-center gap-1.5 text-[10px] md:text-[11px] font-medium">
-                {stat.trendUp ? (
-                  <TrendingUp className="h-3 w-3 text-status-success-fg" />
-                ) : (
-                  <TrendingDown className="h-3 w-3 text-status-warning-fg" />
-                )}
-                <span className="text-muted-foreground truncate">{stat.trend}</span>
-              </div>
-            </div>
-          );
-        })}
+                <h3 className="text-[22px] font-semibold tabular-nums text-foreground leading-tight">{c.value}</h3>
+                <p className="text-[10px] md:text-[11px] font-medium text-muted-foreground mt-0.5">{c.label}</p>
+              </Link>
+            );
+          })}
+        </div>
       </div>
 
-      {/* Main grid — stacked on mobile */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-5">
-        {/* Konten Terbaru - spans 2 cols on desktop */}
-        <div className="lg:col-span-2 rounded-[12px] border border-border bg-surface shadow-card">
+      {/* SECTION B – Workflow Status */}
+      <div>
+        <h4 className="text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground mb-3">Status Workflow</h4>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          {workflowCards.map((w) => {
+            const Icon = w.icon;
+            return (
+              <Link
+                key={w.label}
+                to={w.href}
+                className="rounded-[12px] border border-border bg-surface p-4 shadow-card hover:shadow-soft transition-shadow duration-200"
+              >
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-[10px] md:text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground">{w.label}</p>
+                    <h3 className="text-[22px] md:text-[28px] font-semibold tabular-nums text-foreground leading-tight mt-1">{w.value}</h3>
+                  </div>
+                  <div className={`flex h-8 w-8 md:h-9 md:w-9 items-center justify-center rounded-[8px] ${w.bg} shrink-0`}>
+                    <Icon className={`h-4 w-4 ${w.color}`} strokeWidth={1.8} />
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* SECTION C & D – Main grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-5">
+        {/* Aktivitas Terbaru */}
+        <div className="rounded-[12px] border border-border bg-surface shadow-card">
           <div className="flex items-center justify-between border-b border-border/60 px-4 md:px-5 py-3 md:py-4">
-            <h4 className="text-[13px] font-semibold text-foreground">Konten Terbaru</h4>
-            <Link to="/published" className="flex items-center gap-1 text-[11px] font-medium text-primary hover:underline">
-              Lihat semua <ArrowUpRight className="h-3 w-3" />
+            <h4 className="text-[13px] font-semibold text-foreground">Aktivitas Terbaru</h4>
+            <Link to="/activity" className="flex items-center gap-1 text-[11px] font-medium text-primary hover:underline">
+              Lihat Semua <ArrowUpRight className="h-3 w-3" />
             </Link>
           </div>
           <div className="divide-y divide-border/40">
-            {recentContent.map((item) => {
-              const TypeIcon = typeIcons[item.type] || BookOpen;
+            {recentActivities.map((a, i) => (
+              <div key={i} className="px-4 md:px-5 py-3 flex items-start gap-3">
+                <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+                  <span className="text-[10px] font-semibold text-primary">{a.nama.charAt(0)}</span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[12px] md:text-[13px] text-foreground">
+                    <span className="font-medium">{a.nama}</span>{" "}
+                    <span className="text-muted-foreground">· {a.menu}</span>
+                  </p>
+                  <p className="text-[11px] text-muted-foreground mt-0.5">{a.aktivitas}</p>
+                  <p className="text-[10px] text-muted-foreground/70 mt-0.5">{a.waktu}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Konten Terakhir Diubah */}
+        <div className="rounded-[12px] border border-border bg-surface shadow-card">
+          <div className="flex items-center justify-between border-b border-border/60 px-4 md:px-5 py-3 md:py-4">
+            <h4 className="text-[13px] font-semibold text-foreground">Konten Terakhir Diubah</h4>
+          </div>
+          <div className="divide-y divide-border/40">
+            {recentlyUpdated.map((item, i) => {
+              const ModIcon = modulIcons[item.modul] || BookOpen;
               return (
-                <Link
-                  key={item.id}
-                  to={item.editUrl}
-                  className="flex items-center gap-3 md:gap-4 px-4 md:px-5 py-3 md:py-3.5 hover:bg-accent/40 transition-colors"
-                >
-                  {item.thumbnail ? (
-                    <img
-                      src={item.thumbnail}
-                      alt=""
-                      className="h-10 w-16 md:h-12 md:w-[78px] rounded-[8px] object-cover bg-muted shrink-0"
-                    />
-                  ) : (
-                    <div className="h-10 w-16 md:h-12 md:w-[78px] rounded-[8px] bg-accent shrink-0 flex items-center justify-center">
-                      <TypeIcon className="h-4 w-4 text-muted-foreground" strokeWidth={1.6} />
-                    </div>
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[12px] md:text-[13px] font-medium text-foreground truncate">{item.title}</p>
-                    <div className="flex items-center gap-2 mt-1 flex-wrap">
-                      <span className="inline-flex items-center gap-1 text-[10px] md:text-[11px] text-muted-foreground">
-                        <TypeIcon className="h-3 w-3" strokeWidth={1.6} />
-                        {item.type}
-                      </span>
-                      <span className="text-[11px] text-muted-foreground/50 hidden sm:inline">·</span>
-                      <span className="text-[10px] md:text-[11px] text-muted-foreground hidden sm:inline">{item.channel}</span>
-                    </div>
+                <div key={i} className="px-4 md:px-5 py-3 flex items-start gap-3">
+                  <div className="h-7 w-7 rounded-[6px] bg-accent flex items-center justify-center shrink-0 mt-0.5">
+                    <ModIcon className="h-3.5 w-3.5 text-muted-foreground" strokeWidth={1.6} />
                   </div>
-                  <StatusBadge status={item.status} />
-                </Link>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[12px] md:text-[13px] font-medium text-foreground truncate">{item.judul}</p>
+                    <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                      <span className="inline-flex items-center rounded-full bg-primary/[0.07] px-2 py-[1px] text-[10px] font-medium text-primary">{item.modul}</span>
+                      <span className="text-[10px] text-muted-foreground">oleh {item.user}</span>
+                    </div>
+                    <p className="text-[10px] text-muted-foreground/70 mt-0.5">{item.waktu}</p>
+                  </div>
+                </div>
               );
             })}
           </div>
         </div>
+      </div>
 
-        {/* Right column */}
-        <div className="space-y-4 md:space-y-5">
-          {/* Perlu Review */}
-          <div className="rounded-[12px] border border-border bg-surface shadow-card">
-            <div className="flex items-center justify-between border-b border-border/60 px-4 md:px-5 py-3 md:py-4">
-              <h4 className="text-[13px] font-semibold text-foreground">Perlu Review</h4>
-              <Link to="/video" className="flex items-center gap-1 text-[11px] font-medium text-primary hover:underline">
-                Semua <ArrowUpRight className="h-3 w-3" />
-              </Link>
-            </div>
-            <div className="divide-y divide-border/40">
-              {needReviewVideos.map((v) => (
-                <Link
-                  key={v.id}
-                  to={`/video/${v.id}`}
-                  className="flex items-center gap-3 px-4 md:px-5 py-2.5 md:py-3 hover:bg-accent/40 transition-colors"
-                >
-                  <img
-                    src={v.thumbnail}
-                    alt=""
-                    className="h-8 w-12 md:h-9 md:w-14 rounded-md object-cover bg-muted shrink-0"
-                  />
-                  <div className="min-w-0 flex-1">
-                    <p className="text-[11px] md:text-[12px] font-medium text-foreground truncate">{v.title}</p>
-                    <p className="text-[10px] text-muted-foreground mt-0.5">{v.channel} · {v.publishDate}</p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          {/* Kategori Terpopuler */}
-          <div className="rounded-[12px] border border-border bg-surface shadow-card">
-            <div className="border-b border-border/60 px-4 md:px-5 py-3 md:py-4">
-              <h4 className="text-[13px] font-semibold text-foreground">Kategori Terpopuler</h4>
-            </div>
-            <div className="px-4 md:px-5 py-3 md:py-4 space-y-3 md:space-y-4">
-              {topCategories.map((c) => (
-                <div key={c.name}>
-                  <div className="flex items-center justify-between text-[11px] md:text-[12px] mb-1.5">
-                    <span className="font-medium text-foreground">{c.name}</span>
-                    <span className="tabular-nums text-muted-foreground">{c.count} konten</span>
-                  </div>
-                  <div className="h-[6px] rounded-full bg-accent overflow-hidden">
-                    <div
-                      className="h-full rounded-full bg-primary/50 transition-all duration-500"
-                      style={{ width: `${c.percentage}%` }}
-                    />
+      {/* SECTION E – Master Data Snapshot */}
+      <div>
+        <h4 className="text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground mb-3">Master Data</h4>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+          {masterCards.map((m) => {
+            const Icon = m.icon;
+            return (
+              <Link
+                key={m.label}
+                to={m.href}
+                className="rounded-[12px] border border-border bg-surface p-4 shadow-card hover:shadow-soft transition-shadow duration-200"
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-[6px] bg-accent shrink-0">
+                    <Icon className="h-3.5 w-3.5 text-muted-foreground" strokeWidth={1.6} />
                   </div>
                 </div>
-              ))}
-            </div>
+                <h3 className="text-[20px] font-semibold tabular-nums text-foreground leading-tight">{m.value}</h3>
+                <p className="text-[10px] md:text-[11px] font-medium text-muted-foreground mt-0.5">{m.label}</p>
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* SECTION F & G – Bottom row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-5">
+        {/* Pengguna & Akses */}
+        <div className="rounded-[12px] border border-border bg-surface shadow-card p-4 md:p-5">
+          <h4 className="text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground mb-4">Pengguna & Akses</h4>
+          <div className="grid grid-cols-2 gap-3">
+            <Link to="/users" className="rounded-[10px] border border-border bg-background p-4 hover:shadow-soft transition-shadow">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="flex h-7 w-7 items-center justify-center rounded-[6px] bg-primary/10">
+                  <Users className="h-3.5 w-3.5 text-primary" strokeWidth={1.6} />
+                </div>
+              </div>
+              <h3 className="text-[20px] font-semibold tabular-nums text-foreground leading-tight">12</h3>
+              <p className="text-[11px] text-muted-foreground mt-0.5">Total Pengguna</p>
+            </Link>
+            <Link to="/access" className="rounded-[10px] border border-border bg-background p-4 hover:shadow-soft transition-shadow">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="flex h-7 w-7 items-center justify-center rounded-[6px] bg-primary/10">
+                  <Shield className="h-3.5 w-3.5 text-primary" strokeWidth={1.6} />
+                </div>
+              </div>
+              <h3 className="text-[20px] font-semibold tabular-nums text-foreground leading-tight">3</h3>
+              <p className="text-[11px] text-muted-foreground mt-0.5">Grup Hak Akses</p>
+            </Link>
+          </div>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="rounded-[12px] border border-border bg-surface shadow-card p-4 md:p-5">
+          <h4 className="text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground mb-4">Aksi Cepat</h4>
+          <div className="grid grid-cols-2 gap-2.5">
+            <Link to="/video">
+              <Button variant="outline" size="sm" className="w-full h-9 rounded-[10px] text-[12px] gap-1.5 border-border justify-start">
+                <Plus className="h-3.5 w-3.5" strokeWidth={1.6} /> Tambah Video
+              </Button>
+            </Link>
+            <Link to="/faq/new">
+              <Button variant="outline" size="sm" className="w-full h-9 rounded-[10px] text-[12px] gap-1.5 border-border justify-start">
+                <Plus className="h-3.5 w-3.5" strokeWidth={1.6} /> Tambah FAQ
+              </Button>
+            </Link>
+            <Link to="/panduan/new">
+              <Button variant="outline" size="sm" className="w-full h-9 rounded-[10px] text-[12px] gap-1.5 border-border justify-start">
+                <Plus className="h-3.5 w-3.5" strokeWidth={1.6} /> Tambah Panduan
+              </Button>
+            </Link>
+            <Link to="/repository/new">
+              <Button variant="outline" size="sm" className="w-full h-9 rounded-[10px] text-[12px] gap-1.5 border-border justify-start">
+                <Upload className="h-3.5 w-3.5" strokeWidth={1.6} /> Upload Repository
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
