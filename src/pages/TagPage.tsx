@@ -74,9 +74,13 @@ export default function TagPage() {
                     </span>
                   </div>
                 </div>
-                <div className="flex items-center gap-0.5 shrink-0">
-                  <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground hover:bg-accent"><Edit className="h-3.5 w-3.5" strokeWidth={1.6} /></Button>
-                  <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive hover:bg-destructive/10"><Trash2 className="h-3.5 w-3.5" strokeWidth={1.6} /></Button>
+                <div className="flex items-center gap-1 shrink-0">
+                  <Button size="sm" variant="ghost" className="h-8 rounded-[8px] text-xs text-muted-foreground hover:text-foreground hover:bg-accent gap-1">
+                    <Pencil className="h-3.5 w-3.5" strokeWidth={1.6} /> Ubah
+                  </Button>
+                  <Button size="sm" variant="ghost" className="h-8 rounded-[8px] text-xs text-muted-foreground hover:text-destructive hover:bg-destructive/10 gap-1">
+                    <Trash2 className="h-3.5 w-3.5" strokeWidth={1.6} /> Hapus
+                  </Button>
                 </div>
               </div>
             ))}
