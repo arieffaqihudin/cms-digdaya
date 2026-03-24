@@ -20,6 +20,8 @@ import MediaLibrary from "@/pages/MediaLibrary";
 import PanduanFormPage from "@/pages/PanduanFormPage";
 import RepositoryPage from "@/pages/RepositoryPage";
 import RepositoryFormPage from "@/pages/RepositoryFormPage";
+import BannerPage from "@/pages/BannerPage";
+import BannerFormPage from "@/pages/BannerFormPage";
 import ProductFormPage from "@/pages/ProductFormPage";
 import FAQFormPage from "@/pages/FAQFormPage";
 import FAQCategoryFormPage from "@/pages/FAQCategoryFormPage";
