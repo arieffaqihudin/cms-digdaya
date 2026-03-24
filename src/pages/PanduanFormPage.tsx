@@ -50,7 +50,7 @@ export default function PanduanFormPage() {
   return (
     <div className="mx-auto max-w-5xl space-y-8">
       {/* Breadcrumb & Title */}
-      <div className="space-y-1.5">
+      <div className="space-y-2">
         <div className="text-sm text-muted-foreground">
           <span className="cursor-pointer hover:text-primary" onClick={() => navigate("/panduan")}>Panduan</span>
           <span className="mx-2">›</span>
@@ -60,7 +60,7 @@ export default function PanduanFormPage() {
       </div>
 
       {/* Form Card */}
-      <div className="space-y-6 rounded-[12px] border bg-card p-6 sm:p-8">
+      <div className="space-y-7 rounded-[12px] border bg-card p-6 sm:p-8">
         {/* Nama Topik */}
         <div className="space-y-2">
           <label className="text-sm font-medium text-foreground">
@@ -94,7 +94,7 @@ export default function PanduanFormPage() {
         </div>
 
         {/* Konten */}
-        <div className="space-y-4 border-t pt-6 mt-2">
+        <div className="space-y-5 border-t pt-7">
           <div className="flex items-center justify-between">
             <label className="text-sm font-medium text-foreground">Konten</label>
             <Popover open={addOpen} onOpenChange={setAddOpen}>
@@ -119,6 +119,10 @@ export default function PanduanFormPage() {
               </PopoverContent>
             </Popover>
           </div>
+
+          {items.length === 0 && (
+            <p className="text-sm text-muted-foreground">Belum ada konten. Klik "Tambah Konten" untuk menambahkan dokumen atau video.</p>
+          )}
 
           {items.length > 0 && (
             <div className="space-y-3">
@@ -161,8 +165,6 @@ export default function PanduanFormPage() {
                 </div>
               ))}
             </div>
-          {items.length === 0 && (
-            <p className="text-sm text-muted-foreground py-4">Belum ada konten. Klik "Tambah Konten" untuk menambahkan dokumen atau video.</p>
           )}
         </div>
       </div>
