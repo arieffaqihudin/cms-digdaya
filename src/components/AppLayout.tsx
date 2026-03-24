@@ -210,9 +210,9 @@ export default function AppLayout({ children }: { children: ReactNode }) {
         {/* Keluar */}
         <button
           onClick={async () => { await signOut(); navigate("/login"); }}
-          className="flex w-full items-center gap-3 rounded-[10px] px-3 py-[10px] text-[13px] font-normal text-red-400 hover:bg-red-50 hover:text-red-500 transition-all duration-150 ease-in-out"
+          className="flex w-full items-center gap-3 rounded-[10px] px-3 py-[10px] text-[13px] font-normal text-status-danger-fg hover:bg-destructive/10 hover:text-destructive transition-all duration-150 ease-in-out"
         >
-          <LogOut className="h-[18px] w-[18px] shrink-0 text-red-300" strokeWidth={1.6} />
+          <LogOut className="h-[18px] w-[18px] shrink-0 text-status-danger-fg/70" strokeWidth={1.6} />
           {showLabels && <span className="truncate">Keluar</span>}
         </button>
         {/* Collapse toggle */}
