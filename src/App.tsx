@@ -104,6 +104,9 @@ const AppRoutes = () => {
                 <Route path="/categories/faq" element={<FAQCategoryPage />} />
                 <Route path="/categories/faq/new" element={<FAQCategoryFormPage />} />
                 <Route path="/categories/faq/:id" element={<FAQCategoryFormPage />} />
+                <Route path="/categories/dokumen" element={<DocCategoryPage />} />
+                <Route path="/categories/dokumen/new" element={<DocCategoryFormPage />} />
+                <Route path="/categories/dokumen/:id" element={<DocCategoryFormPage />} />
                 <Route path="/tags" element={<TaxonomyPage defaultTab="tags" />} />
                 <Route path="/products" element={<TaxonomyPage defaultTab="products" />} />
                 <Route path="/products/new" element={<ProductFormPage />} />
