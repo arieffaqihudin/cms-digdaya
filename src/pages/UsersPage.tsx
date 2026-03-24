@@ -196,10 +196,24 @@ export default function UsersPage() {
     toast.success("Pengguna berhasil dihapus");
   };
 
-  const toggleStatus = (id: string) => {
+  // Toggle confirmation state
+  const [toggleTarget, setToggleTarget] = useState<{ id: string; currentActive: boolean } | null>(null);
+
+  const requestToggle = (id: string, currentActive: boolean) => {
+    setToggleTarget({ id, currentActive });
+  };
+
+  const confirmToggle = () => {
+    if (!toggleTarget) return;
     setUsers((prev) =>
-      prev.map((u) => (u.id === id ? { ...u, isActive: !u.isActive } : u))
+      prev.map((u) => (u.id === toggleTarget.id ? { ...u, isActive: !u.isActive } : u))
     );
+    if (toggleTarget.currentActive) {
+      toast.success("Pengguna berhasil dinonaktifkan.");
+    } else {
+      toast.success("Pengguna berhasil diaktifkan. Email verifikasi telah dikirim.");
+    }
+    setToggleTarget(null);
   };
 
   // ─── Filter selects ──────────────────────────────────────────────
