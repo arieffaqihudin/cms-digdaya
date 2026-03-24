@@ -1,213 +1,298 @@
 import { useState, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Save, Upload, FileText, Video, Image, Link2, Eye, CheckCircle } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
+import {
+  Upload, FileText, Video, Image, Link2, ChevronDown, ChevronUp,
+  GripVertical, Trash2, Plus, X,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
+import {
+  Popover, PopoverContent, PopoverTrigger,
+} from "@/components/ui/popover";
 import { products } from "@/lib/mock-data";
 import { toast } from "sonner";
-import { useScreenSize } from "@/components/AppLayout";
 import { cn } from "@/lib/utils";
 
 function slugify(text: string) {
   return text.toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-").replace(/-+/g, "-").trim();
 }
 
-function SectionCard({ title, children }: { title?: string; children: React.ReactNode }) {
+/* ─── Upload Area ─── */
+function UploadArea({ label }: { label?: string }) {
   return (
-    <div className="bg-card rounded-[12px] border border-border/60 p-6 space-y-5">
-      {title && <h3 className="text-sm font-semibold text-foreground/80">{title}</h3>}
-      {children}
+    <div className="space-y-1.5">
+      {label && <Label className="text-[13px] font-medium text-foreground/80">{label}</Label>}
+      <div className="flex items-center justify-center rounded-[10px] border-2 border-dashed border-border/50 hover:border-primary/30 transition-colors p-8 cursor-pointer bg-muted/5">
+        <div className="text-center space-y-1.5">
+          <Upload className="h-7 w-7 mx-auto text-muted-foreground/40" strokeWidth={1.5} />
+          <p className="text-[13px] text-muted-foreground">
+            Seret & Jatuhkan berkas Anda atau{" "}
+            <span className="text-primary font-medium cursor-pointer hover:underline">Jelajahi</span>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
 
-function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
-  return (
-    <div className="space-y-1.5">
-      <Label className="text-xs font-medium text-muted-foreground">{label}</Label>
-      {children}
-      {hint && <p className="text-[11px] text-muted-foreground/70">{hint}</p>}
-    </div>
-  );
-}
+/* ─── Content Block Types ─── */
+type ContentBlock = {
+  id: string;
+  type: "document" | "video";
+  expanded: boolean;
+};
+
+let blockIdCounter = 0;
+function genId() { return `block-${++blockIdCounter}-${Date.now()}`; }
 
 export default function PanduanFormPage() {
   const navigate = useNavigate();
-  const screenSize = useScreenSize();
 
   const [namaTopic, setNamaTopic] = useState("");
+  const [slugManual, setSlugManual] = useState("");
   const [product, setProduct] = useState("");
-  const [contentType, setContentType] = useState<"video" | "dokumen">("video");
-  const [videoUrl, setVideoUrl] = useState("");
-  const [description, setDescription] = useState("");
-  const [isPublished, setIsPublished] = useState(false);
+  const [contentBlocks, setContentBlocks] = useState<ContentBlock[]>([]);
+  const [addMenuOpen, setAddMenuOpen] = useState(false);
 
-  const slug = useMemo(() => slugify(namaTopic), [namaTopic]);
+  const slug = useMemo(() => slugManual || slugify(namaTopic), [namaTopic, slugManual]);
 
-  const handleSave = () => {
-    if (!namaTopic.trim()) { toast.error("Nama Topik wajib diisi"); return; }
-    toast.success("Panduan berhasil disimpan");
-    navigate("/panduan");
+  const addBlock = (type: "document" | "video") => {
+    setContentBlocks(prev => [...prev, { id: genId(), type, expanded: true }]);
+    setAddMenuOpen(false);
   };
 
-  const handlePublish = () => {
+  const removeBlock = (id: string) => {
+    setContentBlocks(prev => prev.filter(b => b.id !== id));
+  };
+
+  const toggleBlock = (id: string) => {
+    setContentBlocks(prev => prev.map(b => b.id === id ? { ...b, expanded: !b.expanded } : b));
+  };
+
+  const moveBlock = (idx: number, dir: -1 | 1) => {
+    const newIdx = idx + dir;
+    if (newIdx < 0 || newIdx >= contentBlocks.length) return;
+    const arr = [...contentBlocks];
+    [arr[idx], arr[newIdx]] = [arr[newIdx], arr[idx]];
+    setContentBlocks(arr);
+  };
+
+  const getBlockNumber = (id: string, type: "document" | "video") => {
+    return contentBlocks.filter(b => b.type === type).findIndex(b => b.id === id) + 1;
+  };
+
+  const handleCreate = () => {
     if (!namaTopic.trim()) { toast.error("Nama Topik wajib diisi"); return; }
-    toast.success("Panduan berhasil dipublikasikan");
+    if (!product) { toast.error("Product wajib dipilih"); return; }
+    toast.success("Panduan berhasil dibuat");
     navigate("/panduan");
   };
 
   return (
-    <div className="space-y-6">
-      {/* Editor Header — normal flow */}
-      <div className="rounded-[12px] border border-border bg-card p-4 md:px-6 md:py-4 shadow-card">
-        <div className="flex flex-wrap items-center gap-3 md:gap-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate("/panduan")} className="rounded-[10px] text-muted-foreground hover:text-foreground h-8 w-8 shrink-0">
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-          <div className="flex items-center gap-2 min-w-0 flex-1">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/15 bg-primary/[0.06] px-2.5 py-[3px] text-[11px] font-medium text-primary shrink-0">
-              <FileText className="h-3 w-3" strokeWidth={1.8} />
-              <span className="hidden sm:inline">Panduan</span>
-            </span>
-            <h1 className="text-sm md:text-[15px] font-semibold text-foreground truncate">Buat Panduan Baru</h1>
+    <div className="space-y-8">
+      {/* ═══ Breadcrumb & Title ═══ */}
+      <div className="space-y-1">
+        <div className="flex items-center gap-1.5 text-[13px] text-muted-foreground">
+          <Link to="/panduan" className="hover:text-foreground transition-colors">Panduan</Link>
+          <span>/</span>
+          <span className="text-foreground font-medium">Buat</span>
+        </div>
+        <h1 className="text-xl md:text-2xl font-semibold text-foreground tracking-tight">Buat Panduan</h1>
+      </div>
+
+      {/* ═══ Two Column Top ═══ */}
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-5 lg:gap-6">
+        {/* LEFT — Informasi Utama */}
+        <div className="bg-card rounded-[12px] border border-border/50 p-5 md:p-6 space-y-5">
+          {/* Nama Topik */}
+          <div className="space-y-1.5">
+            <Label className="text-[13px] font-medium text-foreground/80">
+              Nama Topik <span className="text-destructive">*</span>
+            </Label>
+            <Input
+              placeholder="Masukan Nama Topik"
+              value={namaTopic}
+              onChange={(e) => setNamaTopic(e.target.value)}
+              className="rounded-[10px] h-11 border-border/50 bg-background text-sm focus-visible:ring-primary/30"
+            />
           </div>
-          <div className="flex items-center gap-2 shrink-0 max-sm:w-full max-sm:pt-2 max-sm:border-t max-sm:border-border/40">
-            <Button variant="ghost" size="sm" className="h-8 rounded-[10px] text-xs text-muted-foreground hover:text-foreground hover:bg-accent gap-1.5 hidden sm:flex">
-              <Eye className="h-3.5 w-3.5" strokeWidth={1.6} /> Preview
-            </Button>
-            <Button variant="outline" size="sm" onClick={handleSave} className={cn("rounded-[10px] text-xs gap-1.5 h-8", screenSize === "mobile" && "flex-1")}>
-              <Save className="h-3.5 w-3.5" /> Simpan Draft
-            </Button>
-            <Button size="sm" onClick={handlePublish} className={cn("rounded-[10px] text-xs gap-1.5 h-8 bg-primary hover:bg-primary/90", screenSize === "mobile" && "flex-1")}>
-              <CheckCircle className="h-3.5 w-3.5" strokeWidth={1.6} /> Publikasikan
-            </Button>
+
+          {/* Slug */}
+          <div className="space-y-1.5">
+            <Label className="text-[13px] font-medium text-foreground/80">
+              Slug <span className="text-destructive">*</span>
+            </Label>
+            <Input
+              placeholder="slug-otomatis"
+              value={slug}
+              onChange={(e) => setSlugManual(e.target.value)}
+              className="rounded-[10px] h-11 border-border/50 bg-background text-sm font-mono text-muted-foreground focus-visible:ring-primary/30"
+            />
+            <p className="text-[11px] text-muted-foreground/60">Otomatis dibuat dari Nama Topik, bisa diedit manual</p>
+          </div>
+        </div>
+
+        {/* RIGHT — Icon & Product */}
+        <div className="bg-card rounded-[12px] border border-border/50 p-5 md:p-6 space-y-5">
+          {/* Icon */}
+          <UploadArea label="Icon" />
+
+          {/* Product */}
+          <div className="space-y-1.5">
+            <Label className="text-[13px] font-medium text-foreground/80">
+              Product <span className="text-destructive">*</span>
+            </Label>
+            <Select value={product} onValueChange={setProduct}>
+              <SelectTrigger className="rounded-[10px] h-11 border-border/50 bg-background text-sm focus:ring-primary/30">
+                <SelectValue placeholder="Pilih salah satu opsi" />
+              </SelectTrigger>
+              <SelectContent className="rounded-[10px]">
+                {products.map((p) => (
+                  <SelectItem key={p} value={p}>{p}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </div>
 
-      {/* Two Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
-        {/* LEFT */}
-        <div className="space-y-5">
-          <SectionCard>
-            <Field label="Nama Topik">
-              <Input placeholder="Masukkan nama topik panduan..." value={namaTopic} onChange={(e) => setNamaTopic(e.target.value)} className="rounded-[10px] border-border/60 focus-visible:ring-primary/30 text-sm" />
-            </Field>
-            <Field label="Slug" hint="Otomatis dibuat dari Nama Topik">
-              <div className="flex items-center gap-2 rounded-[10px] border border-border/60 bg-muted/30 px-3 py-2 text-sm text-muted-foreground">
-                <Link2 className="h-3.5 w-3.5 shrink-0" />
-                <span className="truncate">{slug || "slug-otomatis"}</span>
-              </div>
-            </Field>
-          </SectionCard>
-
-          <SectionCard title="Tipe Konten">
-            <RadioGroup value={contentType} onValueChange={(v) => setContentType(v as "video" | "dokumen")} className="flex gap-4">
-              <label className={cn("flex items-center gap-3 rounded-[10px] border px-4 py-3 cursor-pointer transition-colors flex-1", contentType === "video" ? "border-primary/50 bg-primary/5" : "border-border/60 hover:border-border")}>
-                <RadioGroupItem value="video" id="type-video" />
-                <Video className="h-4 w-4 text-primary/70" />
-                <span className="text-sm font-medium text-foreground/80">Video</span>
-              </label>
-              <label className={cn("flex items-center gap-3 rounded-[10px] border px-4 py-3 cursor-pointer transition-colors flex-1", contentType === "dokumen" ? "border-primary/50 bg-primary/5" : "border-border/60 hover:border-border")}>
-                <RadioGroupItem value="dokumen" id="type-dokumen" />
-                <FileText className="h-4 w-4 text-primary/70" />
-                <span className="text-sm font-medium text-foreground/80">Dokumen</span>
-              </label>
-            </RadioGroup>
-
-            {contentType === "video" ? (
-              <div className="space-y-5 pt-2">
-                <Field label="URL Video" hint="Masukkan link YouTube atau platform lainnya">
-                  <Input placeholder="https://youtube.com/watch?v=..." value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} className="rounded-[10px] border-border/60 focus-visible:ring-primary/30 text-sm" />
-                </Field>
-                <Field label="Thumbnail Video">
-                  <div className="flex items-center justify-center rounded-[10px] border-2 border-dashed border-border/60 hover:border-primary/30 transition-colors p-8 cursor-pointer bg-muted/10">
-                    <div className="text-center space-y-2">
-                      <Image className="h-8 w-8 mx-auto text-muted-foreground/50" />
-                      <p className="text-xs text-muted-foreground">Klik atau seret gambar ke sini</p>
-                      <p className="text-[11px] text-muted-foreground/60">PNG, JPG, WEBP · Maks 2MB</p>
-                    </div>
-                  </div>
-                </Field>
-              </div>
-            ) : (
-              <div className="space-y-5 pt-2">
-                <Field label="Upload File Dokumen">
-                  <div className="flex items-center justify-center rounded-[10px] border-2 border-dashed border-border/60 hover:border-primary/30 transition-colors p-8 cursor-pointer bg-muted/10">
-                    <div className="text-center space-y-2">
-                      <Upload className="h-8 w-8 mx-auto text-muted-foreground/50" />
-                      <p className="text-xs text-muted-foreground">Klik atau seret file ke sini</p>
-                      <p className="text-[11px] text-muted-foreground/60">PDF, DOCX, PPTX · Maks 10MB</p>
-                    </div>
-                  </div>
-                </Field>
-                <Field label="Thumbnail Dokumen">
-                  <div className="flex items-center justify-center rounded-[10px] border-2 border-dashed border-border/60 hover:border-primary/30 transition-colors p-8 cursor-pointer bg-muted/10">
-                    <div className="text-center space-y-2">
-                      <Image className="h-8 w-8 mx-auto text-muted-foreground/50" />
-                      <p className="text-xs text-muted-foreground">Klik atau seret gambar ke sini</p>
-                      <p className="text-[11px] text-muted-foreground/60">PNG, JPG, WEBP · Maks 2MB</p>
-                    </div>
-                  </div>
-                </Field>
-              </div>
-            )}
-          </SectionCard>
-
-          <SectionCard>
-            <Field label="Deskripsi Singkat" hint="Ringkasan singkat panduan ini">
-              <Textarea placeholder="Tulis deskripsi singkat..." value={description} onChange={(e) => setDescription(e.target.value)} rows={4} className="rounded-[10px] border-border/60 focus-visible:ring-primary/30 text-sm resize-none" />
-            </Field>
-          </SectionCard>
+      {/* ═══ Content Section ═══ */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-[15px] md:text-base font-semibold text-foreground">Konten</h2>
         </div>
 
-        {/* RIGHT */}
-        <div className="space-y-5 lg:sticky lg:top-4 self-start">
-          <SectionCard title="Publikasi">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <p className="text-sm font-medium text-foreground/80">Publikasikan</p>
-                <p className="text-[11px] text-muted-foreground">Konten akan tampil di publik</p>
-              </div>
-              <Switch checked={isPublished} onCheckedChange={setIsPublished} />
-            </div>
-            <div className="flex items-center gap-2 rounded-[10px] border border-border/60 bg-muted/20 px-3 py-2.5 text-xs text-muted-foreground">
-              <Eye className="h-3.5 w-3.5" />
-              <span>Status: {isPublished ? "Dipublikasikan" : "Draft"}</span>
-            </div>
-          </SectionCard>
+        {/* Content Blocks */}
+        {contentBlocks.map((block, idx) => {
+          const num = getBlockNumber(block.id, block.type);
+          const label = block.type === "document" ? `Document ${num}` : `Video ${num}`;
 
-          <SectionCard title="Produk Terkait">
-            <Field label="Produk">
-              <Select value={product} onValueChange={setProduct}>
-                <SelectTrigger className="rounded-[10px] border-border/60 focus:ring-primary/30 text-sm"><SelectValue placeholder="Pilih produk..." /></SelectTrigger>
-                <SelectContent className="rounded-[10px]">{products.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}</SelectContent>
-              </Select>
-            </Field>
-          </SectionCard>
-
-          <SectionCard title="Ringkasan">
-            <div className="space-y-3 text-xs">
-              {[["Topik", namaTopic], ["Slug", slug], ["Tipe", contentType], ["Produk", product]].map(([l, v]) => (
-                <div key={l} className="flex justify-between">
-                  <span className="text-muted-foreground">{l}</span>
-                  <span className="text-foreground/80 font-medium truncate max-w-[180px] capitalize">{v || "—"}</span>
+          return (
+            <div key={block.id} className="bg-card rounded-[12px] border border-border/50 overflow-hidden">
+              {/* Block Header */}
+              <div className="flex items-center gap-2 px-4 py-3 border-b border-border/40 bg-muted/20">
+                <div className="flex items-center gap-1 shrink-0">
+                  <button
+                    onClick={() => moveBlock(idx, -1)}
+                    disabled={idx === 0}
+                    className="p-1 text-muted-foreground/50 hover:text-muted-foreground disabled:opacity-30 transition-colors"
+                  >
+                    <ChevronUp className="h-3.5 w-3.5" />
+                  </button>
+                  <button
+                    onClick={() => moveBlock(idx, 1)}
+                    disabled={idx === contentBlocks.length - 1}
+                    className="p-1 text-muted-foreground/50 hover:text-muted-foreground disabled:opacity-30 transition-colors"
+                  >
+                    <ChevronDown className="h-3.5 w-3.5" />
+                  </button>
+                  <GripVertical className="h-4 w-4 text-muted-foreground/30" />
                 </div>
-              ))}
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Status</span>
-                <span className={`font-medium ${isPublished ? "text-success" : "text-muted-foreground"}`}>{isPublished ? "Published" : "Draft"}</span>
+                <div className="flex items-center gap-2 flex-1 min-w-0">
+                  {block.type === "document" ? (
+                    <FileText className="h-4 w-4 text-primary/60 shrink-0" strokeWidth={1.6} />
+                  ) : (
+                    <Video className="h-4 w-4 text-primary/60 shrink-0" strokeWidth={1.6} />
+                  )}
+                  <span className="text-[13px] font-semibold text-foreground/80">{label}</span>
+                </div>
+                <div className="flex items-center gap-1 shrink-0">
+                  <button
+                    onClick={() => removeBlock(block.id)}
+                    className="p-1.5 text-muted-foreground/50 hover:text-destructive hover:bg-destructive/10 rounded-md transition-colors"
+                    title="Hapus"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" strokeWidth={1.6} />
+                  </button>
+                  <button
+                    onClick={() => toggleBlock(block.id)}
+                    className="p-1.5 text-muted-foreground/50 hover:text-foreground hover:bg-accent rounded-md transition-colors"
+                    title={block.expanded ? "Collapse" : "Expand"}
+                  >
+                    {block.expanded ? (
+                      <ChevronUp className="h-3.5 w-3.5" />
+                    ) : (
+                      <ChevronDown className="h-3.5 w-3.5" />
+                    )}
+                  </button>
+                </div>
               </div>
+
+              {/* Block Body */}
+              {block.expanded && (
+                <div className="p-5 md:p-6">
+                  {block.type === "document" ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                      <UploadArea label="File PDF" />
+                      <UploadArea label="Thumbnail" />
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                      <div className="space-y-1.5">
+                        <Label className="text-[13px] font-medium text-foreground/80">URL Video</Label>
+                        <Input
+                          placeholder="Masukkan URL video"
+                          className="rounded-[10px] h-11 border-border/50 bg-background text-sm focus-visible:ring-primary/30"
+                        />
+                      </div>
+                      <UploadArea label="Thumbnail" />
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
-          </SectionCard>
-        </div>
+          );
+        })}
+
+        {/* Add Content Button */}
+        <Popover open={addMenuOpen} onOpenChange={setAddMenuOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className="rounded-[10px] h-10 border-dashed border-border/50 text-muted-foreground hover:text-foreground hover:border-primary/30 hover:bg-primary/[0.03] gap-2 text-[13px]"
+            >
+              <Plus className="h-4 w-4" strokeWidth={1.6} />
+              Tambah Konten
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="start" className="w-44 p-1.5 rounded-[10px]">
+            <button
+              onClick={() => addBlock("video")}
+              className="flex items-center gap-2.5 w-full px-3 py-2 text-[13px] text-foreground/80 hover:bg-accent rounded-[8px] transition-colors"
+            >
+              <Video className="h-4 w-4 text-primary/60" strokeWidth={1.6} />
+              Video
+            </button>
+            <button
+              onClick={() => addBlock("document")}
+              className="flex items-center gap-2.5 w-full px-3 py-2 text-[13px] text-foreground/80 hover:bg-accent rounded-[8px] transition-colors"
+            >
+              <FileText className="h-4 w-4 text-primary/60" strokeWidth={1.6} />
+              Document
+            </button>
+          </PopoverContent>
+        </Popover>
+      </div>
+
+      {/* ═══ Action Buttons ═══ */}
+      <div className="flex items-center gap-3 pt-2 pb-4">
+        <Button
+          onClick={handleCreate}
+          className="rounded-[10px] h-10 px-6 bg-primary text-primary-foreground hover:bg-primary/90 text-[13px] font-medium"
+        >
+          Buat
+        </Button>
+        <Button
+          variant="outline"
+          onClick={() => navigate("/panduan")}
+          className="rounded-[10px] h-10 px-6 border-border/50 text-muted-foreground hover:text-foreground text-[13px] font-medium"
+        >
+          Batal
+        </Button>
       </div>
     </div>
   );
