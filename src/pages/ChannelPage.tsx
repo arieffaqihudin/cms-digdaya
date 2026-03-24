@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Search, Plus, Edit, Trash2, Tv2 } from "lucide-react";
+import { Search, Plus, Pencil, Trash2, Tv2 } from "lucide-react";
 import { channels } from "@/lib/mock-data";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
