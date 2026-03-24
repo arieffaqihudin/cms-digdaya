@@ -37,6 +37,7 @@ const App = () => (
                   <Route path="/video/:id" element={<ContentEditor />} />
                   <Route path="/blog" element={<BlogPage />} />
                   <Route path="/panduan" element={<PanduanPage />} />
+                  <Route path="/panduan/new" element={<PanduanFormPage />} />
                   <Route path="/faq" element={<FAQPage />} />
                   <Route path="/content/:id" element={<ContentEditor />} />
                   <Route path="/published" element={<PublishedContent />} />
