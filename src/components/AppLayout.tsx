@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import {
   LayoutDashboard, Video, FileText, HelpCircle, PenSquare,
   FolderTree, Tag, Package, Tv2, Image, FileClock, CheckCircle,
-  Archive, Settings, Search, Bell, ChevronLeft, Menu, User,
+  Archive, Settings, Search, Bell, ChevronLeft, Menu, User, LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
@@ -58,21 +58,21 @@ export default function AppLayout({ children }: { children: ReactNode }) {
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
-      {/* Sidebar — pale sage green */}
+      {/* Sidebar */}
       <aside
         className={cn(
-          "flex flex-col bg-sidebar border-r border-sidebar-border transition-all duration-200 shrink-0",
-          collapsed ? "w-[64px]" : "w-[256px]"
+          "flex flex-col bg-sidebar transition-[width] duration-200 ease-in-out shrink-0",
+          collapsed ? "w-[68px]" : "w-[260px]"
         )}
       >
         {/* Logo */}
-        <div className="flex h-[60px] items-center gap-3 border-b border-sidebar-border px-4">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-sidebar-primary">
-            <LayoutDashboard className="h-4 w-4 text-sidebar-primary-foreground" />
+        <div className="flex h-[64px] items-center gap-3 px-5">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-sidebar-primary">
+            <LayoutDashboard className="h-[18px] w-[18px] text-sidebar-primary-foreground" strokeWidth={1.8} />
           </div>
           {!collapsed && (
             <div className="overflow-hidden">
-              <h1 className="text-[13px] font-semibold tracking-tight text-foreground truncate">
+              <h1 className="text-[14px] font-semibold tracking-tight text-foreground truncate">
                 Digdaya CMS
               </h1>
               <p className="text-[10px] text-sidebar-muted leading-tight">Content Management</p>
@@ -81,17 +81,19 @@ export default function AppLayout({ children }: { children: ReactNode }) {
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
+        <nav className="flex-1 overflow-y-auto px-3 pb-4 pt-2">
           {navItems.map((item, i) => {
             if ("divider" in item) {
               return (
-                <div key={i} className="pt-5 pb-1.5">
+                <div key={i} className={cn("pb-1", i === 1 ? "pt-3" : "pt-6")}>
                   {!collapsed && item.section && (
-                    <p className="px-3 text-[10px] font-medium uppercase tracking-[0.08em] text-sidebar-section">
+                    <p className="px-3 text-[10px] font-semibold uppercase tracking-[0.1em] text-sidebar-section">
                       {item.section}
                     </p>
                   )}
-                  {collapsed && <div className="mx-2 border-t border-sidebar-border" />}
+                  {collapsed && i > 1 && (
+                    <div className="mx-3 my-1" />
+                  )}
                 </div>
               );
             }
@@ -102,33 +104,53 @@ export default function AppLayout({ children }: { children: ReactNode }) {
                 key={item.path}
                 to={item.path}
                 className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-[9px] text-[13px] font-medium transition-all duration-150",
+                  "flex items-center gap-3 rounded-[10px] px-3 py-[10px] text-[13px] transition-all duration-150 ease-in-out",
                   active
-                    ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                    : "text-sidebar-foreground hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground"
+                    ? "bg-sidebar-accent font-medium text-sidebar-accent-foreground"
+                    : "font-normal text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
                 )}
               >
-                <Icon className="h-[18px] w-[18px] shrink-0" />
+                <Icon
+                  className={cn(
+                    "h-[18px] w-[18px] shrink-0 transition-colors duration-150",
+                    active ? "text-sidebar-accent-foreground" : "text-sidebar-muted"
+                  )}
+                  strokeWidth={active ? 2 : 1.6}
+                />
                 {!collapsed && <span className="truncate">{item.label}</span>}
               </Link>
             );
           })}
         </nav>
 
-        {/* Collapse toggle */}
-        <div className="border-t border-sidebar-border p-3">
+        {/* Footer */}
+        <div className="px-3 pb-4 space-y-1">
+          {!collapsed && (
+            <div className="flex items-center gap-3 rounded-[10px] px-3 py-2.5">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-sidebar-accent">
+                <User className="h-4 w-4 text-sidebar-accent-foreground" strokeWidth={1.6} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-[12px] font-medium text-foreground truncate">Admin User</p>
+                <p className="text-[10px] text-sidebar-muted truncate">admin@digdaya.id</p>
+              </div>
+              <button className="p-1 rounded-md text-sidebar-muted hover:text-sidebar-accent-foreground hover:bg-sidebar-accent/50 transition-colors">
+                <LogOut className="h-3.5 w-3.5" strokeWidth={1.6} />
+              </button>
+            </div>
+          )}
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="flex w-full items-center justify-center rounded-lg p-2 text-sidebar-foreground hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground transition-colors"
+            className="flex w-full items-center justify-center rounded-[10px] p-2.5 text-sidebar-muted hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground transition-colors duration-150"
           >
-            {collapsed ? <Menu className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+            {collapsed ? <Menu className="h-4 w-4" strokeWidth={1.6} /> : <ChevronLeft className="h-4 w-4" strokeWidth={1.6} />}
           </button>
         </div>
       </aside>
 
       {/* Main area */}
       <div className="flex flex-1 flex-col overflow-hidden">
-        {/* Header — white, thin border */}
+        {/* Header */}
         <header className="flex h-[56px] items-center justify-between border-b border-border bg-surface px-6 shrink-0">
           <h2 className="text-[15px] font-semibold tracking-tight text-foreground">
             {pageTitle}
@@ -145,12 +167,6 @@ export default function AppLayout({ children }: { children: ReactNode }) {
               <Bell className="h-4 w-4 text-muted-foreground" />
               <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-primary" />
             </Button>
-            <div className="flex items-center gap-2 rounded-lg px-2.5 py-1.5">
-              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10">
-                <User className="h-3.5 w-3.5 text-primary" />
-              </div>
-              <span className="text-[13px] font-medium text-foreground">Admin</span>
-            </div>
           </div>
         </header>
 
