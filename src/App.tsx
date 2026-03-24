@@ -17,6 +17,7 @@ import DraftsPage from "@/pages/DraftsPage";
 import ProdukPage from "@/pages/ProdukPage";
 import TagPage from "@/pages/TagPage";
 import ChannelPage from "@/pages/ChannelPage";
+import AccessPage from "@/pages/AccessPage";
 import MediaLibrary from "@/pages/MediaLibrary";
 import PanduanFormPage from "@/pages/PanduanFormPage";
 import RepositoryPage from "@/pages/RepositoryPage";
@@ -113,6 +114,7 @@ const AppRoutes = () => {
                 <Route path="/products/new" element={<ProductFormPage />} />
                 <Route path="/channels" element={<ChannelPage />} />
                 <Route path="/media" element={<MediaLibrary />} />
+                <Route path="/access" element={<AccessPage />} />
                 <Route path="/settings" element={<NotFound />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
