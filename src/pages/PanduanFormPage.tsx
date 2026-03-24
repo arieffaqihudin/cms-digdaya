@@ -94,8 +94,31 @@ export default function PanduanFormPage() {
         </div>
 
         {/* Konten */}
-        <div className="space-y-4 pt-2">
-          <label className="text-sm font-medium text-foreground">Konten</label>
+        <div className="space-y-4 border-t pt-6 mt-2">
+          <div className="flex items-center justify-between">
+            <label className="text-sm font-medium text-foreground">Konten</label>
+            <Popover open={addOpen} onOpenChange={setAddOpen}>
+              <PopoverTrigger asChild>
+                <Button variant="outline" size="sm" className="gap-2">
+                  <Plus className="h-4 w-4" /> Tambah Konten
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-44 p-1.5" align="end">
+                <button
+                  className="flex w-full items-center gap-2.5 rounded-md px-3 py-2 text-sm hover:bg-muted"
+                  onClick={() => addItem("document")}
+                >
+                  <FileText className="h-4 w-4 text-muted-foreground" /> Dokumen
+                </button>
+                <button
+                  className="flex w-full items-center gap-2.5 rounded-md px-3 py-2 text-sm hover:bg-muted"
+                  onClick={() => addItem("video")}
+                >
+                  <Video className="h-4 w-4 text-muted-foreground" /> Video
+                </button>
+              </PopoverContent>
+            </Popover>
+          </div>
 
           {items.length > 0 && (
             <div className="space-y-3">
