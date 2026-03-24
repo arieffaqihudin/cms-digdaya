@@ -1,21 +1,38 @@
 import React, { useState } from "react";
-import { Eye, EyeOff, Mail, Lock } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    navigate("/");
+    if (!email || !password) {
+      toast.error("Masukkan email dan password");
+      return;
+    }
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    setLoading(false);
+    if (error) {
+      toast.error(error.message === "Invalid login credentials"
+        ? "Email atau password salah"
+        : error.message);
+    } else {
+      toast.success("Berhasil masuk!");
+      navigate("/");
+    }
   };
 
   return (
@@ -23,7 +40,6 @@ const LoginPage = () => {
       <div className="flex-1 flex flex-col lg:flex-row">
         {/* LEFT — Brand panel */}
         <div className="hidden lg:flex lg:w-[45%] relative items-center justify-center bg-[hsl(150,16%,96%)] overflow-hidden">
-          {/* Subtle pattern overlay */}
           <div
             className="absolute inset-0 opacity-[0.04]"
             style={{
@@ -32,7 +48,6 @@ const LoginPage = () => {
               backgroundSize: "32px 32px",
             }}
           />
-
           <div className="relative z-10 flex flex-col items-center gap-6 px-12 text-center max-w-md">
             <img
               src="https://play-lh.googleusercontent.com/kfeQ0QFBny3AVurQ9r_CSBJyCfceAymEBlh9t6SIU_lZX0tH7WqYaTN7NHqrKGoQGNFEc3y8nj-iyw6IxqbEug=w480-h960-rw"
@@ -82,7 +97,6 @@ const LoginPage = () => {
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-5">
-                {/* Email */}
                 <div className="space-y-2">
                   <Label htmlFor="email" className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Email
@@ -96,11 +110,11 @@ const LoginPage = () => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="pl-10 h-11 bg-background"
+                      disabled={loading}
                     />
                   </div>
                 </div>
 
-                {/* Password */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <Label htmlFor="password" className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
@@ -122,49 +136,47 @@ const LoginPage = () => {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       className="pl-10 pr-10 h-11 bg-background"
+                      disabled={loading}
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                     >
-                      {showPassword ? (
-                        <EyeOff className="h-4 w-4" />
-                      ) : (
-                        <Eye className="h-4 w-4" />
-                      )}
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
                 </div>
 
-                {/* Remember me */}
                 <div className="flex items-center gap-2">
                   <Checkbox
                     id="remember"
                     checked={rememberMe}
-                    onCheckedChange={(checked) =>
-                      setRememberMe(checked === true)
-                    }
+                    onCheckedChange={(checked) => setRememberMe(checked === true)}
+                    disabled={loading}
                   />
-                  <Label
-                    htmlFor="remember"
-                    className="text-sm text-muted-foreground font-normal cursor-pointer"
-                  >
+                  <Label htmlFor="remember" className="text-sm text-muted-foreground font-normal cursor-pointer">
                     Ingat saya
                   </Label>
                 </div>
 
-                {/* Submit */}
                 <Button
                   type="submit"
                   className="w-full h-11 text-sm font-medium rounded-lg"
+                  disabled={loading}
                 >
-                  Masuk
+                  {loading ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Memproses...
+                    </>
+                  ) : (
+                    "Masuk"
+                  )}
                 </Button>
               </form>
             </div>
 
-            {/* Footer */}
             <p className="text-center text-xs text-muted-foreground mt-8">
               © Digdaya NU
             </p>

@@ -1,5 +1,5 @@
 import { ReactNode, useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard, Video, FileText, HelpCircle, PenSquare,
   FolderTree, Tag, Package, Tv2, Image, FileClock, CheckCircle,
@@ -9,6 +9,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
 
 const navItems = [
   { label: "Dashboard", icon: LayoutDashboard, path: "/" },
@@ -73,6 +74,8 @@ export { useScreenSize };
 export type { ScreenSize };
 
 export default function AppLayout({ children }: { children: ReactNode }) {
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
   const location = useLocation();
   const screenSize = useScreenSize();
   const [collapsed, setCollapsed] = useState(false);
@@ -169,10 +172,15 @@ export default function AppLayout({ children }: { children: ReactNode }) {
               <User className="h-4 w-4 text-sidebar-accent-foreground" strokeWidth={1.6} />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-[12px] font-medium text-foreground truncate">Admin User</p>
-              <p className="text-[10px] text-sidebar-muted truncate">admin@digdaya.id</p>
+              <p className="text-[12px] font-medium text-foreground truncate">
+                {user?.user_metadata?.display_name || user?.email?.split("@")[0] || "User"}
+              </p>
+              <p className="text-[10px] text-sidebar-muted truncate">{user?.email || ""}</p>
             </div>
-            <button className="p-1 rounded-md text-sidebar-muted hover:text-sidebar-accent-foreground hover:bg-sidebar-accent/50 transition-colors">
+            <button
+              onClick={async () => { await signOut(); navigate("/login"); }}
+              className="p-1 rounded-md text-sidebar-muted hover:text-sidebar-accent-foreground hover:bg-sidebar-accent/50 transition-colors"
+            >
               <LogOut className="h-3.5 w-3.5" strokeWidth={1.6} />
             </button>
           </div>
