@@ -26,6 +26,8 @@ import ProductFormPage from "@/pages/ProductFormPage";
 import FAQFormPage from "@/pages/FAQFormPage";
 import FAQCategoryFormPage from "@/pages/FAQCategoryFormPage";
 import FAQCategoryPage from "@/pages/FAQCategoryPage";
+import DocCategoryPage from "@/pages/DocCategoryPage";
+import DocCategoryFormPage from "@/pages/DocCategoryFormPage";
 import LoginPage from "@/pages/LoginPage";
 import ForgotPasswordPage from "@/pages/ForgotPasswordPage";
 import ResetPasswordPage from "@/pages/ResetPasswordPage";
@@ -102,6 +104,9 @@ const AppRoutes = () => {
                 <Route path="/categories/faq" element={<FAQCategoryPage />} />
                 <Route path="/categories/faq/new" element={<FAQCategoryFormPage />} />
                 <Route path="/categories/faq/:id" element={<FAQCategoryFormPage />} />
+                <Route path="/categories/dokumen" element={<DocCategoryPage />} />
+                <Route path="/categories/dokumen/new" element={<DocCategoryFormPage />} />
+                <Route path="/categories/dokumen/:id" element={<DocCategoryFormPage />} />
                 <Route path="/tags" element={<TaxonomyPage defaultTab="tags" />} />
                 <Route path="/products" element={<TaxonomyPage defaultTab="products" />} />
                 <Route path="/products/new" element={<ProductFormPage />} />
