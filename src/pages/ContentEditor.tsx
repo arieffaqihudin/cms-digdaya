@@ -102,7 +102,7 @@ export default function ContentEditor() {
             ═══════════════════════════════════════════ */}
         <div className="lg:col-span-8 space-y-4">
           {/* Title input */}
-          <div className="rounded-lg border border-border bg-surface p-5 shadow-card">
+          <div className="rounded-xl border border-border bg-surface p-5 shadow-card">
             <Input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -114,11 +114,11 @@ export default function ContentEditor() {
           {/* Video: YouTube preview & source metadata */}
           {contentType === "video" && video && (
             <>
-              <div className="rounded-lg overflow-hidden bg-foreground/95 aspect-video flex items-center justify-center">
+              <div className="rounded-xl overflow-hidden bg-foreground/95 aspect-video flex items-center justify-center">
                 <img src={video.thumbnail} alt="" className="w-full h-full object-cover opacity-80" />
               </div>
-              <div className="rounded-lg border border-border bg-surface p-5 shadow-card space-y-4">
-                <h3 className="text-sm font-semibold text-foreground">YouTube Source</h3>
+              <div className="rounded-xl border border-border bg-surface p-5 shadow-card space-y-4">
+                <h3 className="text-[13px] font-semibold text-foreground">YouTube Source</h3>
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
                     <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-semibold mb-1">Original Title</p>
@@ -154,8 +154,8 @@ export default function ContentEditor() {
 
           {/* Blog: Cover image */}
           {contentType === "blog" && (
-            <div className="rounded-lg border border-border bg-surface p-5 shadow-card space-y-3">
-              <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Cover Image</Label>
+            <div className="rounded-xl border border-border bg-surface p-5 shadow-card space-y-3">
+              <Label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Cover Image</Label>
               <div className="border-2 border-dashed border-border rounded-lg p-10 text-center hover:border-primary/40 transition-colors cursor-pointer">
                 <Image className="h-8 w-8 mx-auto text-muted-foreground/40 mb-2" />
                 <p className="text-sm text-muted-foreground">Click to upload or drag & drop</p>
@@ -166,8 +166,8 @@ export default function ContentEditor() {
 
           {/* FAQ: Answer */}
           {contentType === "faq" && (
-            <div className="rounded-lg border border-border bg-surface p-5 shadow-card space-y-3">
-              <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Answer</Label>
+            <div className="rounded-xl border border-border bg-surface p-5 shadow-card space-y-3">
+              <Label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Answer</Label>
               <Textarea
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
@@ -180,13 +180,13 @@ export default function ContentEditor() {
 
           {/* Guide: Structured steps */}
           {contentType === "guide" && (
-            <div className="rounded-lg border border-border bg-surface p-5 shadow-card space-y-4">
+            <div className="rounded-xl border border-border bg-surface p-5 shadow-card space-y-4">
               <div className="flex items-center justify-between">
-                <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Guide Steps</Label>
+                <Label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Guide Steps</Label>
                 <Button
                   size="sm"
                   variant="outline"
-                  className="h-7 rounded-md text-xs"
+                  className="h-7 rounded-lg text-xs"
                   onClick={() => setSteps([...steps, { title: `Step ${steps.length + 1}`, content: "" }])}
                 >
                   <Plus className="h-3 w-3 mr-1" /> Add Step
@@ -194,7 +194,7 @@ export default function ContentEditor() {
               </div>
               <div className="space-y-3">
                 {steps.map((step, i) => (
-                  <div key={i} className="rounded-lg border border-border p-4 space-y-2 bg-background">
+                  <div key={i} className="rounded-xl border border-border p-4 space-y-2 bg-background">
                     <div className="flex items-center gap-2">
                       <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold shrink-0">{i + 1}</span>
                       <Input
@@ -237,8 +237,8 @@ export default function ContentEditor() {
 
           {/* Blog/Video: Rich text content area */}
           {(contentType === "blog" || contentType === "video") && (
-            <div className="rounded-lg border border-border bg-surface p-5 shadow-card space-y-3">
-              <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+            <div className="rounded-xl border border-border bg-surface p-5 shadow-card space-y-3">
+              <Label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
                 {contentType === "video" ? "Display Description" : "Article Content"}
               </Label>
               {/* Toolbar mock */}
@@ -261,8 +261,8 @@ export default function ContentEditor() {
 
           {/* Media embed area (blog, guide) */}
           {(contentType === "blog" || contentType === "guide") && (
-            <div className="rounded-lg border border-border bg-surface p-5 shadow-card space-y-3">
-              <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Media Embed</Label>
+            <div className="rounded-xl border border-border bg-surface p-5 shadow-card space-y-3">
+              <Label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Media Embed</Label>
               <div className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-primary/40 transition-colors cursor-pointer">
                 <Video className="h-6 w-6 mx-auto text-muted-foreground/40 mb-2" />
                 <p className="text-sm text-muted-foreground">Embed images, videos, or other media</p>
@@ -271,9 +271,9 @@ export default function ContentEditor() {
           )}
 
           {/* Content preview */}
-          <div className="rounded-lg border border-border bg-surface p-5 shadow-card space-y-3">
-            <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Content Preview</Label>
-            <div className="rounded-lg border border-border bg-background p-5 min-h-[100px] text-sm text-muted-foreground">
+          <div className="rounded-xl border border-border bg-surface p-5 shadow-card space-y-3">
+            <Label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Content Preview</Label>
+            <div className="rounded-xl border border-border bg-background p-5 min-h-[100px] text-sm text-muted-foreground">
               {title && <h4 className="text-base font-semibold text-foreground mb-2">{title}</h4>}
               {content || <span className="italic">Preview will appear here as you write...</span>}
             </div>
@@ -285,13 +285,13 @@ export default function ContentEditor() {
             ═══════════════════════════════════════════ */}
         <div className="lg:col-span-4 space-y-4">
           {/* Publish actions card */}
-          <div className="rounded-lg border border-border bg-surface p-5 shadow-card space-y-4">
-            <h3 className="text-sm font-semibold text-foreground">Publish</h3>
+          <div className="rounded-xl border border-border bg-surface p-5 shadow-card space-y-4">
+            <h3 className="text-[13px] font-semibold text-foreground">Publish</h3>
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <Label className="text-sm text-foreground">Status</Label>
                 <Select value={status} onValueChange={setStatus}>
-                  <SelectTrigger className="w-[140px] h-8 rounded-md text-xs"><SelectValue /></SelectTrigger>
+                  <SelectTrigger className="w-[140px] h-8 rounded-lg text-xs"><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="draft">Draft</SelectItem>
                     <SelectItem value="need_review">Need Review</SelectItem>
@@ -317,51 +317,51 @@ export default function ContentEditor() {
               )}
             </div>
             <div className="space-y-1.5">
-              <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Scheduled Date</Label>
-              <Input type="date" className="rounded-md h-9 text-sm" />
+              <Label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Scheduled Date</Label>
+              <Input type="date" className="rounded-lg h-9 text-[13px]" />
             </div>
             <div className="flex gap-2 pt-2 border-t border-border">
-              <Button variant="outline" className="flex-1 h-9 rounded-md text-xs" onClick={handleSave}>
+              <Button variant="outline" className="flex-1 h-9 rounded-lg text-xs" onClick={handleSave}>
                 <Save className="h-3.5 w-3.5 mr-1" /> Save Draft
               </Button>
               <Button className="flex-1 h-9 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 text-xs" onClick={handlePublish}>
                 <CheckCircle className="h-3.5 w-3.5 mr-1" /> Publish
               </Button>
             </div>
-            <Button variant="outline" className="w-full h-9 rounded-md text-xs text-destructive border-destructive/30 hover:bg-destructive/5" onClick={handleReject}>
+            <Button variant="outline" className="w-full h-9 rounded-lg text-xs text-destructive border-destructive/30 hover:bg-destructive/5" onClick={handleReject}>
               <XCircle className="h-3.5 w-3.5 mr-1" /> Reject
             </Button>
           </div>
 
           {/* Summary */}
-          <div className="rounded-lg border border-border bg-surface p-5 shadow-card space-y-3">
-            <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Summary / Excerpt</Label>
-            <Textarea value={summary} onChange={(e) => setSummary(e.target.value)} rows={3} className="rounded-md resize-none text-sm" placeholder="Brief description..." />
+          <div className="rounded-xl border border-border bg-surface p-5 shadow-card space-y-3">
+            <Label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Summary / Excerpt</Label>
+            <Textarea value={summary} onChange={(e) => setSummary(e.target.value)} rows={3} className="rounded-lg resize-none text-[13px]" placeholder="Brief description..." />
           </div>
 
           {/* Blog-specific: Author */}
           {contentType === "blog" && (
-            <div className="rounded-lg border border-border bg-surface p-5 shadow-card space-y-3">
-              <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Author</Label>
-              <Input value={author} onChange={(e) => setAuthor(e.target.value)} className="rounded-md h-9 text-sm" placeholder="Author name..." />
+            <div className="rounded-xl border border-border bg-surface p-5 shadow-card space-y-3">
+              <Label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Author</Label>
+              <Input value={author} onChange={(e) => setAuthor(e.target.value)} className="rounded-lg h-9 text-[13px]" placeholder="Author name..." />
             </div>
           )}
 
           {/* Taxonomy card */}
-          <div className="rounded-lg border border-border bg-surface p-5 shadow-card space-y-4">
-            <h3 className="text-sm font-semibold text-foreground">Taxonomy</h3>
+          <div className="rounded-xl border border-border bg-surface p-5 shadow-card space-y-4">
+            <h3 className="text-[13px] font-semibold text-foreground">Taxonomy</h3>
             <div className="space-y-3">
               <div className="space-y-1.5">
-                <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Category</Label>
+                <Label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Category</Label>
                 <Select value={category} onValueChange={setCategory}>
-                  <SelectTrigger className="rounded-md h-9 text-sm"><SelectValue placeholder="Select category" /></SelectTrigger>
+                  <SelectTrigger className="rounded-lg h-9 text-[13px]"><SelectValue placeholder="Select category" /></SelectTrigger>
                   <SelectContent>
                     {categories.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-1.5">
-                <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Tags</Label>
+                <Label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Tags</Label>
                 <div className="flex flex-wrap gap-1.5">
                   {allTags.map((t) => (
                     <button
@@ -382,54 +382,54 @@ export default function ContentEditor() {
           </div>
 
           {/* Relations card */}
-          <div className="rounded-lg border border-border bg-surface p-5 shadow-card space-y-4">
-            <h3 className="text-sm font-semibold text-foreground">Relations</h3>
+          <div className="rounded-xl border border-border bg-surface p-5 shadow-card space-y-4">
+            <h3 className="text-[13px] font-semibold text-foreground">Relations</h3>
             <div className="space-y-3">
               <div className="space-y-1.5">
-                <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Related Product</Label>
+                <Label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Related Product</Label>
                 <Select value={product} onValueChange={setProduct}>
-                  <SelectTrigger className="rounded-md h-9 text-sm"><SelectValue placeholder="Select product" /></SelectTrigger>
+                  <SelectTrigger className="rounded-lg h-9 text-[13px]"><SelectValue placeholder="Select product" /></SelectTrigger>
                   <SelectContent>
                     {products.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-1.5">
-                <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Audience</Label>
+                <Label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Audience</Label>
                 <Select value={audience} onValueChange={setAudience}>
-                  <SelectTrigger className="rounded-md h-9 text-sm"><SelectValue placeholder="Select audience" /></SelectTrigger>
+                  <SelectTrigger className="rounded-lg h-9 text-[13px]"><SelectValue placeholder="Select audience" /></SelectTrigger>
                   <SelectContent>
                     {audiences.map((a) => <SelectItem key={a} value={a}>{a}</SelectItem>)}
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-1.5">
-                <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Organization Level</Label>
+                <Label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Organization Level</Label>
                 <Select value={orgLevel} onValueChange={setOrgLevel}>
-                  <SelectTrigger className="rounded-md h-9 text-sm"><SelectValue placeholder="Select level" /></SelectTrigger>
+                  <SelectTrigger className="rounded-lg h-9 text-[13px]"><SelectValue placeholder="Select level" /></SelectTrigger>
                   <SelectContent>
                     {orgLevels.map((l) => <SelectItem key={l} value={l}>{l}</SelectItem>)}
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-1.5">
-                <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Related Content</Label>
-                <Input placeholder="Search related content..." className="rounded-md h-9 text-sm" />
+                <Label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Related Content</Label>
+                <Input placeholder="Search related content..." className="rounded-lg h-9 text-[13px]" />
               </div>
             </div>
           </div>
 
           {/* Editor Notes */}
-          <div className="rounded-lg border border-border bg-surface p-5 shadow-card space-y-3">
-            <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Editor Notes</Label>
-            <Textarea value={editorNotes} onChange={(e) => setEditorNotes(e.target.value)} rows={2} className="rounded-md resize-none text-sm" placeholder="Internal notes..." />
+          <div className="rounded-xl border border-border bg-surface p-5 shadow-card space-y-3">
+            <Label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Editor Notes</Label>
+            <Textarea value={editorNotes} onChange={(e) => setEditorNotes(e.target.value)} rows={2} className="rounded-lg resize-none text-[13px]" placeholder="Internal notes..." />
           </div>
 
           {/* Reject reason (video) */}
           {contentType === "video" && (
-            <div className="rounded-lg border border-border bg-surface p-5 shadow-card space-y-3">
-              <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Reject Reason</Label>
-              <Input value={rejectReason} onChange={(e) => setRejectReason(e.target.value)} placeholder="Reason if rejecting..." className="rounded-md h-9 text-sm" />
+            <div className="rounded-xl border border-border bg-surface p-5 shadow-card space-y-3">
+              <Label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Reject Reason</Label>
+              <Input value={rejectReason} onChange={(e) => setRejectReason(e.target.value)} placeholder="Reason if rejecting..." className="rounded-lg h-9 text-[13px]" />
             </div>
           )}
         </div>
