@@ -48,7 +48,7 @@ export default function PanduanFormPage() {
   };
 
   return (
-    <div className="mx-auto max-w-3xl space-y-8">
+    <div className="mx-auto max-w-5xl space-y-8">
       {/* Breadcrumb & Title */}
       <div className="space-y-1.5">
         <div className="text-sm text-muted-foreground">
