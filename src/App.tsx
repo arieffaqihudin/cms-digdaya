@@ -19,6 +19,7 @@ import MediaLibrary from "@/pages/MediaLibrary";
 import PanduanFormPage from "@/pages/PanduanFormPage";
 import ProductFormPage from "@/pages/ProductFormPage";
 import FAQFormPage from "@/pages/FAQFormPage";
+import FAQCategoryFormPage from "@/pages/FAQCategoryFormPage";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -48,6 +49,7 @@ const App = () => (
                   <Route path="/drafts" element={<DraftsPage />} />
                   <Route path="/scheduled" element={<ScheduledPage />} />
                   <Route path="/categories" element={<TaxonomyPage defaultTab="categories" />} />
+                  <Route path="/categories/faq/new" element={<FAQCategoryFormPage />} />
                   <Route path="/tags" element={<TaxonomyPage defaultTab="tags" />} />
                   <Route path="/products" element={<TaxonomyPage defaultTab="products" />} />
                   <Route path="/products/new" element={<ProductFormPage />} />
