@@ -19,7 +19,7 @@ interface BannerItem {
   status: "active" | "inactive" | "scheduled";
 }
 
-const placementTabs = ["Home", "Produk", "Promo", "Event", "Onboarding"];
+const placementOptions = ["Home", "Produk", "Promo", "Event", "Onboarding"];
 
 const mockBanners: BannerItem[] = [
   { id: "b1", title: "Promo Ramadhan 2025", thumbnail: "https://placehold.co/320x120/e8f5e9/2e7d32?text=Ramadhan+2025", placement: "Home", targetLink: "/promo/ramadhan", order: 1, status: "active" },
@@ -45,7 +45,7 @@ const ITEMS_PER_PAGE = 10;
 
 export default function BannerPage() {
   const [search, setSearch] = useState("");
-  const [activeTab, setActiveTab] = useState(placementTabs[0]);
+  const [placementFilter, setPlacementFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [page, setPage] = useState(1);
@@ -54,17 +54,17 @@ export default function BannerPage() {
 
   const filtered = useMemo(() => {
     return mockBanners.filter((b) => {
-      if (b.placement !== activeTab) return false;
+      if (placementFilter !== "all" && b.placement !== placementFilter) return false;
       if (search && !b.title.toLowerCase().includes(search.toLowerCase())) return false;
       if (statusFilter !== "all" && b.status !== statusFilter) return false;
       return true;
     });
-  }, [search, activeTab, statusFilter]);
+  }, [search, placementFilter, statusFilter]);
 
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
   const paged = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
   const allSelected = paged.length > 0 && paged.every((b) => selectedIds.has(b.id));
-  const hasActiveFilters = statusFilter !== "all";
+  const hasActiveFilters = placementFilter !== "all" || statusFilter !== "all";
 
   const toggleAll = () => {
     if (allSelected) setSelectedIds(new Set());
@@ -74,12 +74,6 @@ export default function BannerPage() {
     const next = new Set(selectedIds);
     if (next.has(id)) next.delete(id); else next.add(id);
     setSelectedIds(next);
-  };
-  const handleTabChange = (tab: string) => {
-    setActiveTab(tab);
-    setPage(1);
-    setStatusFilter("all");
-    setSelectedIds(new Set());
   };
 
   const StatusBadge = ({ status }: { status: string }) => {
@@ -93,17 +87,28 @@ export default function BannerPage() {
   };
 
   const filterSelects = (
-    <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setPage(1); }}>
-      <SelectTrigger className="w-full sm:w-[150px] h-9 rounded-[10px] text-[13px] border-border bg-background">
-        <SelectValue placeholder="Status" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="all">Semua Status</SelectItem>
-        <SelectItem value="active">Aktif</SelectItem>
-        <SelectItem value="inactive">Nonaktif</SelectItem>
-        <SelectItem value="scheduled">Terjadwal</SelectItem>
-      </SelectContent>
-    </Select>
+    <>
+      <Select value={placementFilter} onValueChange={(v) => { setPlacementFilter(v); setPage(1); }}>
+        <SelectTrigger className="w-full sm:w-[170px] h-9 rounded-[10px] text-[13px] border-border bg-background">
+          <SelectValue placeholder="Semua Placement" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">Semua Placement</SelectItem>
+          {placementOptions.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}
+        </SelectContent>
+      </Select>
+      <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setPage(1); }}>
+        <SelectTrigger className="w-full sm:w-[150px] h-9 rounded-[10px] text-[13px] border-border bg-background">
+          <SelectValue placeholder="Semua Status" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">Semua Status</SelectItem>
+          <SelectItem value="active">Aktif</SelectItem>
+          <SelectItem value="inactive">Nonaktif</SelectItem>
+          <SelectItem value="scheduled">Terjadwal</SelectItem>
+        </SelectContent>
+      </Select>
+    </>
   );
 
   return (
@@ -118,26 +123,6 @@ export default function BannerPage() {
           <ImageIcon className="h-3.5 w-3.5" strokeWidth={1.6} />
           <span className="tabular-nums font-medium">{filtered.length}</span>
           <span className="hidden sm:inline">banner</span>
-        </div>
-      </div>
-
-      {/* Placement tabs */}
-      <div className="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
-        <div className="flex gap-1 min-w-max">
-          {placementTabs.map((tab) => (
-            <button
-              key={tab}
-              onClick={() => handleTabChange(tab)}
-              className={cn(
-                "px-3.5 py-2 rounded-[10px] text-[13px] font-medium transition-colors whitespace-nowrap",
-                activeTab === tab
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-              )}
-            >
-              {tab}
-            </button>
-          ))}
         </div>
       </div>
 

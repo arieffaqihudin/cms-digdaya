@@ -37,7 +37,7 @@ const mockFAQItems: FAQItem[] = [
   { id: "fq14", title: "Apa itu fitur tracking surat?", slug: "fitur-tracking-surat", category: "Surat & Disposisi", product: "Digdaya Kepengurusan", status: "draft" },
 ];
 
-const productTabs = ["Digdaya Persuratan", "Digdaya Pesantren", "Siskader NU", "Digdaya Kepengurusan"];
+const productOptions = ["Digdaya Persuratan", "Digdaya Pesantren", "Siskader NU", "Digdaya Kepengurusan"];
 
 const statusMap: Record<string, { label: string; className: string; dot: string }> = {
   published: { label: "Dipublikasikan", className: "bg-[hsl(var(--status-success-bg))] text-[hsl(var(--status-success-fg))]", dot: "bg-[hsl(var(--status-success-fg))]" },
@@ -49,7 +49,7 @@ const ITEMS_PER_PAGE = 10;
 
 export default function FAQPage() {
   const [search, setSearch] = useState("");
-  const [activeTab, setActiveTab] = useState(productTabs[0]);
+  const [productFilter, setProductFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -57,25 +57,26 @@ export default function FAQPage() {
   const [showFilters, setShowFilters] = useState(false);
   const screenSize = useScreenSize();
 
-  const categoriesForTab = useMemo(() => {
-    const cats = new Set(mockFAQItems.filter((f) => f.product === activeTab).map((f) => f.category));
+  const categoriesForProduct = useMemo(() => {
+    const items = productFilter === "all" ? mockFAQItems : mockFAQItems.filter((f) => f.product === productFilter);
+    const cats = new Set(items.map((f) => f.category));
     return Array.from(cats);
-  }, [activeTab]);
+  }, [productFilter]);
 
   const filtered = useMemo(() => {
     return mockFAQItems.filter((f) => {
-      if (f.product !== activeTab) return false;
+      if (productFilter !== "all" && f.product !== productFilter) return false;
       if (search && !f.title.toLowerCase().includes(search.toLowerCase()) && !f.slug.toLowerCase().includes(search.toLowerCase())) return false;
       if (categoryFilter !== "all" && f.category !== categoryFilter) return false;
       if (statusFilter !== "all" && f.status !== statusFilter) return false;
       return true;
     });
-  }, [search, activeTab, categoryFilter, statusFilter]);
+  }, [search, productFilter, categoryFilter, statusFilter]);
 
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
   const paged = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
   const allSelected = paged.length > 0 && paged.every((f) => selectedIds.has(f.id));
-  const hasActiveFilters = categoryFilter !== "all" || statusFilter !== "all";
+  const hasActiveFilters = productFilter !== "all" || categoryFilter !== "all" || statusFilter !== "all";
 
   const toggleAll = () => {
     if (allSelected) setSelectedIds(new Set());
@@ -85,13 +86,6 @@ export default function FAQPage() {
     const next = new Set(selectedIds);
     if (next.has(id)) next.delete(id); else next.add(id);
     setSelectedIds(next);
-  };
-  const handleTabChange = (tab: string) => {
-    setActiveTab(tab);
-    setPage(1);
-    setCategoryFilter("all");
-    setStatusFilter("all");
-    setSelectedIds(new Set());
   };
 
   const StatusBadge = ({ status }: { status: string }) => {
@@ -106,18 +100,27 @@ export default function FAQPage() {
 
   const filterSelects = (
     <>
+      <Select value={productFilter} onValueChange={(v) => { setProductFilter(v); setCategoryFilter("all"); setPage(1); }}>
+        <SelectTrigger className="w-full sm:w-[180px] h-9 rounded-[10px] text-[13px] border-border bg-background">
+          <SelectValue placeholder="Semua Produk" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">Semua Produk</SelectItem>
+          {productOptions.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}
+        </SelectContent>
+      </Select>
       <Select value={categoryFilter} onValueChange={(v) => { setCategoryFilter(v); setPage(1); }}>
         <SelectTrigger className="w-full sm:w-[180px] h-9 rounded-[10px] text-[13px] border-border bg-background">
-          <SelectValue placeholder="Kategori FAQ" />
+          <SelectValue placeholder="Semua Kategori" />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">Semua Kategori</SelectItem>
-          {categoriesForTab.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+          {categoriesForProduct.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
         </SelectContent>
       </Select>
       <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setPage(1); }}>
         <SelectTrigger className="w-full sm:w-[150px] h-9 rounded-[10px] text-[13px] border-border bg-background">
-          <SelectValue placeholder="Status" />
+          <SelectValue placeholder="Semua Status" />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">Semua Status</SelectItem>
@@ -141,26 +144,6 @@ export default function FAQPage() {
           <HelpCircle className="h-3.5 w-3.5" strokeWidth={1.6} />
           <span className="tabular-nums font-medium">{filtered.length}</span>
           <span className="hidden sm:inline">FAQ</span>
-        </div>
-      </div>
-
-      {/* Product tabs */}
-      <div className="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
-        <div className="flex gap-1 min-w-max">
-          {productTabs.map((tab) => (
-            <button
-              key={tab}
-              onClick={() => handleTabChange(tab)}
-              className={cn(
-                "px-3.5 py-2 rounded-[10px] text-[13px] font-medium transition-colors whitespace-nowrap",
-                activeTab === tab
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-              )}
-            >
-              {tab}
-            </button>
-          ))}
         </div>
       </div>
 
