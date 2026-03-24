@@ -9,8 +9,8 @@ import { Label } from "@/components/ui/label";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { products, categories } from "@/lib/mock-data";
 import { toast } from "sonner";
+import { useScreenSize } from "@/components/AppLayout";
 
 function slugify(text: string) {
   return text
@@ -23,7 +23,7 @@ function slugify(text: string) {
 
 function SectionCard({ title, children }: { title?: string; children: React.ReactNode }) {
   return (
-    <div className="bg-card rounded-[12px] border border-border/60 p-6 space-y-5">
+    <div className="bg-card rounded-[12px] border border-border/60 p-5 md:p-6 space-y-5">
       {title && <h3 className="text-sm font-semibold text-foreground/80">{title}</h3>}
       {children}
     </div>
@@ -40,10 +40,24 @@ function Field({ label, hint, children }: { label: string; hint?: string; childr
   );
 }
 
-const faqCategories = ["Umum", "Akun & Login", "Pembayaran", "Teknis", "Fitur", "Kebijakan"];
+// Master data produk & kategori per produk
+const masterProducts = [
+  "Digdaya Persuratan",
+  "Digdaya Pesantren",
+  "Siskader NU",
+  "Digdaya Kepengurusan",
+];
+
+const categoriesByProduct: Record<string, string[]> = {
+  "Digdaya Persuratan": ["Pendaftaran & Akun", "Pembayaran", "Fitur Utama", "Teknis & Troubleshoot"],
+  "Digdaya Pesantren": ["Manajemen Santri", "Kurikulum", "Laporan Keuangan"],
+  "Siskader NU": ["Pendataan Kader", "Verifikasi Data"],
+  "Digdaya Kepengurusan": ["Surat & Disposisi", "Manajemen Pengurus", "Agenda & Rapat"],
+};
 
 export default function FAQFormPage() {
   const navigate = useNavigate();
+  const screenSize = useScreenSize();
 
   const [title, setTitle] = useState("");
   const [product, setProduct] = useState("");
@@ -53,13 +67,19 @@ export default function FAQFormPage() {
   const [isPinned, setIsPinned] = useState(false);
 
   const slug = useMemo(() => slugify(title), [title]);
+  const availableCategories = product ? (categoriesByProduct[product] || []) : [];
+
+  const handleProductChange = (value: string) => {
+    setProduct(value);
+    setCategory(""); // reset category when product changes
+  };
 
   const handleSave = () => {
     if (!title.trim()) {
       toast.error("Title wajib diisi");
       return;
     }
-    toast.success("FAQ berhasil disimpan");
+    toast.success("FAQ berhasil disimpan sebagai draft");
     navigate("/faq");
   };
 
@@ -68,26 +88,122 @@ export default function FAQFormPage() {
       toast.error("Title wajib diisi");
       return;
     }
+    if (!product) {
+      toast.error("Pilih produk terlebih dahulu");
+      return;
+    }
     toast.success("FAQ berhasil dipublikasikan");
     navigate("/faq");
   };
 
+  const metadataPanel = (
+    <div className="space-y-5 lg:sticky lg:top-6 self-start">
+      {/* Publikasi */}
+      <SectionCard title="Publikasi">
+        <div className="flex items-center justify-between">
+          <div className="space-y-0.5">
+            <p className="text-sm font-medium text-foreground/80">Publikasikan</p>
+            <p className="text-[11px] text-muted-foreground">FAQ tampil di halaman publik</p>
+          </div>
+          <Switch checked={isPublished} onCheckedChange={setIsPublished} />
+        </div>
+
+        <div className="flex items-center justify-between">
+          <div className="space-y-0.5">
+            <p className="text-sm font-medium text-foreground/80">Pin to Top</p>
+            <p className="text-[11px] text-muted-foreground">Tampilkan di urutan teratas</p>
+          </div>
+          <Switch checked={isPinned} onCheckedChange={setIsPinned} />
+        </div>
+
+        <div className="flex items-center gap-2 rounded-[10px] border border-border/60 bg-muted/20 px-3 py-2.5 text-xs text-muted-foreground">
+          <Eye className="h-3.5 w-3.5 shrink-0" />
+          <span>Status: {isPublished ? "Dipublikasikan" : "Draft"}</span>
+          {isPinned && (
+            <>
+              <span className="text-border">·</span>
+              <Pin className="h-3 w-3" />
+              <span>Pinned</span>
+            </>
+          )}
+        </div>
+      </SectionCard>
+
+      {/* Klasifikasi */}
+      <SectionCard title="Klasifikasi">
+        <Field label="Produk">
+          <Select value={product} onValueChange={handleProductChange}>
+            <SelectTrigger className="rounded-[10px] border-border/60 focus:ring-primary/30 text-sm">
+              <SelectValue placeholder="Pilih produk..." />
+            </SelectTrigger>
+            <SelectContent className="rounded-[10px]">
+              {masterProducts.map((p) => (
+                <SelectItem key={p} value={p}>{p}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </Field>
+
+        <Field label="Kategori FAQ" hint={!product ? "Pilih produk terlebih dahulu" : undefined}>
+          <Select value={category} onValueChange={setCategory} disabled={!product}>
+            <SelectTrigger className="rounded-[10px] border-border/60 focus:ring-primary/30 text-sm disabled:opacity-50">
+              <SelectValue placeholder={product ? "Pilih kategori..." : "Pilih produk terlebih dahulu"} />
+            </SelectTrigger>
+            <SelectContent className="rounded-[10px]">
+              {availableCategories.map((c) => (
+                <SelectItem key={c} value={c}>{c}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </Field>
+      </SectionCard>
+
+      {/* Ringkasan */}
+      <SectionCard title="Ringkasan">
+        <div className="space-y-3 text-xs">
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">Title</span>
+            <span className="text-foreground/80 font-medium truncate max-w-[160px] text-right">{title || "—"}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">Slug</span>
+            <span className="text-foreground/80 font-medium font-mono truncate max-w-[160px] text-right">{slug || "—"}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">Produk</span>
+            <span className="text-foreground/80 font-medium truncate max-w-[160px] text-right">{product || "—"}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">Kategori</span>
+            <span className="text-foreground/80 font-medium truncate max-w-[160px] text-right">{category || "—"}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">Status</span>
+            <span className={`font-medium ${isPublished ? "text-[hsl(var(--status-success-fg))]" : "text-muted-foreground"}`}>
+              {isPublished ? "Published" : "Draft"}
+            </span>
+          </div>
+        </div>
+      </SectionCard>
+    </div>
+  );
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 md:space-y-6">
       {/* Top Bar */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div className="flex items-center gap-3">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => navigate("/faq")}
-            className="rounded-[10px] text-muted-foreground hover:text-foreground"
+            className="rounded-[10px] text-muted-foreground hover:text-foreground h-9 w-9"
           >
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div className="flex items-center gap-2">
             <HelpCircle className="h-4 w-4 text-primary/70" />
-            <h1 className="text-lg font-semibold text-foreground/90">Tambah FAQ</h1>
+            <h1 className="text-base md:text-lg font-semibold text-foreground/90">FAQ Baru</h1>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -95,7 +211,7 @@ export default function FAQFormPage() {
             variant="outline"
             size="sm"
             onClick={handleSave}
-            className="rounded-[10px] text-xs gap-1.5"
+            className={`rounded-[10px] text-xs gap-1.5 ${screenSize === "mobile" ? "flex-1" : ""}`}
           >
             <Save className="h-3.5 w-3.5" />
             Simpan Draft
@@ -103,7 +219,7 @@ export default function FAQFormPage() {
           <Button
             size="sm"
             onClick={handlePublish}
-            className="rounded-[10px] text-xs gap-1.5 bg-primary hover:bg-primary/90"
+            className={`rounded-[10px] text-xs gap-1.5 bg-primary hover:bg-primary/90 ${screenSize === "mobile" ? "flex-1" : ""}`}
           >
             Publikasikan
           </Button>
@@ -111,8 +227,8 @@ export default function FAQFormPage() {
       </div>
 
       {/* Two Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
-        {/* LEFT */}
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-5 md:gap-6">
+        {/* LEFT — Content */}
         <div className="space-y-5">
           <SectionCard>
             <Field label="Title">
@@ -120,14 +236,14 @@ export default function FAQFormPage() {
                 placeholder="Masukkan pertanyaan FAQ..."
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="rounded-[10px] border-border/60 focus-visible:ring-primary/30 text-sm"
+                className="rounded-[10px] border-border/60 focus-visible:ring-primary/30 text-sm h-11"
               />
             </Field>
 
             <Field label="Slug" hint="Otomatis dibuat dari Title">
-              <div className="flex items-center gap-2 rounded-[10px] border border-border/60 bg-muted/30 px-3 py-2 text-sm text-muted-foreground">
+              <div className="flex items-center gap-2 rounded-[10px] border border-border/60 bg-muted/30 px-3 py-2.5 text-sm text-muted-foreground">
                 <Link2 className="h-3.5 w-3.5 shrink-0" />
-                <span className="truncate">{slug || "slug-otomatis"}</span>
+                <span className="truncate font-mono text-[12px]">{slug || "slug-otomatis"}</span>
               </div>
             </Field>
           </SectionCard>
@@ -138,96 +254,15 @@ export default function FAQFormPage() {
                 placeholder="Tulis jawaban FAQ di sini..."
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                rows={10}
+                rows={12}
                 className="rounded-[10px] border-border/60 focus-visible:ring-primary/30 text-sm resize-none leading-relaxed"
               />
             </Field>
           </SectionCard>
         </div>
 
-        {/* RIGHT */}
-        <div className="space-y-5 lg:sticky lg:top-6 self-start">
-          <SectionCard title="Publikasi">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <p className="text-sm font-medium text-foreground/80">Publikasikan</p>
-                <p className="text-[11px] text-muted-foreground">FAQ tampil di halaman publik</p>
-              </div>
-              <Switch checked={isPublished} onCheckedChange={setIsPublished} />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <p className="text-sm font-medium text-foreground/80">Pin to Top</p>
-                <p className="text-[11px] text-muted-foreground">Tampilkan di urutan teratas</p>
-              </div>
-              <Switch checked={isPinned} onCheckedChange={setIsPinned} />
-            </div>
-
-            <div className="flex items-center gap-2 rounded-[10px] border border-border/60 bg-muted/20 px-3 py-2.5 text-xs text-muted-foreground">
-              <Eye className="h-3.5 w-3.5" />
-              <span>Status: {isPublished ? "Dipublikasikan" : "Draft"}</span>
-              {isPinned && (
-                <>
-                  <span className="text-border">·</span>
-                  <Pin className="h-3 w-3" />
-                  <span>Pinned</span>
-                </>
-              )}
-            </div>
-          </SectionCard>
-
-          <SectionCard title="Klasifikasi">
-            <Field label="Produk">
-              <Select value={product} onValueChange={setProduct}>
-                <SelectTrigger className="rounded-[10px] border-border/60 focus:ring-primary/30 text-sm">
-                  <SelectValue placeholder="Pilih produk..." />
-                </SelectTrigger>
-                <SelectContent className="rounded-[10px]">
-                  {products.map((p) => (
-                    <SelectItem key={p} value={p}>{p}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </Field>
-
-            <Field label="Kategori FAQ">
-              <Select value={category} onValueChange={setCategory}>
-                <SelectTrigger className="rounded-[10px] border-border/60 focus:ring-primary/30 text-sm">
-                  <SelectValue placeholder="Pilih kategori..." />
-                </SelectTrigger>
-                <SelectContent className="rounded-[10px]">
-                  {faqCategories.map((c) => (
-                    <SelectItem key={c} value={c}>{c}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </Field>
-          </SectionCard>
-
-          <SectionCard title="Ringkasan">
-            <div className="space-y-3 text-xs">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Title</span>
-                <span className="text-foreground/80 font-medium truncate max-w-[160px]">{title || "—"}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Produk</span>
-                <span className="text-foreground/80 font-medium truncate max-w-[160px]">{product || "—"}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Kategori</span>
-                <span className="text-foreground/80 font-medium truncate max-w-[160px]">{category || "—"}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Status</span>
-                <span className={`font-medium ${isPublished ? "text-success" : "text-muted-foreground"}`}>
-                  {isPublished ? "Published" : "Draft"}
-                </span>
-              </div>
-            </div>
-          </SectionCard>
-        </div>
+        {/* RIGHT — Metadata */}
+        {metadataPanel}
       </div>
     </div>
   );
