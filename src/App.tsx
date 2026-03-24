@@ -16,6 +16,7 @@ import DraftsPage from "@/pages/DraftsPage";
 import TaxonomyPage from "@/pages/TaxonomyPage";
 import PlaceholderPage from "@/pages/PlaceholderPage";
 import MediaLibrary from "@/pages/MediaLibrary";
+import PanduanFormPage from "@/pages/PanduanFormPage";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,6 +37,7 @@ const App = () => (
                   <Route path="/video/:id" element={<ContentEditor />} />
                   <Route path="/blog" element={<BlogPage />} />
                   <Route path="/panduan" element={<PanduanPage />} />
+                  <Route path="/panduan/new" element={<PanduanFormPage />} />
                   <Route path="/faq" element={<FAQPage />} />
                   <Route path="/content/:id" element={<ContentEditor />} />
                   <Route path="/published" element={<PublishedContent />} />
