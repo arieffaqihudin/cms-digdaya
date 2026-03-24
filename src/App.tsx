@@ -14,8 +14,9 @@ import ContentEditor from "@/pages/ContentEditor";
 import PublishedContent from "@/pages/PublishedContent";
 import ArchivedContent from "@/pages/ArchivedContent";
 import DraftsPage from "@/pages/DraftsPage";
-import TaxonomyPage from "@/pages/TaxonomyPage";
-import PlaceholderPage from "@/pages/PlaceholderPage";
+import ProdukPage from "@/pages/ProdukPage";
+import TagPage from "@/pages/TagPage";
+import ChannelPage from "@/pages/ChannelPage";
 import MediaLibrary from "@/pages/MediaLibrary";
 import PanduanFormPage from "@/pages/PanduanFormPage";
 import RepositoryPage from "@/pages/RepositoryPage";
@@ -100,19 +101,19 @@ const AppRoutes = () => {
                 <Route path="/archived" element={<ArchivedContent />} />
                 <Route path="/drafts" element={<DraftsPage />} />
                 <Route path="/scheduled" element={<ScheduledPage />} />
-                <Route path="/categories" element={<TaxonomyPage defaultTab="categories" />} />
+                <Route path="/categories" element={<FAQCategoryPage />} />
                 <Route path="/categories/faq" element={<FAQCategoryPage />} />
                 <Route path="/categories/faq/new" element={<FAQCategoryFormPage />} />
                 <Route path="/categories/faq/:id" element={<FAQCategoryFormPage />} />
                 <Route path="/categories/dokumen" element={<DocCategoryPage />} />
                 <Route path="/categories/dokumen/new" element={<DocCategoryFormPage />} />
                 <Route path="/categories/dokumen/:id" element={<DocCategoryFormPage />} />
-                <Route path="/tags" element={<TaxonomyPage defaultTab="tags" />} />
-                <Route path="/products" element={<TaxonomyPage defaultTab="products" />} />
+                <Route path="/tags" element={<TagPage />} />
+                <Route path="/products" element={<ProdukPage />} />
                 <Route path="/products/new" element={<ProductFormPage />} />
-                <Route path="/channels" element={<TaxonomyPage defaultTab="channels" />} />
+                <Route path="/channels" element={<ChannelPage />} />
                 <Route path="/media" element={<MediaLibrary />} />
-                <Route path="/settings" element={<PlaceholderPage title="Pengaturan" />} />
+                <Route path="/settings" element={<NotFound />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </AppLayout>
