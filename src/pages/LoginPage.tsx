@@ -120,12 +120,12 @@ const LoginPage = () => {
                     <Label htmlFor="password" className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
                       Password
                     </Label>
-                    <button
-                      type="button"
+                    <Link
+                      to="/forgot-password"
                       className="text-xs text-primary hover:text-primary/80 font-medium transition-colors"
                     >
                       Lupa Password?
-                    </button>
+                    </Link>
                   </div>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
