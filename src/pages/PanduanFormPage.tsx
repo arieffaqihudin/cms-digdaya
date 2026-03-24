@@ -72,42 +72,48 @@ export default function PanduanFormPage() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Top Bar */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
+    <div className="-m-4 md:-m-5 lg:-m-7">
+      {/* Editor Page Header */}
+      <div className="sticky top-0 z-20 border-b border-border/60 bg-card px-4 md:px-6 py-3">
+        <div className="flex flex-wrap items-center gap-3 md:gap-4">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => navigate("/panduan")}
-            className="rounded-[10px] text-muted-foreground hover:text-foreground"
+            className="rounded-[10px] text-muted-foreground hover:text-foreground h-8 w-8 shrink-0"
           >
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <h1 className="text-lg font-semibold text-foreground/90">Buat Panduan Baru</h1>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleSave}
-            className="rounded-[10px] text-xs gap-1.5"
-          >
-            <Save className="h-3.5 w-3.5" />
-            Simpan Draft
-          </Button>
-          <Button
-            size="sm"
-            onClick={handlePublish}
-            className="rounded-[10px] text-xs gap-1.5 bg-primary hover:bg-primary/90"
-          >
-            Publikasikan
-          </Button>
+          <div className="flex items-center gap-2 min-w-0 flex-1">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/15 bg-primary/[0.06] px-2.5 py-[3px] text-[11px] font-medium text-primary shrink-0">
+              <FileText className="h-3 w-3" strokeWidth={1.8} />
+              <span className="hidden sm:inline">Panduan</span>
+            </span>
+            <h1 className="text-sm md:text-[15px] font-semibold text-foreground truncate">Buat Panduan Baru</h1>
+          </div>
+          <div className="flex items-center gap-2 shrink-0 max-sm:w-full max-sm:pt-2 max-sm:border-t max-sm:border-border/40">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleSave}
+              className="rounded-[10px] text-xs gap-1.5 h-8 max-sm:flex-1"
+            >
+              <Save className="h-3.5 w-3.5" />
+              Simpan Draft
+            </Button>
+            <Button
+              size="sm"
+              onClick={handlePublish}
+              className="rounded-[10px] text-xs gap-1.5 h-8 bg-primary hover:bg-primary/90 max-sm:flex-1"
+            >
+              Publikasikan
+            </Button>
+          </div>
         </div>
       </div>
 
       {/* Two Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
+      <div className="p-4 md:p-6 lg:p-7 pt-6 md:pt-7 lg:pt-8 grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
         {/* LEFT – Main Fields */}
         <div className="space-y-5">
           {/* Nama Topik & Slug */}
