@@ -2,7 +2,7 @@ import { useParams, useSearchParams, Link, useNavigate } from "react-router-dom"
 import {
   ArrowLeft, Save, CheckCircle, XCircle, ExternalLink, Plus, Trash2,
   Image, Video, FileText, Eye, Calendar, Clock, ThumbsUp, ThumbsDown,
-  Pin, BookOpen, Hash, Users, Building2, Link2, Star, Sparkles,
+  Pin, BookOpen, Hash, Users, Building2, Link2, Star,
   ChevronDown, Bold, Italic, Underline, Heading1, Heading2, List, Code, LinkIcon,
   Upload,
 } from "lucide-react";
@@ -118,14 +118,12 @@ export default function ContentEditor() {
 
   const [title, setTitle] = useState(video?.displayTitle || video?.title || guide?.title || faq?.question || blog?.title || "");
   const [summary, setSummary] = useState(video?.shortDescription || guide?.summary || blog?.excerpt || "");
-  const [category, setCategory] = useState(video?.category || video?.aiSuggestion || guide?.category || faq?.category || blog?.category || "");
+  const [category, setCategory] = useState(video?.category || guide?.category || faq?.category || blog?.category || "");
   const [product, setProduct] = useState(guide?.relatedProduct || faq?.relatedProduct || "");
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
   const [status, setStatus] = useState<string>(video?.status || guide?.status || faq?.status || blog?.status || "draft");
   const [featured, setFeatured] = useState(video?.featured || blog?.featured || false);
-  const [publishToggle, setPublishToggle] = useState(status === "published");
   const [showOnHomepage, setShowOnHomepage] = useState(video?.showOnHomepage || false);
-  const [editorNotes, setEditorNotes] = useState(video?.editorNotes || "");
   const [orgLevel, setOrgLevel] = useState(video?.organizationLevel || "");
   const [audience, setAudience] = useState("");
   const [content, setContent] = useState(faq?.answer || guide?.content || blog?.content || "");
@@ -158,10 +156,9 @@ export default function ContentEditor() {
   const handleSave = () => toast.success("Draft berhasil disimpan.");
   const handlePublish = () => { toast.success(`${typeLabels[contentType]} berhasil dipublikasikan!`); navigate(backPath); };
 
-  /* ─── Blog Sidebar (exact fields per spec) ─── */
+  /* ─── Blog Sidebar ─── */
   const blogSidebar = (
     <>
-      {/* 1. Produk Terkait */}
       <SectionCard title="Produk Terkait" icon={Building2}>
         <Field label="Produk" hint="Pilih satu atau lebih produk terkait">
           <div className="flex flex-wrap gap-1.5">
@@ -183,7 +180,6 @@ export default function ContentEditor() {
         </Field>
       </SectionCard>
 
-      {/* 2. Penerbit */}
       <SectionCard title="Penerbit" icon={Users}>
         <Field label="Penerbit">
           <Input
@@ -195,7 +191,6 @@ export default function ContentEditor() {
         </Field>
       </SectionCard>
 
-      {/* 3. Slug */}
       <SectionCard title="Slug" icon={Link2}>
         <Field label="Slug" hint="Otomatis dari judul, bisa diedit manual">
           <Input
@@ -206,7 +201,6 @@ export default function ContentEditor() {
         </Field>
       </SectionCard>
 
-      {/* 4. Gambar Sampul */}
       <SectionCard title="Gambar Sampul" icon={Image}>
         <div className="border border-dashed border-border/60 rounded-[10px] p-8 text-center hover:border-primary/25 transition-colors cursor-pointer group">
           <Upload className="h-6 w-6 mx-auto text-muted-foreground/40 mb-2 group-hover:text-primary/50 transition-colors" strokeWidth={1.6} />
@@ -216,7 +210,6 @@ export default function ContentEditor() {
         </div>
       </SectionCard>
 
-      {/* 5. Opsi Penerbitan */}
       <SectionCard title="Opsi Penerbitan" icon={Calendar}>
         <Field label="Opsi Penerbitan">
           <RadioGroup value={publishOption} onValueChange={(v) => setPublishOption(v as "now" | "scheduled")} className="space-y-2">
@@ -230,8 +223,6 @@ export default function ContentEditor() {
             </div>
           </RadioGroup>
         </Field>
-
-        {/* 6. Tanggal Terbit */}
         <Field label="Tanggal Terbit" hint={publishOption === "scheduled" ? "Wajib diisi untuk penerbitan terjadwal" : "Opsional"}>
           <Popover>
             <PopoverTrigger asChild>
@@ -259,17 +250,44 @@ export default function ContentEditor() {
         </Field>
       </SectionCard>
 
-      {/* 7. Postingan Unggulan & 8. Published */}
       <SectionCard title="Pengaturan" icon={Star}>
         <ToggleRow label="Postingan Unggulan" checked={featured} onChange={setFeatured} hint="Ditampilkan di bagian utama" />
-        <ToggleRow label="Published" checked={publishToggle} onChange={setPublishToggle} hint="Kontrol status tayang artikel" />
       </SectionCard>
     </>
   );
 
-  /* ─── Non-Blog Sidebar (other content types) ─── */
+  /* ─── Video Sidebar (simplified: Status dropdown + Unggulan toggle + Kategori Video) ─── */
   const videoCategories = ["Kegiatan Organisasi", "Program & Inisiatif NU", "Tokoh & Kepemimpinan", "NU & Kebangsaan"];
 
+  const videoSidebar = (
+    <>
+      <SectionCard title="Status & Publikasi" icon={CheckCircle}>
+        <Field label="Status">
+          <Select value={status} onValueChange={setStatus}>
+            <SelectTrigger className="rounded-[10px] h-9 text-[13px] border-border bg-background"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="draft">Draft</SelectItem>
+              <SelectItem value="published">Dipublikasikan</SelectItem>
+            </SelectContent>
+          </Select>
+        </Field>
+        <div className="pt-1">
+          <ToggleRow label="Unggulan" checked={featured} onChange={setFeatured} hint="Tampilkan sebagai video unggulan" />
+        </div>
+      </SectionCard>
+
+      <SectionCard title="Kategori Video" icon={Hash}>
+        <Field label="Kategori Video">
+          <Select value={category} onValueChange={setCategory}>
+            <SelectTrigger className="rounded-[10px] h-9 text-[13px] border-border bg-background"><SelectValue placeholder="Pilih kategori video" /></SelectTrigger>
+            <SelectContent>{videoCategories.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
+          </Select>
+        </Field>
+      </SectionCard>
+    </>
+  );
+
+  /* ─── Other content types sidebar ─── */
   const otherSidebar = (
     <>
       <SectionCard title="Status & Publikasi" icon={CheckCircle}>
@@ -283,66 +301,48 @@ export default function ContentEditor() {
           </Select>
         </Field>
         <div className="space-y-2 pt-1">
-          <ToggleRow label="Publish" checked={publishToggle} onChange={setPublishToggle} />
           <ToggleRow label="Unggulan" checked={featured} onChange={setFeatured} />
           {contentType === "faq" && <ToggleRow label="Sematkan" checked={pinned} onChange={setPinned} hint="Tampilkan di atas daftar FAQ" />}
         </div>
       </SectionCard>
 
-      {contentType === "video" && (
-        <SectionCard title="Kategori Video" icon={Hash}>
-          <Field label="Kategori Video">
-            <Select value={category} onValueChange={setCategory}>
-              <SelectTrigger className="rounded-[10px] h-9 text-[13px] border-border bg-background"><SelectValue placeholder="Pilih kategori video" /></SelectTrigger>
-              <SelectContent>{videoCategories.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
-            </Select>
-          </Field>
-        </SectionCard>
-      )}
-
-      {contentType !== "video" && (
-        <SectionCard title="Kategorisasi" icon={Hash} defaultOpen={screenSize !== "mobile"}>
-          <Field label="Kategori">
-            <Select value={category} onValueChange={setCategory}>
-              <SelectTrigger className="rounded-[10px] h-9 text-[13px] border-border bg-background"><SelectValue placeholder="Pilih kategori" /></SelectTrigger>
-              <SelectContent>{categories.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
-            </Select>
-          </Field>
-          <Field label="Slug">
-            <div className="flex items-center gap-2 rounded-[10px] border border-border bg-muted/30 px-3 py-2 text-[12px] text-muted-foreground font-mono">
-              <Link2 className="h-3.5 w-3.5 shrink-0" strokeWidth={1.6} />
-              <span className="truncate">{slug}</span>
-            </div>
-          </Field>
-        </SectionCard>
-      )}
-
-      {contentType !== "video" && (
-        <SectionCard title="Gambar Sampul" icon={Image} defaultOpen={screenSize !== "mobile"}>
-          <div className="border border-dashed border-border/60 rounded-[10px] p-6 text-center hover:border-primary/25 transition-colors cursor-pointer group">
-            <Image className="h-5 w-5 mx-auto text-muted-foreground/40 mb-1.5 group-hover:text-primary/50 transition-colors" strokeWidth={1.6} />
-            <p className="text-[11px] text-muted-foreground">Upload gambar sampul</p>
-            <p className="text-[10px] text-muted-foreground/60 mt-0.5">PNG, JPG · 1200×630</p>
+      <SectionCard title="Kategorisasi" icon={Hash} defaultOpen={screenSize !== "mobile"}>
+        <Field label="Kategori">
+          <Select value={category} onValueChange={setCategory}>
+            <SelectTrigger className="rounded-[10px] h-9 text-[13px] border-border bg-background"><SelectValue placeholder="Pilih kategori" /></SelectTrigger>
+            <SelectContent>{categories.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
+          </Select>
+        </Field>
+        <Field label="Slug">
+          <div className="flex items-center gap-2 rounded-[10px] border border-border bg-muted/30 px-3 py-2 text-[12px] text-muted-foreground font-mono">
+            <Link2 className="h-3.5 w-3.5 shrink-0" strokeWidth={1.6} />
+            <span className="truncate">{slug}</span>
           </div>
-        </SectionCard>
-      )}
+        </Field>
+      </SectionCard>
 
-      {contentType !== "video" && (
-        <SectionCard title="Relasi" icon={Link2} defaultOpen={screenSize !== "mobile"}>
-          <Field label="Produk Terkait">
-            <Select value={product} onValueChange={setProduct}>
-              <SelectTrigger className="rounded-[10px] h-9 text-[13px] border-border bg-background"><SelectValue placeholder="Pilih produk" /></SelectTrigger>
-              <SelectContent>{products.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}</SelectContent>
-            </Select>
-          </Field>
-          <Field label="Audience">
-            <Select value={audience} onValueChange={setAudience}>
-              <SelectTrigger className="rounded-[10px] h-9 text-[13px] border-border bg-background"><SelectValue placeholder="Pilih audience" /></SelectTrigger>
-              <SelectContent>{audiences.map((a) => <SelectItem key={a} value={a}>{a}</SelectItem>)}</SelectContent>
-            </Select>
-          </Field>
-        </SectionCard>
-      )}
+      <SectionCard title="Gambar Sampul" icon={Image} defaultOpen={screenSize !== "mobile"}>
+        <div className="border border-dashed border-border/60 rounded-[10px] p-6 text-center hover:border-primary/25 transition-colors cursor-pointer group">
+          <Image className="h-5 w-5 mx-auto text-muted-foreground/40 mb-1.5 group-hover:text-primary/50 transition-colors" strokeWidth={1.6} />
+          <p className="text-[11px] text-muted-foreground">Upload gambar sampul</p>
+          <p className="text-[10px] text-muted-foreground/60 mt-0.5">PNG, JPG · 1200×630</p>
+        </div>
+      </SectionCard>
+
+      <SectionCard title="Relasi" icon={Link2} defaultOpen={screenSize !== "mobile"}>
+        <Field label="Produk Terkait">
+          <Select value={product} onValueChange={setProduct}>
+            <SelectTrigger className="rounded-[10px] h-9 text-[13px] border-border bg-background"><SelectValue placeholder="Pilih produk" /></SelectTrigger>
+            <SelectContent>{products.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}</SelectContent>
+          </Select>
+        </Field>
+        <Field label="Audience">
+          <Select value={audience} onValueChange={setAudience}>
+            <SelectTrigger className="rounded-[10px] h-9 text-[13px] border-border bg-background"><SelectValue placeholder="Pilih audience" /></SelectTrigger>
+            <SelectContent>{audiences.map((a) => <SelectItem key={a} value={a}>{a}</SelectItem>)}</SelectContent>
+          </Select>
+        </Field>
+      </SectionCard>
 
       {contentType === "faq" && (
         <SectionCard title="Pengaturan FAQ" icon={Hash}>
@@ -368,9 +368,16 @@ export default function ContentEditor() {
     </>
   );
 
+  // Choose correct sidebar
+  const getSidebar = () => {
+    if (contentType === "blog") return blogSidebar;
+    if (contentType === "video") return videoSidebar;
+    return otherSidebar;
+  };
+
   return (
     <div className="space-y-6">
-      {/* ═══ Editor Page Header — normal flow, NOT floating ═══ */}
+      {/* ═══ Editor Page Header ═══ */}
       <div className="rounded-[12px] border border-border bg-card p-4 md:px-6 md:py-4 shadow-card">
         <div className="flex flex-wrap items-center gap-3 md:gap-4">
           <Link
@@ -488,7 +495,7 @@ export default function ContentEditor() {
             </div>
           )}
 
-          {/* Video: YouTube Preview */}
+          {/* Video: YouTube Preview — NO AI Suggestion */}
           {contentType === "video" && video && (
             <>
               <div className="rounded-[12px] overflow-hidden bg-muted aspect-video flex items-center justify-center border border-border">
@@ -512,13 +519,6 @@ export default function ContentEditor() {
                     <div>
                       <p className="text-[11px] text-muted-foreground mb-1">Tanggal Publish</p>
                       <p className="text-[13px] text-foreground tabular-nums">{video.publishDate}</p>
-                    </div>
-                    <div>
-                      <p className="text-[11px] text-muted-foreground mb-1">AI Suggestion</p>
-                      <span className="inline-flex items-center gap-1 rounded-full bg-primary/[0.07] px-2.5 py-[3px] text-[11px] font-medium text-primary">
-                        <Sparkles className="h-3 w-3" strokeWidth={1.8} />
-                        {video.aiSuggestion}
-                      </span>
                     </div>
                   </div>
                   {video.youtubeUrl && (
@@ -607,7 +607,7 @@ export default function ContentEditor() {
             </div>
           )}
 
-          {/* Rich Text Editor — Blog uses TipTap, Video uses textarea */}
+          {/* Rich Text Editor */}
           {contentType === "blog" && (
             <TipTapEditor content={content} onChange={setContent} placeholder="Mulai menulis artikel..." />
           )}
@@ -652,7 +652,7 @@ export default function ContentEditor() {
 
         {/* ─── RIGHT: Metadata Sidebar ─── */}
         <div className="space-y-5 lg:sticky lg:top-4 self-start">
-          {contentType === "blog" ? blogSidebar : otherSidebar}
+          {getSidebar()}
         </div>
       </div>
     </div>
