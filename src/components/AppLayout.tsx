@@ -52,6 +52,7 @@ const pageTitles: Record<string, string> = {
   "/banner": "Banner App",
   "/categories/faq": "Kategori FAQ",
   "/categories/dokumen": "Kategori Dokumen",
+  "/categories/video": "Kategori Video",
   "/tags": "Tag",
   "/products": "Produk",
   "/channels": "Channel",
