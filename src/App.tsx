@@ -18,6 +18,7 @@ import PlaceholderPage from "@/pages/PlaceholderPage";
 import MediaLibrary from "@/pages/MediaLibrary";
 import PanduanFormPage from "@/pages/PanduanFormPage";
 import ProductFormPage from "@/pages/ProductFormPage";
+import FAQFormPage from "@/pages/FAQFormPage";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
