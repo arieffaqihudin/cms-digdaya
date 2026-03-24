@@ -201,10 +201,10 @@ export default function RepositoryPage() {
                     <td className="px-4 md:px-5 py-4 text-right">
                       <div className="flex items-center justify-end gap-3">
                         <Link to={`/repository/${item.id}`} className="inline-flex items-center gap-1 text-[12px] font-medium text-primary hover:text-primary/80 transition-colors">
-                          <Pencil className="h-3 w-3" strokeWidth={1.6} /> Edit
+                          <Pencil className="h-3 w-3" strokeWidth={1.6} /> Ubah
                         </Link>
                         <button className="inline-flex items-center gap-1 text-[12px] font-medium text-muted-foreground hover:text-foreground transition-colors">
-                          <Eye className="h-3 w-3" strokeWidth={1.6} /> View
+                          <Eye className="h-3 w-3" strokeWidth={1.6} /> Lihat
                         </button>
                       </div>
                     </td>

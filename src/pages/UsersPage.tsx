@@ -428,7 +428,7 @@ export default function UsersPage() {
                {editingId ? "Ubah" : "Tambah"}
              </p>
             <DialogTitle className="text-[16px] font-semibold text-foreground mt-0.5">
-              {editingId ? "Edit Pengguna" : "Tambah Pengguna"}
+              {editingId ? "Ubah Pengguna" : "Tambah Pengguna"}
             </DialogTitle>
             {/* Step indicator */}
             <div className="flex items-center gap-3 mt-4">

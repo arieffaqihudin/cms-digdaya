@@ -155,7 +155,7 @@ export default function BlogPage() {
                     <td className="px-4 md:px-5 py-4 text-right">
                       <Link to={`/content/${b.id}?type=blog`}>
                         <Button size="sm" variant="ghost" className="h-8 rounded-[8px] text-xs text-muted-foreground hover:text-foreground hover:bg-accent gap-1.5">
-                          <Eye className="h-3.5 w-3.5" strokeWidth={1.6} /> <span className="hidden md:inline">Edit</span>
+                          <Pencil className="h-3.5 w-3.5" strokeWidth={1.6} /> <span className="hidden md:inline">Ubah</span>
                         </Button>
                       </Link>
                     </td>

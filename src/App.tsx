@@ -114,6 +114,9 @@ const AppRoutes = () => {
                 <Route path="/categories/dokumen" element={<DocCategoryPage />} />
                 <Route path="/categories/dokumen/new" element={<DocCategoryFormPage />} />
                 <Route path="/categories/dokumen/:id" element={<DocCategoryFormPage />} />
+                <Route path="/categories/video" element={<VideoCategoryPage />} />
+                <Route path="/categories/video/new" element={<VideoCategoryFormPage />} />
+                <Route path="/categories/video/:id" element={<VideoCategoryFormPage />} />
                 <Route path="/tags" element={<TagPage />} />
                 <Route path="/products" element={<ProdukPage />} />
                 <Route path="/products/new" element={<ProductFormPage />} />

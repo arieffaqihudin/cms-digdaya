@@ -268,6 +268,8 @@ export default function ContentEditor() {
   );
 
   /* ─── Non-Blog Sidebar (other content types) ─── */
+  const videoCategories = ["Kegiatan Organisasi", "Program & Inisiatif NU", "Tokoh & Kepemimpinan", "NU & Kebangsaan"];
+
   const otherSidebar = (
     <>
       <SectionCard title="Status & Publikasi" icon={CheckCircle}>
@@ -276,64 +278,71 @@ export default function ContentEditor() {
             <SelectTrigger className="rounded-[10px] h-9 text-[13px] border-border bg-background"><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="draft">Draft</SelectItem>
-              <SelectItem value="need_review">Perlu Review</SelectItem>
               <SelectItem value="published">Dipublikasikan</SelectItem>
-              <SelectItem value="rejected">Ditolak</SelectItem>
-              <SelectItem value="archived">Diarsipkan</SelectItem>
             </SelectContent>
           </Select>
         </Field>
         <div className="space-y-2 pt-1">
           <ToggleRow label="Publish" checked={publishToggle} onChange={setPublishToggle} />
           <ToggleRow label="Unggulan" checked={featured} onChange={setFeatured} />
-          {contentType === "video" && <ToggleRow label="Tampilkan di Beranda" checked={showOnHomepage} onChange={setShowOnHomepage} />}
           {contentType === "faq" && <ToggleRow label="Sematkan" checked={pinned} onChange={setPinned} hint="Tampilkan di atas daftar FAQ" />}
         </div>
-        <Field label="Jadwal Publikasi" hint="Kosongkan untuk publish langsung">
-          <div className="relative">
-            <Calendar className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" strokeWidth={1.6} />
-            <Input type="date" className="pl-9 rounded-[10px] h-9 text-[13px] border-border bg-background" />
+      </SectionCard>
+
+      {contentType === "video" && (
+        <SectionCard title="Kategori Video" icon={Hash}>
+          <Field label="Kategori Video">
+            <Select value={category} onValueChange={setCategory}>
+              <SelectTrigger className="rounded-[10px] h-9 text-[13px] border-border bg-background"><SelectValue placeholder="Pilih kategori video" /></SelectTrigger>
+              <SelectContent>{videoCategories.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
+            </Select>
+          </Field>
+        </SectionCard>
+      )}
+
+      {contentType !== "video" && (
+        <SectionCard title="Kategorisasi" icon={Hash} defaultOpen={screenSize !== "mobile"}>
+          <Field label="Kategori">
+            <Select value={category} onValueChange={setCategory}>
+              <SelectTrigger className="rounded-[10px] h-9 text-[13px] border-border bg-background"><SelectValue placeholder="Pilih kategori" /></SelectTrigger>
+              <SelectContent>{categories.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
+            </Select>
+          </Field>
+          <Field label="Slug">
+            <div className="flex items-center gap-2 rounded-[10px] border border-border bg-muted/30 px-3 py-2 text-[12px] text-muted-foreground font-mono">
+              <Link2 className="h-3.5 w-3.5 shrink-0" strokeWidth={1.6} />
+              <span className="truncate">{slug}</span>
+            </div>
+          </Field>
+        </SectionCard>
+      )}
+
+      {contentType !== "video" && (
+        <SectionCard title="Gambar Sampul" icon={Image} defaultOpen={screenSize !== "mobile"}>
+          <div className="border border-dashed border-border/60 rounded-[10px] p-6 text-center hover:border-primary/25 transition-colors cursor-pointer group">
+            <Image className="h-5 w-5 mx-auto text-muted-foreground/40 mb-1.5 group-hover:text-primary/50 transition-colors" strokeWidth={1.6} />
+            <p className="text-[11px] text-muted-foreground">Upload gambar sampul</p>
+            <p className="text-[10px] text-muted-foreground/60 mt-0.5">PNG, JPG · 1200×630</p>
           </div>
-        </Field>
-      </SectionCard>
+        </SectionCard>
+      )}
 
-      <SectionCard title="Kategorisasi" icon={Hash} defaultOpen={screenSize !== "mobile"}>
-        <Field label="Kategori">
-          <Select value={category} onValueChange={setCategory}>
-            <SelectTrigger className="rounded-[10px] h-9 text-[13px] border-border bg-background"><SelectValue placeholder="Pilih kategori" /></SelectTrigger>
-            <SelectContent>{categories.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
-          </Select>
-        </Field>
-        <Field label="Slug">
-          <div className="flex items-center gap-2 rounded-[10px] border border-border bg-muted/30 px-3 py-2 text-[12px] text-muted-foreground font-mono">
-            <Link2 className="h-3.5 w-3.5 shrink-0" strokeWidth={1.6} />
-            <span className="truncate">{slug}</span>
-          </div>
-        </Field>
-      </SectionCard>
-
-      <SectionCard title="Gambar Sampul" icon={Image} defaultOpen={screenSize !== "mobile"}>
-        <div className="border border-dashed border-border/60 rounded-[10px] p-6 text-center hover:border-primary/25 transition-colors cursor-pointer group">
-          <Image className="h-5 w-5 mx-auto text-muted-foreground/40 mb-1.5 group-hover:text-primary/50 transition-colors" strokeWidth={1.6} />
-          <p className="text-[11px] text-muted-foreground">Upload gambar sampul</p>
-          <p className="text-[10px] text-muted-foreground/60 mt-0.5">PNG, JPG · 1200×630</p>
-        </div>
-      </SectionCard>
-
-      <SectionCard title="Relasi" icon={Link2} defaultOpen={screenSize !== "mobile"}>
-        <Field label="Produk Terkait">
-          <Select value={product} onValueChange={setProduct}>
-            <SelectTrigger className="rounded-[10px] h-9 text-[13px] border-border bg-background"><SelectValue placeholder="Pilih produk" /></SelectTrigger>
-            <SelectContent>{products.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}</SelectContent>
-          </Select>
-        </Field>
-        <Field label="Audience">
-          <Select value={audience} onValueChange={setAudience}>
-            <SelectTrigger className="rounded-[10px] h-9 text-[13px] border-border bg-background"><SelectValue placeholder="Pilih audience" /></SelectTrigger>
-            <SelectContent>{audiences.map((a) => <SelectItem key={a} value={a}>{a}</SelectItem>)}</SelectContent>
-          </Select>
-        </Field>
-      </SectionCard>
+      {contentType !== "video" && (
+        <SectionCard title="Relasi" icon={Link2} defaultOpen={screenSize !== "mobile"}>
+          <Field label="Produk Terkait">
+            <Select value={product} onValueChange={setProduct}>
+              <SelectTrigger className="rounded-[10px] h-9 text-[13px] border-border bg-background"><SelectValue placeholder="Pilih produk" /></SelectTrigger>
+              <SelectContent>{products.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}</SelectContent>
+            </Select>
+          </Field>
+          <Field label="Audience">
+            <Select value={audience} onValueChange={setAudience}>
+              <SelectTrigger className="rounded-[10px] h-9 text-[13px] border-border bg-background"><SelectValue placeholder="Pilih audience" /></SelectTrigger>
+              <SelectContent>{audiences.map((a) => <SelectItem key={a} value={a}>{a}</SelectItem>)}</SelectContent>
+            </Select>
+          </Field>
+        </SectionCard>
+      )}
 
       {contentType === "faq" && (
         <SectionCard title="Pengaturan FAQ" icon={Hash}>
@@ -356,12 +365,6 @@ export default function ContentEditor() {
           </Field>
         </SectionCard>
       )}
-
-      <SectionCard title="Catatan" icon={FileText} defaultOpen={screenSize !== "mobile"}>
-        <Field label="Catatan Editor" hint="Internal — tidak terlihat oleh pengguna">
-          <Textarea value={editorNotes} onChange={(e) => setEditorNotes(e.target.value)} rows={2} className="rounded-[10px] resize-none text-[13px] border-border bg-background leading-relaxed" placeholder="Catatan internal..." />
-        </Field>
-      </SectionCard>
     </>
   );
 
