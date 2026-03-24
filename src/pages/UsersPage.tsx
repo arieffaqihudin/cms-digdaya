@@ -341,7 +341,7 @@ export default function UsersPage() {
                   <p><span className="font-medium text-foreground/70">Kepengurusan:</span> {u.kepengurusan}</p>
                   <p><span className="font-medium text-foreground/70">Grup:</span> {u.grupPengguna}</p>
                   <div className="flex items-center gap-2 pt-1">
-                    <Switch checked={u.isActive} onCheckedChange={() => toggleStatus(u.id)} className="scale-[0.8]" />
+                    <Switch checked={u.isActive} onCheckedChange={() => requestToggle(u.id, u.isActive)} className="scale-[0.8]" />
                     <span className={cn("text-[10px] font-medium", u.isActive ? "text-[hsl(var(--status-success-fg))]" : "text-muted-foreground")}>
                       {u.isActive ? "Aktif" : "Nonaktif"}
                     </span>
