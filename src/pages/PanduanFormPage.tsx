@@ -48,9 +48,9 @@ export default function PanduanFormPage() {
   };
 
   return (
-    <div className="space-y-8">
-      {/* Breadcrumb */}
-      <div className="space-y-1">
+    <div className="mx-auto max-w-3xl space-y-8">
+      {/* Breadcrumb & Title */}
+      <div className="space-y-1.5">
         <div className="text-sm text-muted-foreground">
           <span className="cursor-pointer hover:text-primary" onClick={() => navigate("/panduan")}>Panduan</span>
           <span className="mx-2">›</span>
@@ -59,8 +59,8 @@ export default function PanduanFormPage() {
         <h1 className="text-xl font-semibold text-foreground">Buat Panduan</h1>
       </div>
 
-      {/* Form */}
-      <div className="max-w-2xl space-y-6 rounded-[12px] border bg-card p-6 sm:p-8">
+      {/* Form Card */}
+      <div className="space-y-6 rounded-[12px] border bg-card p-6 sm:p-8">
         {/* Nama Topik */}
         <div className="space-y-2">
           <label className="text-sm font-medium text-foreground">
@@ -94,7 +94,7 @@ export default function PanduanFormPage() {
         </div>
 
         {/* Konten */}
-        <div className="space-y-4">
+        <div className="space-y-4 pt-2">
           <label className="text-sm font-medium text-foreground">Konten</label>
 
           {items.length > 0 && (
@@ -108,7 +108,7 @@ export default function PanduanFormPage() {
                       <Video className="h-4 w-4 text-primary" />
                     )}
                   </div>
-                  <div className="min-w-0 flex-1 space-y-1.5">
+                  <div className="min-w-0 flex-1 space-y-2">
                     <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                       {item.type === "document" ? `Dokumen ${idx + 1}` : `Video ${idx + 1}`}
                     </span>
@@ -165,7 +165,7 @@ export default function PanduanFormPage() {
       </div>
 
       {/* Actions */}
-      <div className="flex max-w-2xl gap-3">
+      <div className="flex gap-3 pb-4">
         <Button onClick={handleSave}>Simpan</Button>
         <Button variant="outline" onClick={() => navigate("/panduan")}>Batal</Button>
       </div>
