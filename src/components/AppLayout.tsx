@@ -102,9 +102,11 @@ export default function AppLayout({ children }: { children: ReactNode }) {
     <>
       {/* Logo */}
       <div className="flex h-[64px] items-center gap-3 px-5">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-sidebar-primary">
-          <LayoutDashboard className="h-[18px] w-[18px] text-sidebar-primary-foreground" strokeWidth={1.8} />
-        </div>
+        <img
+          src="https://play-lh.googleusercontent.com/kfeQ0QFBny3AVurQ9r_CSBJyCfceAymEBlh9t6SIU_lZX0tH7WqYaTN7NHqrKGoQGNFEc3y8nj-iyw6IxqbEug=w480-h960-rw"
+          alt="Digdaya Logo"
+          className="h-9 w-9 shrink-0 rounded-[10px] object-contain"
+        />
         {showLabels && (
           <div className="overflow-hidden">
             <h1 className="text-[14px] font-semibold tracking-tight text-foreground truncate">
