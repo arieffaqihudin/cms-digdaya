@@ -202,7 +202,7 @@ export default function ActivityPage() {
                     </div>
                   </div>
                   <Button variant="ghost" size="sm" className="h-7 text-[12px] text-primary shrink-0 gap-1" onClick={() => setViewItem(a)}>
-                    <Eye className="h-3 w-3" strokeWidth={1.6} /> View
+                    <Eye className="h-3 w-3" strokeWidth={1.6} /> Lihat
                   </Button>
                 </div>
               </div>
