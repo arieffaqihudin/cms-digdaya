@@ -119,6 +119,8 @@ const AppRoutes = () => {
                 <Route path="/media" element={<MediaLibrary />} />
                 <Route path="/access" element={<AccessPage />} />
                 <Route path="/users" element={<UsersPage />} />
+                <Route path="/activity" element={<ActivityPage />} />
+                <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/settings" element={<NotFound />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
