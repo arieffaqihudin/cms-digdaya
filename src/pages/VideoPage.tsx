@@ -167,7 +167,7 @@ export default function VideoPage() {
             variant="outline"
             size="sm"
             className="h-9 rounded-[10px] text-[13px] border-border gap-1.5"
-            onClick={handleSync}
+            onClick={() => setShowSyncModal(true)}
             disabled={syncing}
           >
             <RefreshCw className={cn("h-3.5 w-3.5", syncing && "animate-spin")} strokeWidth={1.6} />
