@@ -76,13 +76,13 @@ export default function VideoPage() {
 
   const [showSyncModal, setShowSyncModal] = useState(false);
 
-  const handleSync = (startDate: Date, endDate: Date) => {
+  const handleSync = (selectedChannels: string[], startDate: Date, endDate: Date) => {
     setSyncing(true);
     setShowSyncModal(false);
     setTimeout(() => {
       setSyncing(false);
       toast.success("Video berhasil disinkronkan", {
-        description: "12 video berhasil diambil.",
+        description: `12 video berhasil diambil dari ${selectedChannels.length} media.`,
       });
     }, 2000);
   };
