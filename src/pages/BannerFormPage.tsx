@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Save, X, ImageIcon, Calendar, Eye, CheckCircle } from "lucide-react";
+import { ArrowLeft, Save, X, ImageIcon, Calendar, CheckCircle, Link2, Globe } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -8,21 +8,40 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { useScreenSize } from "@/components/AppLayout";
+import TipTapEditor from "@/components/TipTapEditor";
 
-const placements = ["Home", "Produk", "Promo", "Event", "Onboarding"];
+const actionTypes = [
+  { value: "direct_eksternal", label: "Direct Eksternal" },
+  { value: "menu_aplikasi", label: "Menu di Aplikasi" },
+  { value: "halaman_detail", label: "Halaman Detail Banner" },
+];
+
+const appMenuOptions = [
+  "Beranda",
+  "Produk",
+  "Promo",
+  "Event",
+  "Bantuan",
+  "Profil",
+  "Notifikasi",
+  "Riwayat Transaksi",
+];
 
 export default function BannerFormPage() {
   const navigate = useNavigate();
   const screenSize = useScreenSize();
   const [title, setTitle] = useState("");
-  const [placement, setPlacement] = useState("");
-  const [targetLink, setTargetLink] = useState("");
   const [order, setOrder] = useState("1");
   const [isActive, setIsActive] = useState(true);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  const [actionType, setActionType] = useState("");
+  const [externalUrl, setExternalUrl] = useState("");
+  const [appMenu, setAppMenu] = useState("");
+  const [detailContent, setDetailContent] = useState("");
 
   const handleImageChange = (file: File | null) => {
     setImage(file);
@@ -35,9 +54,16 @@ export default function BannerFormPage() {
     }
   };
 
+  const handleActionTypeChange = (value: string) => {
+    setActionType(value);
+    setExternalUrl("");
+    setAppMenu("");
+    setDetailContent("");
+  };
+
   return (
     <div className="space-y-6">
-      {/* Editor Header — normal flow */}
+      {/* Editor Header */}
       <div className="rounded-[12px] border border-border bg-card p-4 md:px-6 md:py-4 shadow-card">
         <div className="flex flex-wrap items-center gap-3 md:gap-4">
           <button onClick={() => navigate("/banner")} className="flex h-8 w-8 items-center justify-center rounded-[10px] text-muted-foreground hover:text-foreground hover:bg-accent transition-colors shrink-0">
@@ -65,6 +91,7 @@ export default function BannerFormPage() {
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-5 md:gap-6">
         {/* Left */}
         <div className="space-y-5">
+          {/* Judul Banner */}
           <div className="rounded-[12px] border border-border bg-surface p-4 md:p-5 shadow-card space-y-4">
             <div className="space-y-1.5">
               <Label className="text-[12px] font-medium text-muted-foreground uppercase tracking-[0.06em]">Judul Banner</Label>
@@ -72,6 +99,7 @@ export default function BannerFormPage() {
             </div>
           </div>
 
+          {/* Upload Gambar */}
           <div className="rounded-[12px] border border-border bg-surface p-4 md:p-5 shadow-card space-y-4">
             <Label className="text-[12px] font-medium text-muted-foreground uppercase tracking-[0.06em]">Upload Gambar Banner</Label>
             {imagePreview ? (
@@ -98,25 +126,79 @@ export default function BannerFormPage() {
             )}
           </div>
 
+          {/* Tipe Aksi Klik */}
           <div className="rounded-[12px] border border-border bg-surface p-4 md:p-5 shadow-card space-y-4">
             <div className="space-y-1.5">
-              <Label className="text-[12px] font-medium text-muted-foreground uppercase tracking-[0.06em]">Target Link</Label>
-              <Input value={targetLink} onChange={(e) => setTargetLink(e.target.value)} placeholder="https://... atau /path/halaman" className="h-10 rounded-[10px] text-[13px] font-mono border-border focus-visible:ring-1 focus-visible:ring-ring" />
-              <p className="text-[11px] text-muted-foreground">URL tujuan saat banner diklik</p>
+              <Label className="text-[12px] font-medium text-muted-foreground uppercase tracking-[0.06em]">Tipe Aksi Klik</Label>
+              <Select value={actionType} onValueChange={handleActionTypeChange}>
+                <SelectTrigger className="w-full h-10 rounded-[10px] text-[13px] border-border">
+                  <SelectValue placeholder="Pilih tipe aksi klik" />
+                </SelectTrigger>
+                <SelectContent>
+                  {actionTypes.map((t) => (
+                    <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-[11px] text-muted-foreground">Tentukan aksi saat banner diklik oleh pengguna</p>
             </div>
+
+            {/* Conditional: Direct Eksternal */}
+            {actionType === "direct_eksternal" && (
+              <div className="space-y-1.5 pt-3 border-t border-border/50">
+                <Label className="text-[12px] font-medium text-muted-foreground uppercase tracking-[0.06em] flex items-center gap-1.5">
+                  <Globe className="h-3.5 w-3.5" strokeWidth={1.6} />
+                  URL Eksternal
+                </Label>
+                <Input
+                  type="url"
+                  value={externalUrl}
+                  onChange={(e) => setExternalUrl(e.target.value)}
+                  placeholder="https://..."
+                  className="h-10 rounded-[10px] text-[13px] font-mono border-border focus-visible:ring-1 focus-visible:ring-ring"
+                />
+                <p className="text-[11px] text-muted-foreground">URL tujuan eksternal saat banner diklik</p>
+              </div>
+            )}
+
+            {/* Conditional: Menu di Aplikasi */}
+            {actionType === "menu_aplikasi" && (
+              <div className="space-y-1.5 pt-3 border-t border-border/50">
+                <Label className="text-[12px] font-medium text-muted-foreground uppercase tracking-[0.06em] flex items-center gap-1.5">
+                  <Link2 className="h-3.5 w-3.5" strokeWidth={1.6} />
+                  Pilihan Menu di App
+                </Label>
+                <Select value={appMenu} onValueChange={setAppMenu}>
+                  <SelectTrigger className="w-full h-10 rounded-[10px] text-[13px] border-border">
+                    <SelectValue placeholder="Pilih menu di aplikasi" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {appMenuOptions.map((m) => (
+                      <SelectItem key={m} value={m}>{m}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-[11px] text-muted-foreground">Menu dalam aplikasi yang akan dibuka</p>
+              </div>
+            )}
+
+            {/* Conditional: Halaman Detail Banner */}
+            {actionType === "halaman_detail" && (
+              <div className="space-y-1.5 pt-3 border-t border-border/50">
+                <Label className="text-[12px] font-medium text-muted-foreground uppercase tracking-[0.06em]">Konten Detail Banner</Label>
+                <TipTapEditor
+                  content={detailContent}
+                  onChange={setDetailContent}
+                  placeholder="Tulis konten detail banner..."
+                />
+              </div>
+            )}
           </div>
         </div>
 
         {/* Right */}
         <div className="space-y-5 lg:sticky lg:top-4 self-start">
           <div className="rounded-[12px] border border-border bg-surface p-4 md:p-5 shadow-card space-y-5">
-            <div className="space-y-1.5">
-              <Label className="text-[12px] font-medium text-muted-foreground uppercase tracking-[0.06em]">Placement</Label>
-              <Select value={placement} onValueChange={setPlacement}>
-                <SelectTrigger className="w-full h-10 rounded-[10px] text-[13px] border-border"><SelectValue placeholder="Pilih placement" /></SelectTrigger>
-                <SelectContent>{placements.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}</SelectContent>
-              </Select>
-            </div>
             <div className="space-y-1.5">
               <Label className="text-[12px] font-medium text-muted-foreground uppercase tracking-[0.06em]">Urutan</Label>
               <Input type="number" min="1" value={order} onChange={(e) => setOrder(e.target.value)} className="h-10 rounded-[10px] text-[13px] border-border focus-visible:ring-1 focus-visible:ring-ring" />
