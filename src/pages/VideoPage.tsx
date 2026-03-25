@@ -76,13 +76,13 @@ export default function VideoPage() {
 
   const [showSyncModal, setShowSyncModal] = useState(false);
 
-  const handleSync = (startDate: Date, endDate: Date) => {
+  const handleSync = (selectedChannels: string[], startDate: Date, endDate: Date) => {
     setSyncing(true);
     setShowSyncModal(false);
     setTimeout(() => {
       setSyncing(false);
       toast.success("Video berhasil disinkronkan", {
-        description: "12 video berhasil diambil.",
+        description: `12 video berhasil diambil dari ${selectedChannels.length} media.`,
       });
     }, 2000);
   };
@@ -505,14 +505,16 @@ function SyncVideoModal({
 }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
-  onSync: (startDate: Date, endDate: Date) => void;
+  onSync: (selectedChannels: string[], startDate: Date, endDate: Date) => void;
 }) {
+  const [selectedChannels, setSelectedChannels] = useState<string[]>([]);
   const [startDate, setStartDate] = useState<Date | undefined>(undefined);
   const [endDate, setEndDate] = useState<Date | undefined>(undefined);
-  const [errors, setErrors] = useState<{ start?: string; end?: string }>({});
+  const [errors, setErrors] = useState<{ channels?: string; start?: string; end?: string }>({});
 
   const validate = () => {
-    const e: { start?: string; end?: string } = {};
+    const e: { channels?: string; start?: string; end?: string } = {};
+    if (selectedChannels.length === 0) e.channels = "Minimal satu media harus dipilih";
     if (!startDate) e.start = "Tanggal mulai wajib diisi";
     if (!endDate) e.end = "Tanggal selesai wajib diisi";
     if (startDate && endDate && endDate < startDate) e.end = "Tanggal selesai tidak boleh lebih awal dari tanggal mulai";
@@ -520,9 +522,19 @@ function SyncVideoModal({
     return Object.keys(e).length === 0;
   };
 
+  const toggleChannel = (ch: string) => {
+    setSelectedChannels((prev) =>
+      prev.includes(ch) ? prev.filter((c) => c !== ch) : [...prev, ch]
+    );
+  };
+
+  const selectAll = () => setSelectedChannels([...channels]);
+  const clearAll = () => setSelectedChannels([]);
+
   const handleConfirm = () => {
     if (!validate()) return;
-    onSync(startDate!, endDate!);
+    onSync(selectedChannels, startDate!, endDate!);
+    setSelectedChannels([]);
     setStartDate(undefined);
     setEndDate(undefined);
     setErrors({});
@@ -530,6 +542,7 @@ function SyncVideoModal({
 
   const handleOpenChange = (v: boolean) => {
     if (!v) {
+      setSelectedChannels([]);
       setStartDate(undefined);
       setEndDate(undefined);
       setErrors({});
@@ -539,15 +552,45 @@ function SyncVideoModal({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-[420px] rounded-[12px] p-0 gap-0">
+      <DialogContent className="sm:max-w-[460px] rounded-[12px] p-0 gap-0">
         <DialogHeader className="px-5 py-4 border-b border-border/50">
           <DialogTitle className="text-[15px] font-semibold text-foreground">Sinkron Video</DialogTitle>
           <p className="text-[12px] text-muted-foreground mt-1">
-            Pilih rentang tanggal video yang ingin diambil dari API YouTube.
+            Pilih media dan rentang tanggal video yang ingin diambil dari API YouTube.
           </p>
         </DialogHeader>
 
-        <div className="px-5 py-5 space-y-4">
+        <div className="px-5 py-5 space-y-5">
+          {/* Media / Channel Selection */}
+          <div className="space-y-2.5">
+            <div className="flex items-center justify-between">
+              <Label className="text-[12px] font-medium text-muted-foreground uppercase tracking-[0.06em]">Media yang Dicrawling</Label>
+              <div className="flex items-center gap-2">
+                <button type="button" onClick={selectAll} className="text-[11px] font-medium text-primary hover:underline">Pilih Semua</button>
+                <span className="text-border">·</span>
+                <button type="button" onClick={clearAll} className="text-[11px] font-medium text-muted-foreground hover:text-foreground hover:underline">Hapus Pilihan</button>
+              </div>
+            </div>
+            <div className={cn(
+              "rounded-[10px] border bg-background p-3 space-y-1",
+              errors.channels ? "border-destructive" : "border-border"
+            )}>
+              {channels.map((ch) => (
+                <label
+                  key={ch}
+                  className="flex items-center gap-2.5 rounded-[8px] px-2 py-2 cursor-pointer hover:bg-accent/40 transition-colors"
+                >
+                  <Checkbox
+                    checked={selectedChannels.includes(ch)}
+                    onCheckedChange={() => toggleChannel(ch)}
+                  />
+                  <span className="text-[13px] text-foreground">{ch}</span>
+                </label>
+              ))}
+            </div>
+            {errors.channels && <p className="text-[11px] text-destructive">{errors.channels}</p>}
+          </div>
+
           {/* Tanggal Mulai */}
           <div className="space-y-1.5">
             <Label className="text-[12px] font-medium text-muted-foreground uppercase tracking-[0.06em]">Tanggal Mulai</Label>
@@ -609,7 +652,7 @@ function SyncVideoModal({
           </div>
 
           <p className="text-[11px] text-muted-foreground">
-            Sistem akan mengambil video yang tanggal publish-nya berada dalam rentang ini.
+            Sistem akan mengambil video dari media terpilih dengan tanggal publish dalam rentang ini.
           </p>
         </div>
 
