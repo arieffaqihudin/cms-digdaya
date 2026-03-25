@@ -336,6 +336,9 @@ export default function VideoPage() {
 
       {/* Add Video Modal */}
       <AddVideoModal open={showAddModal} onOpenChange={setShowAddModal} />
+
+      {/* Sync Video Modal */}
+      <SyncVideoModal open={showSyncModal} onOpenChange={setShowSyncModal} onSync={handleSync} />
     </div>
   );
 }
