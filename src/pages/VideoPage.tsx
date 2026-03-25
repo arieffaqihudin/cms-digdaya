@@ -496,3 +496,135 @@ function AddVideoModal({ open, onOpenChange }: { open: boolean; onOpenChange: (v
     </Dialog>
   );
 }
+
+/* ─── Sync Video Modal ─── */
+function SyncVideoModal({
+  open,
+  onOpenChange,
+  onSync,
+}: {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+  onSync: (startDate: Date, endDate: Date) => void;
+}) {
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  const [errors, setErrors] = useState<{ start?: string; end?: string }>({});
+
+  const validate = () => {
+    const e: { start?: string; end?: string } = {};
+    if (!startDate) e.start = "Tanggal mulai wajib diisi";
+    if (!endDate) e.end = "Tanggal selesai wajib diisi";
+    if (startDate && endDate && endDate < startDate) e.end = "Tanggal selesai tidak boleh lebih awal dari tanggal mulai";
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+
+  const handleConfirm = () => {
+    if (!validate()) return;
+    onSync(startDate!, endDate!);
+    setStartDate(undefined);
+    setEndDate(undefined);
+    setErrors({});
+  };
+
+  const handleOpenChange = (v: boolean) => {
+    if (!v) {
+      setStartDate(undefined);
+      setEndDate(undefined);
+      setErrors({});
+    }
+    onOpenChange(v);
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogContent className="sm:max-w-[420px] rounded-[12px] p-0 gap-0">
+        <DialogHeader className="px-5 py-4 border-b border-border/50">
+          <DialogTitle className="text-[15px] font-semibold text-foreground">Sinkron Video</DialogTitle>
+          <p className="text-[12px] text-muted-foreground mt-1">
+            Pilih rentang tanggal video yang ingin diambil dari API YouTube.
+          </p>
+        </DialogHeader>
+
+        <div className="px-5 py-5 space-y-4">
+          {/* Tanggal Mulai */}
+          <div className="space-y-1.5">
+            <Label className="text-[12px] font-medium text-muted-foreground uppercase tracking-[0.06em]">Tanggal Mulai</Label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "w-full h-10 rounded-[10px] text-[13px] justify-start font-normal border-border",
+                    !startDate && "text-muted-foreground",
+                    errors.start && "border-destructive"
+                  )}
+                >
+                  <Calendar className="h-3.5 w-3.5 mr-2 shrink-0" strokeWidth={1.6} />
+                  {startDate ? format(startDate, "dd MMM yyyy") : "Pilih tanggal mulai"}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <CalendarComponent
+                  mode="single"
+                  selected={startDate}
+                  onSelect={setStartDate}
+                  initialFocus
+                  className="p-3 pointer-events-auto"
+                />
+              </PopoverContent>
+            </Popover>
+            {errors.start && <p className="text-[11px] text-destructive">{errors.start}</p>}
+          </div>
+
+          {/* Tanggal Selesai */}
+          <div className="space-y-1.5">
+            <Label className="text-[12px] font-medium text-muted-foreground uppercase tracking-[0.06em]">Tanggal Selesai</Label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "w-full h-10 rounded-[10px] text-[13px] justify-start font-normal border-border",
+                    !endDate && "text-muted-foreground",
+                    errors.end && "border-destructive"
+                  )}
+                >
+                  <Calendar className="h-3.5 w-3.5 mr-2 shrink-0" strokeWidth={1.6} />
+                  {endDate ? format(endDate, "dd MMM yyyy") : "Pilih tanggal selesai"}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <CalendarComponent
+                  mode="single"
+                  selected={endDate}
+                  onSelect={setEndDate}
+                  initialFocus
+                  className="p-3 pointer-events-auto"
+                />
+              </PopoverContent>
+            </Popover>
+            {errors.end && <p className="text-[11px] text-destructive">{errors.end}</p>}
+          </div>
+
+          <p className="text-[11px] text-muted-foreground">
+            Sistem akan mengambil video yang tanggal publish-nya berada dalam rentang ini.
+          </p>
+        </div>
+
+        <DialogFooter className="px-5 py-4 border-t border-border/50 gap-2 sm:gap-2">
+          <DialogClose asChild>
+            <Button variant="outline" className="rounded-[10px] h-9 text-[13px] border-border">
+              Batal
+            </Button>
+          </DialogClose>
+          <Button className="rounded-[10px] h-9 text-[13px] bg-primary text-primary-foreground hover:bg-primary/90 gap-1.5" onClick={handleConfirm}>
+            <RefreshCw className="h-3.5 w-3.5" strokeWidth={1.6} />
+            Sinkronkan
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
