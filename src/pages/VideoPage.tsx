@@ -74,11 +74,16 @@ export default function VideoPage() {
 
   const hasActiveFilters = channelFilter !== "all" || statusFilter !== "all" || categoryFilter !== "all";
 
-  const handleSync = () => {
+  const [showSyncModal, setShowSyncModal] = useState(false);
+
+  const handleSync = (startDate: Date, endDate: Date) => {
     setSyncing(true);
+    setShowSyncModal(false);
     setTimeout(() => {
       setSyncing(false);
-      toast.success("Video berhasil disinkronkan");
+      toast.success("Video berhasil disinkronkan", {
+        description: "12 video berhasil diambil.",
+      });
     }, 2000);
   };
 
