@@ -6,65 +6,57 @@
 
 @layer base {
   :root {
-    /* Main background: very light warm gray */
-    --background: 200 12% 95%;
-    --foreground: 220 20% 20%;
+    --background: 150 6% 96%;
+    --foreground: 210 12% 24%;
 
-    /* Cards: clean white */
     --card: 0 0% 100%;
-    --card-foreground: 220 20% 20%;
+    --card-foreground: 210 12% 24%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 20% 20%;
+    --popover-foreground: 210 12% 24%;
 
-    /* Primary: muted sage green — soft, not saturated */
-    --primary: 152 45% 35%;
+    --primary: 152 38% 38%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 150 12% 92%;
-    --secondary-foreground: 220 20% 20%;
+    --secondary: 150 8% 94%;
+    --secondary-foreground: 210 12% 24%;
 
-    --muted: 200 10% 92%;
-    --muted-foreground: 215 12% 52%;
+    --muted: 150 6% 93%;
+    --muted-foreground: 160 6% 50%;
 
-    --accent: 150 14% 93%;
-    --accent-foreground: 220 20% 20%;
+    --accent: 150 8% 94%;
+    --accent-foreground: 210 12% 24%;
 
-    /* Destructive: soft salmon */
-    --destructive: 4 60% 58%;
+    --destructive: 4 52% 56%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Borders: very thin light gray */
-    --border: 210 14% 89%;
-    --input: 210 14% 89%;
-    --ring: 152 30% 50%;
+    --border: 150 6% 88%;
+    --input: 150 6% 88%;
+    --ring: 152 30% 46%;
 
     --radius: 12px;
 
-    /* Surface: white */
     --surface: 0 0% 100%;
 
-    /* Status: soft pastels */
-    --status-success-bg: 148 40% 90%;
-    --status-success-fg: 152 40% 30%;
-    --status-warning-bg: 42 60% 90%;
-    --status-warning-fg: 35 55% 42%;
-    --status-info-bg: 210 50% 92%;
-    --status-info-fg: 215 55% 45%;
-    --status-danger-bg: 4 55% 92%;
-    --status-danger-fg: 4 50% 48%;
+    --status-success-bg: 148 30% 92%;
+    --status-success-fg: 152 34% 34%;
+    --status-warning-bg: 42 44% 92%;
+    --status-warning-fg: 35 40% 44%;
+    --status-info-bg: 210 36% 93%;
+    --status-info-fg: 215 40% 46%;
+    --status-danger-bg: 4 40% 93%;
+    --status-danger-fg: 4 42% 50%;
 
-    /* Sidebar: soft pale sage green */
-    --sidebar-background: 150 16% 96%;
-    --sidebar-foreground: 155 8% 46%;
-    --sidebar-primary: 152 42% 34%;
+    --sidebar-background: 150 8% 96.5%;
+    --sidebar-foreground: 155 8% 48%;
+    --sidebar-primary: 152 36% 36%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 150 18% 90%;
-    --sidebar-accent-foreground: 152 32% 26%;
-    --sidebar-border: 150 10% 90%;
-    --sidebar-ring: 152 30% 50%;
-    --sidebar-muted: 155 8% 58%;
-    --sidebar-section: 155 6% 66%;
+    --sidebar-accent: 150 14% 92%;
+    --sidebar-accent-foreground: 152 30% 30%;
+    --sidebar-border: 150 6% 90%;
+    --sidebar-ring: 152 28% 46%;
+    --sidebar-muted: 155 6% 56%;
+    --sidebar-section: 155 4% 62%;
   }
 }
 
