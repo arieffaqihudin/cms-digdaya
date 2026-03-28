@@ -3,8 +3,19 @@ import { Search, Plus, Pencil, Trash2, Tag } from "lucide-react";
 import { tags } from "@/lib/mock-data";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { useScreenSize } from "@/components/AppLayout";
+import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 interface TagItem {
   id: string;
@@ -13,7 +24,7 @@ interface TagItem {
   isActive: boolean;
 }
 
-const mockTags: TagItem[] = tags.map((name, i) => ({
+const initialTags: TagItem[] = tags.map((name, i) => ({
   id: `t${i + 1}`,
   name,
   count: Math.floor(Math.random() * 30) + 2,
@@ -22,13 +33,41 @@ const mockTags: TagItem[] = tags.map((name, i) => ({
 
 export default function TagPage() {
   const [search, setSearch] = useState("");
+  const [tagList, setTagList] = useState<TagItem[]>(initialTags);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [tagName, setTagName] = useState("");
+  const [tagActive, setTagActive] = useState(true);
+  const [nameError, setNameError] = useState("");
   const screenSize = useScreenSize();
 
   const filtered = useMemo(() => {
-    return mockTags.filter((t) =>
+    return tagList.filter((t) =>
       !search || t.name.toLowerCase().includes(search.toLowerCase())
     );
-  }, [search]);
+  }, [search, tagList]);
+
+  const openModal = () => {
+    setTagName("");
+    setTagActive(true);
+    setNameError("");
+    setModalOpen(true);
+  };
+
+  const handleSave = () => {
+    if (!tagName.trim()) {
+      setNameError("Nama tag wajib diisi");
+      return;
+    }
+    const newTag: TagItem = {
+      id: `t${Date.now()}`,
+      name: tagName.trim(),
+      count: 0,
+      isActive: tagActive,
+    };
+    setTagList((prev) => [newTag, ...prev]);
+    setModalOpen(false);
+    toast.success("Tag berhasil ditambahkan");
+  };
 
   return (
     <div className="space-y-4 md:space-y-5">
@@ -50,7 +89,7 @@ export default function TagPage() {
             <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" strokeWidth={1.6} />
             <Input placeholder="Cari tag..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9 h-9 rounded-[10px] text-[13px] border-border bg-background focus-visible:ring-1 focus-visible:ring-ring" />
           </div>
-          <Button size="sm" className={cn("h-9 rounded-[10px] text-[13px] bg-primary text-primary-foreground hover:bg-primary/90 gap-1.5", screenSize === "mobile" && "w-full")}>
+          <Button onClick={openModal} size="sm" className={cn("h-9 rounded-[10px] text-[13px] bg-primary text-primary-foreground hover:bg-primary/90 gap-1.5", screenSize === "mobile" && "w-full")}>
             <Plus className="h-4 w-4" strokeWidth={1.6} /> Tambah Tag
           </Button>
         </div>
@@ -128,6 +167,36 @@ export default function TagPage() {
         )}
         {filtered.length === 0 && <div className="p-12 md:p-16 text-center text-[13px] text-muted-foreground">Tidak ada tag ditemukan.</div>}
       </div>
+
+      {/* Create Tag Modal */}
+      <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+        <DialogContent className="sm:max-w-[420px] rounded-[12px]">
+          <DialogHeader>
+            <DialogTitle className="text-base font-semibold text-foreground">Tambah Tag</DialogTitle>
+            <DialogDescription className="text-[13px] text-muted-foreground">Buat tag baru untuk konten.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-5 py-2">
+            <div className="space-y-2">
+              <Label className="text-[13px] font-medium text-foreground">Nama Tag</Label>
+              <Input
+                placeholder="Masukkan nama tag"
+                value={tagName}
+                onChange={(e) => { setTagName(e.target.value); setNameError(""); }}
+                className="h-9 rounded-[10px] text-[13px] border-border bg-background focus-visible:ring-1 focus-visible:ring-ring"
+              />
+              {nameError && <p className="text-[12px] text-destructive">{nameError}</p>}
+            </div>
+            <div className="flex items-center justify-between">
+              <Label className="text-[13px] font-medium text-foreground">Status Aktif</Label>
+              <Switch checked={tagActive} onCheckedChange={setTagActive} />
+            </div>
+          </div>
+          <DialogFooter className="gap-2 sm:gap-2">
+            <Button variant="outline" onClick={() => setModalOpen(false)} className="h-9 rounded-[10px] text-[13px]">Batal</Button>
+            <Button onClick={handleSave} className="h-9 rounded-[10px] text-[13px] bg-primary text-primary-foreground hover:bg-primary/90">Simpan</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
