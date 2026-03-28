@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -36,7 +37,11 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-[hsl(150,20%,97%)] via-[hsl(0,0%,99%)] to-[hsl(150,15%,95%)] relative overflow-hidden">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-[hsl(150,20%,97%)] via-[hsl(0,0%,99%)] to-[hsl(150,15%,95%)] dark:from-[hsl(200,10%,8%)] dark:via-[hsl(200,10%,10%)] dark:to-[hsl(200,8%,12%)] relative overflow-hidden">
+      {/* Theme toggle */}
+      <div className="absolute top-4 right-4 z-50">
+        <ThemeToggle />
+      </div>
       {/* Subtle decorative shapes */}
       <div className="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] rounded-full bg-[hsl(152,40%,90%)] opacity-30 blur-[120px] pointer-events-none" />
       <div className="absolute bottom-[-15%] left-[-8%] w-[500px] h-[500px] rounded-full bg-[hsl(152,35%,88%)] opacity-25 blur-[100px] pointer-events-none" />
