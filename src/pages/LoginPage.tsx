@@ -43,13 +43,13 @@ const LoginPage = () => {
         <ThemeToggle />
       </div>
       {/* Subtle decorative shapes */}
-      <div className="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] rounded-full bg-[hsl(152,40%,90%)] opacity-30 blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-15%] left-[-8%] w-[500px] h-[500px] rounded-full bg-[hsl(152,35%,88%)] opacity-25 blur-[100px] pointer-events-none" />
-      <div className="absolute top-[30%] left-[15%] w-[200px] h-[200px] rounded-full bg-[hsl(152,30%,92%)] opacity-20 blur-[80px] pointer-events-none hidden lg:block" />
+      <div className="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] rounded-full bg-[hsl(152,40%,90%)] dark:bg-[hsl(152,30%,15%)] opacity-30 blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[-15%] left-[-8%] w-[500px] h-[500px] rounded-full bg-[hsl(152,35%,88%)] dark:bg-[hsl(152,25%,12%)] opacity-25 blur-[100px] pointer-events-none" />
+      <div className="absolute top-[30%] left-[15%] w-[200px] h-[200px] rounded-full bg-[hsl(152,30%,92%)] dark:bg-[hsl(152,20%,14%)] opacity-20 blur-[80px] pointer-events-none hidden lg:block" />
 
       <div className="flex-1 flex flex-col lg:flex-row relative z-10">
         {/* LEFT — Brand panel */}
-        <div className="hidden lg:flex lg:w-[44%] relative items-center justify-center bg-gradient-to-b from-[hsl(150,18%,96%)] to-[hsl(150,22%,93%)] overflow-hidden border-r border-[hsl(150,15%,90%)]">
+        <div className="hidden lg:flex lg:w-[44%] relative items-center justify-center bg-gradient-to-b from-[hsl(150,18%,96%)] to-[hsl(150,22%,93%)] dark:from-[hsl(200,10%,11%)] dark:to-[hsl(200,10%,9%)] overflow-hidden border-r border-[hsl(150,15%,90%)] dark:border-[hsl(200,8%,18%)]">
           {/* Dot pattern */}
           <div
             className="absolute inset-0 opacity-[0.035]"
