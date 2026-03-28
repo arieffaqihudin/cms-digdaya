@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const navItems = [
   { label: "Dashboard", icon: LayoutDashboard, path: "/" },
@@ -272,6 +273,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
                 <Search className="h-4 w-4 text-muted-foreground" />
               </Button>
             )}
+            <ThemeToggle />
             <Button variant="ghost" size="icon" className="relative h-8 w-8">
               <Bell className="h-4 w-4 text-muted-foreground" />
               <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-primary" />
