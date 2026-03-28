@@ -1,19 +1,31 @@
-import { useState, useMemo } from "react";
-import { Search, Plus, Pencil, Trash2, Tv2 } from "lucide-react";
+import { useState, useMemo, useRef, useCallback } from "react";
+import { Search, Plus, Pencil, Trash2, Tv2, Upload, X, ImageIcon } from "lucide-react";
 import { channels } from "@/lib/mock-data";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { useScreenSize } from "@/components/AppLayout";
+import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 interface ChannelItem {
   id: string;
   name: string;
   count: number;
   isActive: boolean;
+  logo?: string;
 }
 
-const mockChannels: ChannelItem[] = channels.map((name, i) => ({
+const initialChannels: ChannelItem[] = channels.map((name, i) => ({
   id: `ch${i + 1}`,
   name,
   count: Math.floor(Math.random() * 30) + 2,
@@ -22,13 +34,78 @@ const mockChannels: ChannelItem[] = channels.map((name, i) => ({
 
 export default function ChannelPage() {
   const [search, setSearch] = useState("");
+  const [channelList, setChannelList] = useState<ChannelItem[]>(initialChannels);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [channelName, setChannelName] = useState("");
+  const [channelActive, setChannelActive] = useState(true);
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const [nameError, setNameError] = useState("");
+  const [dragOver, setDragOver] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const screenSize = useScreenSize();
 
   const filtered = useMemo(() => {
-    return mockChannels.filter((c) =>
+    return channelList.filter((c) =>
       !search || c.name.toLowerCase().includes(search.toLowerCase())
     );
-  }, [search]);
+  }, [search, channelList]);
+
+  const openModal = () => {
+    setChannelName("");
+    setChannelActive(true);
+    setLogoPreview(null);
+    setNameError("");
+    setDragOver(false);
+    setModalOpen(true);
+  };
+
+  const handleFile = useCallback((file: File | null) => {
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast.error("File harus berupa gambar");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => setLogoPreview(e.target?.result as string);
+    reader.readAsDataURL(file);
+  }, []);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+    const file = e.dataTransfer.files?.[0];
+    handleFile(file);
+  }, [handleFile]);
+
+  const handleSave = () => {
+    if (!channelName.trim()) {
+      setNameError("Nama channel wajib diisi");
+      return;
+    }
+    const newChannel: ChannelItem = {
+      id: `ch${Date.now()}`,
+      name: channelName.trim(),
+      count: 0,
+      isActive: channelActive,
+      logo: logoPreview || undefined,
+    };
+    setChannelList((prev) => [newChannel, ...prev]);
+    setModalOpen(false);
+    toast.success("Channel berhasil ditambahkan");
+  };
+
+  const renderLogo = (item: ChannelItem) => {
+    if (item.logo) {
+      return (
+        <img src={item.logo} alt={item.name} className="h-8 w-8 rounded-[8px] object-cover shrink-0" />
+      );
+    }
+    return (
+      <div className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-primary/[0.06] shrink-0">
+        <Tv2 className="h-3.5 w-3.5 text-primary" strokeWidth={1.6} />
+      </div>
+    );
+  };
 
   return (
     <div className="space-y-4 md:space-y-5">
@@ -50,7 +127,7 @@ export default function ChannelPage() {
             <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" strokeWidth={1.6} />
             <Input placeholder="Cari channel..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9 h-9 rounded-[10px] text-[13px] border-border bg-background focus-visible:ring-1 focus-visible:ring-ring" />
           </div>
-          <Button size="sm" className={cn("h-9 rounded-[10px] text-[13px] bg-primary text-primary-foreground hover:bg-primary/90 gap-1.5", screenSize === "mobile" && "w-full")}>
+          <Button onClick={openModal} size="sm" className={cn("h-9 rounded-[10px] text-[13px] bg-primary text-primary-foreground hover:bg-primary/90 gap-1.5", screenSize === "mobile" && "w-full")}>
             <Plus className="h-4 w-4" strokeWidth={1.6} /> Tambah Channel
           </Button>
         </div>
@@ -61,9 +138,7 @@ export default function ChannelPage() {
           <div className="divide-y divide-border/30">
             {filtered.map((item) => (
               <div key={item.id} className="p-4 flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-primary/[0.06] shrink-0">
-                  <Tv2 className="h-3.5 w-3.5 text-primary" strokeWidth={1.6} />
-                </div>
+                {renderLogo(item)}
                 <div className="flex-1 min-w-0">
                   <p className="text-[13px] font-medium text-foreground">{item.name}</p>
                   <div className="flex items-center gap-2 mt-1">
@@ -100,7 +175,7 @@ export default function ChannelPage() {
                 <tr key={item.id} className="border-b border-border/30 hover:bg-accent/30 transition-colors duration-150">
                   <td className="px-4 md:px-5 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-primary/[0.06]"><Tv2 className="h-3.5 w-3.5 text-primary" strokeWidth={1.6} /></div>
+                      {renderLogo(item)}
                       <span className="font-medium text-foreground">{item.name}</span>
                     </div>
                   </td>
@@ -128,6 +203,82 @@ export default function ChannelPage() {
         )}
         {filtered.length === 0 && <div className="p-12 md:p-16 text-center text-[13px] text-muted-foreground">Tidak ada channel ditemukan.</div>}
       </div>
+
+      {/* Create Channel Modal */}
+      <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+        <DialogContent className="sm:max-w-[460px] rounded-[12px]">
+          <DialogHeader>
+            <DialogTitle className="text-base font-semibold text-foreground">Tambah Channel</DialogTitle>
+            <DialogDescription className="text-[13px] text-muted-foreground">Buat channel baru untuk konten.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-5 py-2">
+            {/* Channel Name */}
+            <div className="space-y-2">
+              <Label className="text-[13px] font-medium text-foreground">Nama Channel</Label>
+              <Input
+                placeholder="Masukkan nama channel"
+                value={channelName}
+                onChange={(e) => { setChannelName(e.target.value); setNameError(""); }}
+                className="h-9 rounded-[10px] text-[13px] border-border bg-background focus-visible:ring-1 focus-visible:ring-ring"
+              />
+              {nameError && <p className="text-[12px] text-destructive">{nameError}</p>}
+            </div>
+
+            {/* Logo Upload */}
+            <div className="space-y-2">
+              <Label className="text-[13px] font-medium text-foreground">Logo Channel</Label>
+              {logoPreview ? (
+                <div className="relative inline-block">
+                  <img src={logoPreview} alt="Logo preview" className="h-20 w-20 rounded-[10px] object-cover border border-border" />
+                  <button
+                    type="button"
+                    onClick={() => setLogoPreview(null)}
+                    className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 transition-colors"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </div>
+              ) : (
+                <div
+                  onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+                  onDragLeave={() => setDragOver(false)}
+                  onDrop={handleDrop}
+                  onClick={() => fileInputRef.current?.click()}
+                  className={cn(
+                    "flex flex-col items-center justify-center gap-2 rounded-[10px] border-2 border-dashed px-4 py-6 cursor-pointer transition-colors",
+                    dragOver ? "border-primary bg-primary/5" : "border-border hover:border-muted-foreground/30 hover:bg-accent/30"
+                  )}
+                >
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
+                    <ImageIcon className="h-4 w-4 text-muted-foreground" strokeWidth={1.6} />
+                  </div>
+                  <div className="text-center">
+                    <p className="text-[13px] font-medium text-foreground">Klik atau seret gambar</p>
+                    <p className="text-[11px] text-muted-foreground mt-0.5">PNG, JPG, atau WEBP</p>
+                  </div>
+                </div>
+              )}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => handleFile(e.target.files?.[0] || null)}
+              />
+            </div>
+
+            {/* Active Toggle */}
+            <div className="flex items-center justify-between">
+              <Label className="text-[13px] font-medium text-foreground">Status Aktif</Label>
+              <Switch checked={channelActive} onCheckedChange={setChannelActive} />
+            </div>
+          </div>
+          <DialogFooter className="gap-2 sm:gap-2">
+            <Button variant="outline" onClick={() => setModalOpen(false)} className="h-9 rounded-[10px] text-[13px]">Batal</Button>
+            <Button onClick={handleSave} className="h-9 rounded-[10px] text-[13px] bg-primary text-primary-foreground hover:bg-primary/90">Simpan</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
